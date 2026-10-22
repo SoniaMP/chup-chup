@@ -26,7 +26,7 @@ export function KitchenHeader({
   return (
     <View style={styles.container}>
       <View style={styles.topRow}>
-        <Text style={[styles.title, { color: colors.foreground }]}>Mi cocina</Text>
+        <Text style={[styles.title, { color: colors.foreground }]}>Chup Chup</Text>
         <View style={styles.actions}>
           <Pressable
             accessibilityRole="button"

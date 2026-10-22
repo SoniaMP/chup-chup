@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, useColorScheme } from "react-native";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 
-/** What Mi cocina shows before the first recipe exists. */
+/** What the home screen shows before the first recipe exists. */
 export function EmptyKitchen() {
   const colors = useColors();
   const gradient =

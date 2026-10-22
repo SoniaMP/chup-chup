@@ -14,7 +14,7 @@ const summaryOf = (recipe: Recipe): string => {
   return parts.join(" · ");
 };
 
-/** Una receta en la lista de Mi cocina. Sin foto todavía: miniatura en degradado. */
+/** Una receta en la lista de la pantalla principal. Sin foto todavía: miniatura en degradado. */
 export function RecipeRow({ recipe, onPress }: { recipe: Recipe; onPress: () => void }) {
   const colors = useColors();
   const gradient =

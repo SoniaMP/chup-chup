@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "Recetario",
-    "slug": "recetario",
+    "name": "Chup Chup",
+    "slug": "chup-chup",
     "version": "0.1.0",
     "orientation": "portrait",
-    "scheme": "recetario",
+    "scheme": "chupchup",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": false

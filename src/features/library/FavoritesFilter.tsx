@@ -9,7 +9,7 @@ type FavoritesFilterProps = {
   onToggle: () => void;
 };
 
-/** Deja en Mi cocina solo las favoritas. No es un libro: es una lista que se calcula sola. */
+/** Deja en la pantalla principal solo las favoritas. No es un libro: es una lista que se calcula sola. */
 export function FavoritesFilter({ isOn, onToggle }: FavoritesFilterProps) {
   const colors = useColors();
 

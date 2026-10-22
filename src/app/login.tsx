@@ -34,7 +34,7 @@ export default function LoginScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <Text style={[styles.title, { color: colors.foreground }]}>Recetario</Text>
+          <Text style={[styles.title, { color: colors.foreground }]}>Chup Chup</Text>
           <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
             Tus recetas, siempre contigo.
           </Text>
