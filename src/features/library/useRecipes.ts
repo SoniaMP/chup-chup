@@ -2,7 +2,7 @@ import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 
 import type { Recipe } from "@/domain/recipes/recipe";
-import { localRecipeStore } from "@/features/recipes/localRecipeStore";
+import { supabaseRecipeStore } from "@/features/recipes/supabaseRecipeStore";
 
 /** Las recetas guardadas, recargadas cada vez que se vuelve a la pantalla. */
 export function useRecipes(): Recipe[] | null {
@@ -11,9 +11,15 @@ export function useRecipes(): Recipe[] | null {
   useFocusEffect(
     useCallback(() => {
       let isCurrent = true;
-      void localRecipeStore.list().then((stored) => {
-        if (isCurrent) setRecipes(stored);
-      });
+      void supabaseRecipeStore
+        .list()
+        .catch((cause: unknown) => {
+          console.warn("No se han podido leer las recetas", cause);
+          return [];
+        })
+        .then((stored) => {
+          if (isCurrent) setRecipes(stored);
+        });
       return () => {
         isCurrent = false;
       };

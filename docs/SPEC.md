@@ -26,6 +26,8 @@ Principio rector: ninguna decisión del MVP obliga a migrar datos cuando llegue 
 **Dentro del MVP**
 
 - Registro e inicio de sesión; recetas privadas de la usuaria.
+  **Pendiente:** hoy solo existe la pantalla de inicio de sesión y la usuaria se crea a mano desde
+  el panel de Supabase. La pantalla de registro sigue dentro del MVP, está por hacer.
 - Crear receta desde texto libre → IA estructura y sugiere → revisión editable → guardar.
 - Editar y borrar recetas, con notas personales por receta ("la próxima vez, menos sal").
 - Libros tipo playlist, recetarios tipo carpeta y Favoritos.

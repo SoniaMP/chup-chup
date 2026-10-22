@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import type { Recipe } from "@/domain/recipes/recipe";
-import { localRecipeStore } from "./localRecipeStore";
+import { supabaseRecipeStore } from "./supabaseRecipeStore";
 
 type LoadedRecipe = {
   recipe: Recipe | null;
@@ -19,9 +19,15 @@ export function useRecipe(id: string): LoadedRecipe {
 
   useEffect(() => {
     let isCurrent = true;
-    void localRecipeStore.getById(id).then((recipe) => {
-      if (isCurrent) setLoaded({ recipe, isLoaded: true });
-    });
+    void supabaseRecipeStore
+      .getById(id)
+      .catch((cause: unknown) => {
+        console.warn("No se ha podido leer la receta", cause);
+        return null;
+      })
+      .then((recipe) => {
+        if (isCurrent) setLoaded({ recipe, isLoaded: true });
+      });
     return () => {
       isCurrent = false;
     };
