@@ -42,11 +42,15 @@ export default function CookbookScreen() {
           <CookbookRecipeList
             cookbookId={cookbookId}
             entries={entries}
+            canDeleteCookbook={!cookbook.isSystem}
             onOpenRecipe={(recipeId) => {
               router.push({ pathname: "/recipe/[id]", params: { id: recipeId } });
             }}
             onAddToCookbook={(recipeId) => {
               router.push({ pathname: "/recipe/[id]/books", params: { id: recipeId } });
+            }}
+            onCookbookDeleted={() => {
+              router.replace("/");
             }}
             onReload={reload}
           />

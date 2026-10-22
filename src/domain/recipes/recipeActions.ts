@@ -1,14 +1,31 @@
-/** Lo que se puede hacer con una receta desde el menú de un libro. */
-export type RecipeAction = "reorder" | "addToCookbook" | "removeFromCookbook" | "delete";
+/** Lo que se puede hacer desde el menú de una receta dentro de un libro. */
+export type RecipeAction =
+  | "reorder"
+  | "addToCookbook"
+  | "removeFromCookbook"
+  | "delete"
+  | "deleteCookbook";
+
+type RecipeActionsContext = {
+  recipeCount: number;
+  canDeleteCookbook: boolean;
+};
 
 /**
  * Qué acciones ofrece una receta dentro de un libro.
  *
- * Reordenar es de la lista, no de la receta, y con una sola receta no hay nada que ordenar: en
- * ese caso la opción se queda fuera en vez de enseñarse sin efecto.
+ * Hay dos que no van de la receta sino del libro entero, reordenar y borrarlo, porque es aquí
+ * donde se piden. Reordenar sobra con una sola receta, y el libro por defecto no se borra.
  */
-export function availableRecipeActions(recipeCount: number): RecipeAction[] {
-  const actions: RecipeAction[] = ["addToCookbook", "removeFromCookbook", "delete"];
-
-  return recipeCount > 1 ? ["reorder", ...actions] : actions;
+export function availableRecipeActions({
+  recipeCount,
+  canDeleteCookbook,
+}: RecipeActionsContext): RecipeAction[] {
+  return [
+    ...(recipeCount > 1 ? (["reorder"] as const) : []),
+    "addToCookbook",
+    "removeFromCookbook",
+    "delete",
+    ...(canDeleteCookbook ? (["deleteCookbook"] as const) : []),
+  ];
 }

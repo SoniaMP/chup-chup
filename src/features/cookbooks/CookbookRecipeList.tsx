@@ -14,8 +14,11 @@ import { useReorderCookbookRecipes } from "./useReorderCookbookRecipes";
 type CookbookRecipeListProps = {
   cookbookId: string;
   entries: CookbookEntry[];
+  /** El libro por defecto no se borra: es donde caen las recetas que no tienen otro. */
+  canDeleteCookbook: boolean;
   onOpenRecipe: (recipeId: string) => void;
   onAddToCookbook: (recipeId: string) => void;
+  onCookbookDeleted: () => void;
   /** Para releer el libro cuando algo cambia, y si no se ha podido guardar un arrastre. */
   onReload: () => void;
 };
@@ -34,8 +37,10 @@ const noticeFor = (outcome: RemoveOutcome, cookbookId: string): string | null =>
 export function CookbookRecipeList({
   cookbookId,
   entries,
+  canDeleteCookbook,
   onOpenRecipe,
   onAddToCookbook,
+  onCookbookDeleted,
   onReload,
 }: CookbookRecipeListProps) {
   const [chosenId, setChosenId] = useState<string | null>(null);
@@ -110,6 +115,7 @@ export function CookbookRecipeList({
           cookbookId={cookbookId}
           recipeId={chosenId}
           recipeCount={items.length}
+          canDeleteCookbook={canDeleteCookbook}
           isOpen
           onClose={() => {
             setChosenId(null);
@@ -131,6 +137,10 @@ export function CookbookRecipeList({
           onDeleted={() => {
             setChosenId(null);
             onReload();
+          }}
+          onCookbookDeleted={() => {
+            setChosenId(null);
+            onCookbookDeleted();
           }}
         />
       )}
