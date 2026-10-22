@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { removeRecipeFromCookbook } from "./removeRecipeFromCookbook";
 import { supabaseCookbookRecipeStore } from "./supabaseCookbookRecipeStore";
-import { supabaseCookbookStore } from "./supabaseCookbookStore";
 
 type RecipeCookbooks = {
   /** `null` mientras se cargan: así las casillas no parpadean de vacías a marcadas. */
@@ -40,18 +40,10 @@ export function useRecipeCookbookIds(recipeId: string): RecipeCookbooks {
         return;
       }
 
-      await supabaseCookbookRecipeStore.remove(cookbookId, recipeId);
-      const left = current.filter((id) => id !== cookbookId);
-
       // Sacarla del último libro no la deja en ninguno: vuelve al libro por defecto.
-      if (left.length > 0) {
-        setCookbookIds(left);
-        return;
-      }
+      const fallback = await removeRecipeFromCookbook(cookbookId, recipeId);
 
-      const fallback = await supabaseCookbookStore.ensureDefault();
-      await supabaseCookbookRecipeStore.add(fallback.id, recipeId);
-      setCookbookIds([fallback.id]);
+      setCookbookIds(fallback === null ? current.filter((id) => id !== cookbookId) : [fallback.id]);
     },
     [cookbookIds, recipeId],
   );
