@@ -40,20 +40,26 @@ export function CookbookActions({
 }: CookbookActionsProps) {
   const [open, setOpen] = useState<CookbookAction | null>(null);
 
-  // Reordenar no abre nada: cierra el menú y deja la lista en modo arrastrar.
+  // Reordenar no abre nada: cierra el menú y deja la lista en modo arrastrar. Las otras dos sí
+  // abren un diálogo, y entonces el menú no se "cierra": quien manda la hoja sigue montado,
+  // porque cerrarlo desde fuera se llevaría por delante el diálogo que acaba de abrirse.
   const actions = availableCookbookActions(cookbook).map(
     (action): SheetAction => ({
       ...LABELS[action],
       onPress: () => {
-        onClose();
-        if (action === "reorder") onReorder();
-        else setOpen(action);
+        if (action === "reorder") {
+          onClose();
+          onReorder();
+          return;
+        }
+        setOpen(action);
       },
     }),
   );
 
   const close = (): void => {
     setOpen(null);
+    onClose();
   };
 
   return (
