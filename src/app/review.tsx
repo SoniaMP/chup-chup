@@ -13,7 +13,7 @@ import { fileRecipeInCookbook } from "@/features/cookbooks/fileRecipeInCookbook"
 import { DiscardChangesNotice } from "@/features/recipes/DiscardChangesNotice";
 import { IngredientFields } from "@/features/recipes/IngredientFields";
 import { ReviewHeader } from "@/features/recipes/ReviewHeader";
-import { SectionHeading } from "@/features/recipes/SectionHeading";
+import { SectionHeading } from "@/components/SectionHeading";
 import { StepFields } from "@/features/recipes/StepFields";
 import { TimesFields } from "@/features/recipes/TimesFields";
 import { saveRecipe } from "@/features/recipes/saveRecipe";

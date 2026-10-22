@@ -12,7 +12,7 @@ import { RecipeFacts } from "@/features/recipes/RecipeFacts";
 import { RecipeIngredients } from "@/features/recipes/RecipeIngredients";
 import { RecipeNotes } from "@/features/recipes/RecipeNotes";
 import { RecipeSteps } from "@/features/recipes/RecipeSteps";
-import { SectionHeading } from "@/features/recipes/SectionHeading";
+import { SectionHeading } from "@/components/SectionHeading";
 import { saveRecipeNotes } from "@/features/recipes/saveRecipeNotes";
 import { useRecipe } from "@/features/recipes/useRecipe";
 import { tokens } from "@/theme/tokens";
