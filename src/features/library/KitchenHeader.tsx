@@ -4,8 +4,13 @@ import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 import { webFocusReset } from "@/theme/webFocusReset";
 
+type KitchenHeaderProps = {
+  query: string;
+  onQueryChange: (query: string) => void;
+};
+
 /** Title, profile and + on one row, with the search field underneath. */
-export function KitchenHeader() {
+export function KitchenHeader({ query, onQueryChange }: KitchenHeaderProps) {
   const colors = useColors();
 
   return (
@@ -30,6 +35,12 @@ export function KitchenHeader() {
         </View>
       </View>
       <TextInput
+        value={query}
+        onChangeText={onQueryChange}
+        autoCapitalize="none"
+        autoCorrect={false}
+        returnKeyType="search"
+        clearButtonMode="while-editing"
         placeholder="Busca una receta o un ingrediente"
         placeholderTextColor={colors.mutedForeground}
         style={[styles.search, webFocusReset, { backgroundColor: colors.muted, color: colors.foreground }]}

@@ -1,9 +1,12 @@
 import { useRouter } from "expo-router";
+import { useMemo, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 import { Screen } from "@/components/Screen";
+import { recipeMatchesQuery } from "@/domain/recipes/recipeMatchesQuery";
 import { EmptyKitchen } from "@/features/library/EmptyKitchen";
 import { KitchenHeader } from "@/features/library/KitchenHeader";
+import { NoSearchResults } from "@/features/library/NoSearchResults";
 import { RecipeRow } from "@/features/library/RecipeRow";
 import { useRecipes } from "@/features/library/useRecipes";
 import { CreateRecipeButton } from "@/features/recipes/CreateRecipeButton";
@@ -14,15 +17,24 @@ export default function KitchenScreen() {
   const colors = useColors();
   const router = useRouter();
   const recipes = useRecipes();
+  const [query, setQuery] = useState("");
+
+  const found = useMemo(
+    () => (recipes ?? []).filter((recipe) => recipeMatchesQuery(recipe, query)),
+    [recipes, query],
+  );
 
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
       <Screen>
-        <KitchenHeader />
+        <KitchenHeader query={query} onQueryChange={setQuery} />
         {recipes !== null && recipes.length === 0 && <EmptyKitchen />}
-        {recipes !== null && recipes.length > 0 && (
+        {recipes !== null && recipes.length > 0 && found.length === 0 && (
+          <NoSearchResults query={query} />
+        )}
+        {found.length > 0 && (
           <ScrollView contentContainerStyle={styles.list} showsVerticalScrollIndicator={false}>
-            {recipes.map((recipe) => (
+            {found.map((recipe) => (
               <RecipeRow
                 key={recipe.id}
                 recipe={recipe}
