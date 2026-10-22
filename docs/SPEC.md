@@ -164,3 +164,13 @@ Existe un prototipo hecho en Lovable. Lovable genera React web (no React Native)
 7. Notas personales y modo cocina.
 8. Fotos y retoque.
 9. Caché offline de lectura.
+
+## Ideas por concretar
+
+Cosas acordadas que todavía no tienen forma. Antes de construirlas, una ronda de preguntas.
+
+- **Buscar recetas por los ingredientes que tengo.** Escribes «pepino, tomate, sandía» y la app
+  propone recetas que lleven al menos uno. Está por decidir: si vive en el buscador de siempre o
+  en su propia pantalla; si ordena por cuántos ingredientes coinciden (y si enseña cuáles te
+  faltan); si busca solo por el nombre exacto del ingrediente o entiende que «tomate cherry» es
+  tomate; y si eso último necesita la IA o basta con buscar en la base de datos.
