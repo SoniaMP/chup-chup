@@ -70,10 +70,10 @@ Decisiones:
 
 Acciones de un libro:
 
-Un libro se maneja desde un solo menú, nunca desde botones repartidos por la pantalla. Se abre
-dejando el dedo encima del libro en la biblioteca, como en las listas de Spotify, o con el botón
-**···** dentro del propio libro. El menú es una hoja que sube desde abajo, igual que la pregunta
-de borrar.
+Un libro se maneja desde un solo menú, en un solo sitio: dejando el dedo encima del libro en la
+biblioteca, como en las listas de Spotify. El menú es una hoja que sube desde abajo, igual que la
+pregunta de borrar. Dentro del libro no hay acciones: tocarlo en la biblioteca abre su pantalla,
+que solo enseña sus recetas.
 
 | Acción | Estado |
 | --- | --- |

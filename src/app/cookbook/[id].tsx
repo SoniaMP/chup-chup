@@ -1,12 +1,9 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { BackButton } from "@/components/BackButton";
-import { IconButton } from "@/components/IconButton";
 import { EmptyState } from "@/components/EmptyState";
 import { Screen } from "@/components/Screen";
-import { CookbookActions } from "@/features/cookbooks/CookbookActions";
 import { useCookbook } from "@/features/cookbooks/useCookbook";
 import { useCookbookRecipes } from "@/features/cookbooks/useCookbookRecipes";
 import { RecipeRow } from "@/features/library/RecipeRow";
@@ -18,9 +15,8 @@ export default function CookbookScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ id: string }>();
   const cookbookId = params.id ?? "";
-  const { cookbook, isLoaded, replace } = useCookbook(cookbookId);
+  const { cookbook, isLoaded } = useCookbook(cookbookId);
   const recipes = useCookbookRecipes(cookbookId);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   if (cookbook === null) {
     return (
@@ -38,13 +34,6 @@ export default function CookbookScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <BackButton />
-          <IconButton
-            name="more-horiz"
-            label="Acciones del libro"
-            onPress={() => {
-              setIsMenuOpen(true);
-            }}
-          />
         </View>
 
         <Text style={[styles.label, { color: colors.primary }]}>LIBRO</Text>
@@ -70,30 +59,13 @@ export default function CookbookScreen() {
         </View>
 
       </ScrollView>
-
-      <CookbookActions
-        cookbook={cookbook}
-        isOpen={isMenuOpen}
-        onClose={() => {
-          setIsMenuOpen(false);
-        }}
-        onRenamed={replace}
-        onDeleted={() => {
-          router.replace("/");
-        }}
-      />
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   content: { paddingBottom: tokens.spacing.block * 2 },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: tokens.spacing.block,
-  },
+  header: { flexDirection: "row", alignItems: "center", marginBottom: tokens.spacing.block },
   label: {
     fontFamily: tokens.fontFamily.bodyStrong,
     fontSize: tokens.fontSize.label,

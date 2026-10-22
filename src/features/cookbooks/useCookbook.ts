@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { Cookbook } from "@/domain/cookbooks/cookbook";
 import { supabaseCookbookStore } from "./supabaseCookbookStore";
@@ -6,13 +6,11 @@ import { supabaseCookbookStore } from "./supabaseCookbookStore";
 type LoadedCookbook = {
   cookbook: Cookbook | null;
   isLoaded: boolean;
-  /** Para quedarse con el libro recién renombrado sin volver a leerlo. */
-  replace: (cookbook: Cookbook) => void;
 };
 
 /** Un libro por su identificador. */
 export function useCookbook(id: string): LoadedCookbook {
-  const [loaded, setLoaded] = useState<{ cookbook: Cookbook | null; isLoaded: boolean }>({
+  const [loaded, setLoaded] = useState<LoadedCookbook>({
     cookbook: null,
     isLoaded: false,
   });
@@ -33,9 +31,5 @@ export function useCookbook(id: string): LoadedCookbook {
     };
   }, [id]);
 
-  const replace = useCallback((cookbook: Cookbook) => {
-    setLoaded({ cookbook, isLoaded: true });
-  }, []);
-
-  return { ...loaded, replace };
+  return loaded;
 }

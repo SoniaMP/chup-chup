@@ -1,24 +1,21 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 import type { Cookbook } from "@/domain/cookbooks/cookbook";
-import type { Recipe } from "@/domain/recipes/recipe";
 import { CookbookActions } from "@/features/cookbooks/CookbookActions";
 import { tokens } from "@/theme/tokens";
 import { CookbookListItem } from "./CookbookListItem";
 
 type CookbookListProps = {
   cookbooks: Cookbook[];
-  recipes: Recipe[];
-  /** Identificadores de receta por libro, en el orden del libro. */
-  membership: Map<string, string[]>;
+  /** Cuántas recetas tiene cada libro, por identificador. */
+  recipeCounts: Map<string, number>;
   /** Para volver a leer la biblioteca cuando un libro cambia de nombre o desaparece. */
   onChanged: () => void;
 };
 
-/** La biblioteca: tus libros a lo ancho, cada uno con sus recetas dentro. */
-export function CookbookList({ cookbooks, recipes, membership, onChanged }: CookbookListProps) {
-  const byId = useMemo(() => new Map(recipes.map((recipe) => [recipe.id, recipe])), [recipes]);
+/** La biblioteca: tus libros a lo ancho. Cada uno se abre en su pantalla. */
+export function CookbookList({ cookbooks, recipeCounts, onChanged }: CookbookListProps) {
   // El libro cuyas acciones se han pedido dejando el dedo encima. Una hoja para toda la lista.
   const [chosen, setChosen] = useState<Cookbook | null>(null);
 
@@ -28,9 +25,7 @@ export function CookbookList({ cookbooks, recipes, membership, onChanged }: Cook
         <CookbookListItem
           key={cookbook.id}
           cookbook={cookbook}
-          recipes={(membership.get(cookbook.id) ?? [])
-            .map((id) => byId.get(id))
-            .filter((recipe): recipe is Recipe => recipe !== undefined)}
+          recipeCount={recipeCounts.get(cookbook.id) ?? 0}
           onOpenActions={() => {
             setChosen(cookbook);
           }}

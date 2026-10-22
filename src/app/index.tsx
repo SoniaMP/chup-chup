@@ -35,6 +35,12 @@ export default function KitchenScreen() {
   // que se quiere son recetas, vengan del libro que vengan.
   const isBrowsing = query.trim() === "" && !isOnlyFavorites;
 
+  // La biblioteca solo necesita cuántas recetas tiene cada libro: las de dentro se ven al entrar.
+  const recipeCounts = useMemo(
+    () => new Map([...(membership ?? new Map<string, string[]>())].map(([id, ids]) => [id, ids.length])),
+    [membership],
+  );
+
   const found = useMemo(
     () =>
       (recipes ?? []).filter(
@@ -61,8 +67,7 @@ export default function KitchenScreen() {
           <ScrollView contentContainerStyle={styles.list} showsVerticalScrollIndicator={false}>
             <CookbookList
               cookbooks={cookbooks ?? []}
-              recipes={recipes}
-              membership={membership ?? new Map()}
+              recipeCounts={recipeCounts}
               onChanged={refreshLibrary}
             />
           </ScrollView>
