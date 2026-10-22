@@ -1,13 +1,15 @@
-import { useKeepAwake } from "expo-keep-awake";
 import { StyleSheet, Text, View } from "react-native";
 
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
+import { useKeepScreenOn } from "./useKeepScreenOn";
 
-/** Mantiene la pantalla encendida mientras cocinas, y lo dice. */
+/** Mantiene la pantalla encendida mientras cocinas, y solo lo dice si de verdad lo está. */
 export function KeepScreenOnChip() {
   const colors = useColors();
-  useKeepAwake();
+  const isScreenKeptOn = useKeepScreenOn();
+
+  if (!isScreenKeptOn) return null;
 
   return (
     <View style={[styles.chip, { backgroundColor: colors.oliveSoft }]}>
