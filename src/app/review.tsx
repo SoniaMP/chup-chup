@@ -8,6 +8,8 @@ import { validateRecipeDraft } from "@/domain/recipes/validateRecipeDraft";
 import { draftStore } from "@/features/drafts/draftStore";
 import { useDraftEditor } from "@/features/drafts/useDraftEditor";
 import { AssumptionsNotice } from "@/features/recipes/AssumptionsNotice";
+import { CookbookPicker } from "@/features/cookbooks/CookbookPicker";
+import { fileRecipeInCookbook } from "@/features/cookbooks/fileRecipeInCookbook";
 import { DiscardChangesNotice } from "@/features/recipes/DiscardChangesNotice";
 import { IngredientFields } from "@/features/recipes/IngredientFields";
 import { ReviewHeader } from "@/features/recipes/ReviewHeader";
@@ -32,6 +34,7 @@ export default function ReviewDraftScreen() {
   const { draft, isDirty, update } = useDraftEditor(draftId);
   const [error, setError] = useState<string | null>(null);
   const [isDiscarding, setIsDiscarding] = useState(false);
+  const [cookbookId, setCookbookId] = useState<string | null>(null);
 
   const leaveEditing = (): void => {
     void draftStore.remove(draftId);
@@ -61,11 +64,20 @@ export default function ReviewDraftScreen() {
         return;
       }
 
-      await saveRecipe(validation.value);
+      const recipe = await saveRecipe(validation.value);
+      await fileRecipeInCookbook(recipe.id, cookbookId);
       await draftStore.remove(draftId);
       router.replace("/");
-    } catch {
-      setError("No se ha podido guardar. Comprueba la conexión e inténtalo otra vez.");
+    } catch (cause) {
+      // El motivo tal cual: esconderlo detrás de "comprueba la conexión" nos deja a ciegas
+      // cuando lo que falla es otra cosa.
+      console.warn("No se ha podido guardar la receta", cause);
+      const detail = cause instanceof Error ? cause.message : "";
+      setError(
+        detail === ""
+          ? "No se ha podido guardar. Comprueba la conexión e inténtalo otra vez."
+          : `No se ha podido guardar: ${detail}`,
+      );
     }
   };
 
@@ -136,6 +148,8 @@ export default function ReviewDraftScreen() {
             update({ steps });
           }}
         />
+
+        {!isEditing && <CookbookPicker selectedId={cookbookId} onSelect={setCookbookId} />}
 
         <View style={styles.save}>
           {!isEditing && (

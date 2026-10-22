@@ -4,6 +4,7 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { BackButton } from "@/components/BackButton";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { Screen } from "@/components/Screen";
+import { SecondaryButton } from "@/components/SecondaryButton";
 import { DeleteRecipeButton } from "@/features/recipes/DeleteRecipeButton";
 import { EditRecipeButton } from "@/features/recipes/EditRecipeButton";
 import { FavoriteButton } from "@/features/recipes/FavoriteButton";
@@ -48,16 +49,22 @@ export default function RecipeScreen() {
         <Text style={[styles.title, { color: colors.foreground }]}>{recipe.title}</Text>
         <RecipeFacts recipe={recipe} />
 
-        {recipe.steps.length > 0 && (
-          <View style={styles.cook}>
+        <View style={styles.actions}>
+          {recipe.steps.length > 0 && (
             <PrimaryButton
               label="Modo cocina"
               onPress={() => {
                 router.push({ pathname: "/recipe/[id]/cook", params: { id: recipe.id } });
               }}
             />
-          </View>
-        )}
+          )}
+          <SecondaryButton
+            label="Añadir a un libro"
+            onPress={() => {
+              router.push({ pathname: "/recipe/[id]/books", params: { id: recipe.id } });
+            }}
+          />
+        </View>
 
         <SectionHeading>Ingredientes</SectionHeading>
         <RecipeIngredients ingredients={recipe.ingredients} />
@@ -100,5 +107,5 @@ const styles = StyleSheet.create({
     letterSpacing: -0.4,
     marginBottom: tokens.spacing.gutter,
   },
-  cook: { marginTop: tokens.spacing.block },
+  actions: { marginTop: tokens.spacing.block, gap: tokens.spacing.row },
 });

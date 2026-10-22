@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 import { FavoritesFilter } from "./FavoritesFilter";
@@ -20,6 +21,7 @@ export function KitchenHeader({
   onOnlyFavoritesChange,
 }: KitchenHeaderProps) {
   const colors = useColors();
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
@@ -35,7 +37,10 @@ export function KitchenHeader({
           </Pressable>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Nuevo libro o recetario"
+            accessibilityLabel="Nuevo libro"
+            onPress={() => {
+              router.push("/cookbook/new");
+            }}
             style={[styles.roundButton, { backgroundColor: colors.muted }]}
           >
             <Text style={[styles.plus, { color: colors.foreground }]}>+</Text>

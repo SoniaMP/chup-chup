@@ -4,6 +4,8 @@ import { ScrollView, StyleSheet, View } from "react-native";
 
 import { Screen } from "@/components/Screen";
 import { recipeMatchesQuery } from "@/domain/recipes/recipeMatchesQuery";
+import { CookbookShelf } from "@/features/cookbooks/CookbookShelf";
+import { useCookbooks } from "@/features/cookbooks/useCookbooks";
 import { EmptyKitchen } from "@/features/library/EmptyKitchen";
 import { KitchenHeader } from "@/features/library/KitchenHeader";
 import { NoSearchResults } from "@/features/library/NoSearchResults";
@@ -17,6 +19,7 @@ export default function KitchenScreen() {
   const colors = useColors();
   const router = useRouter();
   const recipes = useRecipes();
+  const cookbooks = useCookbooks();
   const [query, setQuery] = useState("");
   const [isOnlyFavorites, setIsOnlyFavorites] = useState(false);
 
@@ -40,6 +43,8 @@ export default function KitchenScreen() {
             setIsOnlyFavorites((isOn) => !isOn);
           }}
         />
+        {/* Buscando o filtrando, los libros estorban: lo que se quiere ver son las recetas. */}
+        {query.trim() === "" && !isOnlyFavorites && <CookbookShelf cookbooks={cookbooks ?? []} />}
         {recipes !== null && recipes.length === 0 && <EmptyKitchen />}
         {recipes !== null && recipes.length > 0 && found.length === 0 && (
           <NoSearchResults query={query} isOnlyFavorites={isOnlyFavorites} />

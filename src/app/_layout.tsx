@@ -41,6 +41,9 @@ export default function RootLayout() {
             <Stack.Screen name="review" />
             <Stack.Screen name="recipe/[id]/index" />
             <Stack.Screen name="recipe/[id]/cook" />
+            <Stack.Screen name="recipe/[id]/books" />
+            <Stack.Screen name="cookbook/new" />
+            <Stack.Screen name="cookbook/[id]" />
           </Stack.Protected>
 
           <Stack.Protected guard={session === null} redirectTo="/">
