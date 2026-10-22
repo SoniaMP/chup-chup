@@ -5,6 +5,15 @@ node_modules/
 dist/
 build/
 coverage/
-.expo/
 *.log
 reference/
+
+# Expo
+.expo/
+expo-env.d.ts
+web-build/
+.metro-health-check*
+
+# Native projects, generated on build
+/ios
+/android

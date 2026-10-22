@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "Recetario",
+    "slug": "recetario",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "recetario",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": false
+    },
+    "plugins": ["expo-router", "expo-status-bar"],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
