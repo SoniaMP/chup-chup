@@ -117,8 +117,11 @@ export const supabaseCookbookStore = {
       }
     }
 
-    const { error } = await supabase.from("cookbooks").delete().eq("id", id);
+    // Se pide de vuelta la fila borrada: si una política la protege, el borrado no da error,
+    // simplemente no borra nada, y eso no se puede contar como que ha ido bien.
+    const { data, error } = await supabase.from("cookbooks").delete().eq("id", id).select("id");
 
     if (error !== null) throw new Error(error.message);
+    if (data.length === 0) throw new Error("El libro no se ha borrado");
   },
 };
