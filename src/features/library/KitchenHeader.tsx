@@ -1,4 +1,6 @@
 import { useRouter } from "expo-router";
+
+import { signOut } from "@/features/auth/signOut";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 import { FavoritesFilter } from "./FavoritesFilter";
@@ -30,7 +32,10 @@ export function KitchenHeader({
         <View style={styles.actions}>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Perfil y ajustes"
+            accessibilityLabel="Cerrar sesión"
+            onPress={() => {
+              void signOut();
+            }}
             style={[styles.roundButton, { backgroundColor: colors.secondary }]}
           >
             <Text style={[styles.initial, { color: colors.secondaryForeground }]}>S</Text>
