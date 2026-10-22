@@ -1,7 +1,8 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 import { signOut } from "@/features/auth/signOut";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 import { FavoritesFilter } from "./FavoritesFilter";
 import { tokens } from "@/theme/tokens";
@@ -52,17 +53,32 @@ export function KitchenHeader({
           </Pressable>
         </View>
       </View>
-      <TextInput
-        value={query}
-        onChangeText={onQueryChange}
-        autoCapitalize="none"
-        autoCorrect={false}
-        returnKeyType="search"
-        clearButtonMode="while-editing"
-        placeholder="Busca una receta o un ingrediente"
-        placeholderTextColor={colors.mutedForeground}
-        style={[styles.search, webFocusReset, { backgroundColor: colors.muted, color: colors.foreground }]}
-      />
+      {/* La ✕ es nuestra: la del sistema (`clearButtonMode`) solo existe en iPhone. */}
+      <View style={[styles.search, { backgroundColor: colors.muted }]}>
+        <MaterialIcons name="search" size={22} color={colors.mutedForeground} />
+        <TextInput
+          value={query}
+          onChangeText={onQueryChange}
+          autoCapitalize="none"
+          autoCorrect={false}
+          returnKeyType="search"
+          placeholder="Busca una receta o un ingrediente"
+          placeholderTextColor={colors.mutedForeground}
+          style={[styles.field, webFocusReset, { color: colors.foreground }]}
+        />
+        {query !== "" && (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Vaciar la búsqueda"
+            onPress={() => {
+              onQueryChange("");
+            }}
+            style={({ pressed }) => [styles.clear, pressed && styles.pressed]}
+          >
+            <MaterialIcons name="close" size={20} color={colors.mutedForeground} />
+          </Pressable>
+        )}
+      </View>
       <FavoritesFilter isOn={isOnlyFavorites} onToggle={onOnlyFavoritesChange} />
     </View>
   );
@@ -83,10 +99,14 @@ const styles = StyleSheet.create({
   initial: { fontFamily: tokens.fontFamily.bodyStrong, fontSize: tokens.fontSize.body },
   plus: { fontFamily: tokens.fontFamily.body, fontSize: 24, lineHeight: 28 },
   search: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: tokens.spacing.row + 2,
     height: tokens.touch.primaryButton,
     borderRadius: tokens.radius.pill,
-    paddingHorizontal: tokens.spacing.gutter,
-    fontFamily: tokens.fontFamily.body,
-    fontSize: tokens.fontSize.body,
+    paddingHorizontal: tokens.spacing.gutter - 4,
   },
+  field: { flex: 1, height: "100%", fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.body },
+  clear: { width: 32, height: 32, alignItems: "center", justifyContent: "center" },
+  pressed: { opacity: 0.6 },
 });
