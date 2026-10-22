@@ -38,6 +38,12 @@ export const supabaseRecipeStore = {
     return recipeFromRow(data);
   },
 
+  async remove(id: string): Promise<void> {
+    const { error } = await supabase.from("recipes").delete().eq("id", id);
+
+    if (error !== null) throw new Error(error.message);
+  },
+
   async update(recipe: Recipe): Promise<Recipe> {
     const { data, error } = await supabase
       .from("recipes")

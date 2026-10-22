@@ -4,6 +4,8 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { BackButton } from "@/components/BackButton";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { Screen } from "@/components/Screen";
+import { DeleteRecipeButton } from "@/features/recipes/DeleteRecipeButton";
+import { EditRecipeButton } from "@/features/recipes/EditRecipeButton";
 import { RecipeFacts } from "@/features/recipes/RecipeFacts";
 import { RecipeIngredients } from "@/features/recipes/RecipeIngredients";
 import { RecipeNotes } from "@/features/recipes/RecipeNotes";
@@ -36,6 +38,7 @@ export default function RecipeScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <BackButton />
+          <EditRecipeButton recipe={recipe} />
         </View>
 
         <Text style={[styles.title, { color: colors.foreground }]}>{recipe.title}</Text>
@@ -65,6 +68,13 @@ export default function RecipeScreen() {
             void saveRecipeNotes(recipe, notes).then(replace);
           }}
         />
+
+        <DeleteRecipeButton
+          recipeId={recipe.id}
+          onDeleted={() => {
+            router.replace("/");
+          }}
+        />
       </ScrollView>
     </Screen>
   );
@@ -72,7 +82,12 @@ export default function RecipeScreen() {
 
 const styles = StyleSheet.create({
   content: { paddingBottom: tokens.spacing.block * 2 },
-  header: { marginBottom: tokens.spacing.block },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: tokens.spacing.block,
+  },
   message: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.body, marginTop: tokens.spacing.block },
   title: {
     fontFamily: tokens.fontFamily.display,

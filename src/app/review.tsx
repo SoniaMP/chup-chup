@@ -2,18 +2,20 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
-import { BackButton } from "@/components/BackButton";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { Screen } from "@/components/Screen";
 import { validateRecipeDraft } from "@/domain/recipes/validateRecipeDraft";
 import { draftStore } from "@/features/drafts/draftStore";
 import { useDraftEditor } from "@/features/drafts/useDraftEditor";
 import { AssumptionsNotice } from "@/features/recipes/AssumptionsNotice";
+import { DiscardChangesNotice } from "@/features/recipes/DiscardChangesNotice";
 import { IngredientFields } from "@/features/recipes/IngredientFields";
+import { ReviewHeader } from "@/features/recipes/ReviewHeader";
 import { SectionHeading } from "@/features/recipes/SectionHeading";
 import { StepFields } from "@/features/recipes/StepFields";
 import { TimesFields } from "@/features/recipes/TimesFields";
 import { saveRecipe } from "@/features/recipes/saveRecipe";
+import { updateRecipe } from "@/features/recipes/updateRecipe";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 import { webFocusReset } from "@/theme/webFocusReset";
@@ -21,10 +23,26 @@ import { webFocusReset } from "@/theme/webFocusReset";
 export default function ReviewDraftScreen() {
   const colors = useColors();
   const router = useRouter();
-  const params = useLocalSearchParams<{ draftId: string }>();
+  const params = useLocalSearchParams<{ draftId: string; recipeId?: string }>();
   const draftId = params.draftId ?? "";
-  const { draft, update } = useDraftEditor(draftId);
+  // Con `recipeId` la pantalla es el editor de una receta que ya existe; sin él, el paso 2 de la
+  // creación. El formulario es el mismo, solo cambian el rótulo y a dónde va lo guardado.
+  const recipeId = params.recipeId ?? "";
+  const isEditing = recipeId !== "";
+  const { draft, isDirty, update } = useDraftEditor(draftId);
   const [error, setError] = useState<string | null>(null);
+  const [isDiscarding, setIsDiscarding] = useState(false);
+
+  const leaveEditing = (): void => {
+    void draftStore.remove(draftId);
+    router.replace({ pathname: "/recipe/[id]", params: { id: recipeId } });
+  };
+
+  // Volver atrás sin cambios no pregunta nada: no hay nada que perder.
+  const goBack = (): void => {
+    if (isDirty) setIsDiscarding(true);
+    else leaveEditing();
+  };
 
   const save = async (): Promise<void> => {
     if (draft === null) return;
@@ -35,9 +53,20 @@ export default function ReviewDraftScreen() {
       return;
     }
 
-    await saveRecipe(validation.value);
-    await draftStore.remove(draftId);
-    router.replace("/");
+    try {
+      if (isEditing) {
+        await updateRecipe(recipeId, validation.value);
+        await draftStore.remove(draftId);
+        router.replace({ pathname: "/recipe/[id]", params: { id: recipeId } });
+        return;
+      }
+
+      await saveRecipe(validation.value);
+      await draftStore.remove(draftId);
+      router.replace("/");
+    } catch {
+      setError("No se ha podido guardar. Comprueba la conexión e inténtalo otra vez.");
+    }
   };
 
   if (draft === null) {
@@ -55,11 +84,27 @@ export default function ReviewDraftScreen() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.header}>
-          <BackButton />
-        </View>
+        <ReviewHeader
+          isEditing={isEditing}
+          canSave={isDirty}
+          onSave={() => {
+            void save();
+          }}
+          onBack={goBack}
+        />
 
-        <Text style={[styles.stepLabel, { color: colors.primary }]}>PASO 2 DE 2 · REVISIÓN</Text>
+        {isDiscarding && (
+          <DiscardChangesNotice
+            onDiscard={leaveEditing}
+            onKeepEditing={() => {
+              setIsDiscarding(false);
+            }}
+          />
+        )}
+
+        <Text style={[styles.stepLabel, { color: colors.primary }]}>
+          {isEditing ? "EDITAR RECETA" : "PASO 2 DE 2 · REVISIÓN"}
+        </Text>
         <TextInput
           value={draft.title}
           onChangeText={(title) => {
@@ -93,12 +138,14 @@ export default function ReviewDraftScreen() {
         />
 
         <View style={styles.save}>
-          <PrimaryButton
-            label="Guardar receta"
-            onPress={() => {
-              void save();
-            }}
-          />
+          {!isEditing && (
+            <PrimaryButton
+              label="Guardar receta"
+              onPress={() => {
+                void save();
+              }}
+            />
+          )}
           {error !== null && <Text style={[styles.error, { color: colors.destructive }]}>{error}</Text>}
         </View>
       </ScrollView>
@@ -108,7 +155,6 @@ export default function ReviewDraftScreen() {
 
 const styles = StyleSheet.create({
   content: { paddingBottom: tokens.spacing.block * 2 },
-  header: { marginBottom: tokens.spacing.block },
   loading: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.body },
   stepLabel: {
     fontFamily: tokens.fontFamily.bodyStrong,
