@@ -1,9 +1,7 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { BackButton } from "@/components/BackButton";
-import { IconButton } from "@/components/IconButton";
 import { Screen } from "@/components/Screen";
 import { CookbookRecipeList } from "@/features/cookbooks/CookbookRecipeList";
 import { useCookbook } from "@/features/cookbooks/useCookbook";
@@ -18,7 +16,6 @@ export default function CookbookScreen() {
   const cookbookId = params.id ?? "";
   const { cookbook, isLoaded } = useCookbook(cookbookId);
   const { entries, reload } = useCookbookRecipes(cookbookId);
-  const [isReordering, setIsReordering] = useState(false);
 
   if (cookbook === null) {
     return (
@@ -36,16 +33,6 @@ export default function CookbookScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <BackButton />
-          {/* Ordenar solo tiene sentido con más de una receta, y con una sola estorba. */}
-          {!isReordering && entries !== null && entries.length > 1 && (
-            <IconButton
-              name="swap-vert"
-              label="Reordenar recetas"
-              onPress={() => {
-                setIsReordering(true);
-              }}
-            />
-          )}
         </View>
 
         <Text style={[styles.label, { color: colors.primary }]}>LIBRO</Text>
@@ -55,14 +42,13 @@ export default function CookbookScreen() {
           <CookbookRecipeList
             cookbookId={cookbookId}
             entries={entries}
-            isReordering={isReordering}
             onOpenRecipe={(recipeId) => {
               router.push({ pathname: "/recipe/[id]", params: { id: recipeId } });
             }}
-            onDoneReordering={() => {
-              setIsReordering(false);
+            onAddToCookbook={(recipeId) => {
+              router.push({ pathname: "/recipe/[id]/books", params: { id: recipeId } });
             }}
-            onFailed={reload}
+            onReload={reload}
           />
         )}
 
@@ -73,13 +59,7 @@ export default function CookbookScreen() {
 
 const styles = StyleSheet.create({
   content: { paddingBottom: tokens.spacing.block * 2 },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    minHeight: tokens.touch.headerButton,
-    marginBottom: tokens.spacing.block,
-  },
+  header: { flexDirection: "row", alignItems: "center", marginBottom: tokens.spacing.block },
   label: {
     fontFamily: tokens.fontFamily.bodyStrong,
     fontSize: tokens.fontSize.label,

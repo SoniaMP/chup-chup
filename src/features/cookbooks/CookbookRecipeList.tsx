@@ -1,33 +1,47 @@
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { EmptyState } from "@/components/EmptyState";
+import { Notice } from "@/components/Notice";
 import { ReorderBar } from "@/components/ReorderBar";
 import { ReorderableList } from "@/components/ReorderableList";
 import { RecipeRow } from "@/features/library/RecipeRow";
 import { tokens } from "@/theme/tokens";
 import type { CookbookEntry } from "./cookbookEntry";
+import { CookbookRecipeActions, type RemoveOutcome } from "./CookbookRecipeActions";
 import { useReorderCookbookRecipes } from "./useReorderCookbookRecipes";
 
 type CookbookRecipeListProps = {
   cookbookId: string;
   entries: CookbookEntry[];
-  isReordering: boolean;
   onOpenRecipe: (recipeId: string) => void;
-  onDoneReordering: () => void;
-  /** Para releer el libro si no se ha podido guardar un arrastre. */
-  onFailed: () => void;
+  onAddToCookbook: (recipeId: string) => void;
+  /** Para releer el libro cuando algo cambia, y si no se ha podido guardar un arrastre. */
+  onReload: () => void;
 };
 
-/** Las recetas de un libro: se abren tocando y se ordenan desde el botón de la cabecera. */
+const noticeFor = (outcome: RemoveOutcome, cookbookId: string): string | null => {
+  if (outcome.kind === "failed") return "No se ha podido quitar del libro. Inténtalo otra vez.";
+  if (outcome.kind === "removed") return null;
+
+  // Era su único libro: ninguna receta puede quedarse sin ninguno.
+  return outcome.cookbook.id === cookbookId
+    ? "Esta receta solo estaba aquí, así que se queda: ninguna receta puede quedarse sin libro."
+    : `Era su único libro, así que se ha ido a «${outcome.cookbook.title}».`;
+};
+
+/** Las recetas de un libro: se abren tocando y se manejan dejando el dedo encima. */
 export function CookbookRecipeList({
   cookbookId,
   entries,
-  isReordering,
   onOpenRecipe,
-  onDoneReordering,
-  onFailed,
+  onAddToCookbook,
+  onReload,
 }: CookbookRecipeListProps) {
-  const { items, move } = useReorderCookbookRecipes(cookbookId, entries, onFailed);
+  const [chosenId, setChosenId] = useState<string | null>(null);
+  const [isReordering, setIsReordering] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
+  const { items, move } = useReorderCookbookRecipes(cookbookId, entries, onReload);
 
   if (items.length === 0) {
     return (
@@ -43,7 +57,9 @@ export function CookbookRecipeList({
       <View>
         <ReorderBar
           hint="Arrastra las recetas por el asa para ponerlas en orden."
-          onDone={onDoneReordering}
+          onDone={() => {
+            setIsReordering(false);
+          }}
         />
         <ReorderableList
           items={items}
@@ -66,6 +82,15 @@ export function CookbookRecipeList({
 
   return (
     <View style={styles.list}>
+      {notice !== null && (
+        <Notice
+          text={notice}
+          onDismiss={() => {
+            setNotice(null);
+          }}
+        />
+      )}
+
       {items.map((entry) => (
         <RecipeRow
           key={entry.recipe.id}
@@ -73,8 +98,42 @@ export function CookbookRecipeList({
           onPress={() => {
             onOpenRecipe(entry.recipe.id);
           }}
+          onLongPress={() => {
+            setNotice(null);
+            setChosenId(entry.recipe.id);
+          }}
         />
       ))}
+
+      {chosenId !== null && (
+        <CookbookRecipeActions
+          cookbookId={cookbookId}
+          recipeId={chosenId}
+          recipeCount={items.length}
+          isOpen
+          onClose={() => {
+            setChosenId(null);
+          }}
+          onReorder={() => {
+            setChosenId(null);
+            setIsReordering(true);
+          }}
+          onAddToCookbook={() => {
+            const recipeId = chosenId;
+            setChosenId(null);
+            onAddToCookbook(recipeId);
+          }}
+          onRemoved={(outcome) => {
+            setChosenId(null);
+            setNotice(noticeFor(outcome, cookbookId));
+            onReload();
+          }}
+          onDeleted={() => {
+            setChosenId(null);
+            onReload();
+          }}
+        />
+      )}
     </View>
   );
 }
