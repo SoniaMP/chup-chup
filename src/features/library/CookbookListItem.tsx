@@ -32,21 +32,15 @@ export function CookbookListItem({ cookbook, recipes }: { cookbook: Cookbook; re
 
   return (
     <View style={styles.group}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={cookbook.title}
-        accessibilityState={{ expanded: isOpen }}
-        onPress={() => {
-          setIsOpen((open) => !open);
-        }}
-        style={({ pressed }) => [styles.heading, pressed && styles.pressed]}
-      >
+      {/* Dos botones hermanos, nunca uno dentro de otro: en web un Pressable es un <button>. */}
+      <View style={styles.heading}>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={`Abrir el libro ${cookbook.title}`}
           onPress={() => {
             router.push({ pathname: "/cookbook/[id]", params: { id: cookbook.id } });
           }}
+          style={({ pressed }) => pressed && styles.pressed}
         >
           <LinearGradient
             colors={gradient}
@@ -56,21 +50,31 @@ export function CookbookListItem({ cookbook, recipes }: { cookbook: Cookbook; re
           />
         </Pressable>
 
-        <View style={styles.text}>
-          <Text numberOfLines={2} style={[styles.title, { color: colors.foreground }]}>
-            {cookbook.title}
-          </Text>
-          <Text style={[styles.count, { color: colors.mutedForeground }]}>
-            {countLabel(recipes.length)}
-          </Text>
-        </View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={cookbook.title}
+          accessibilityState={{ expanded: isOpen }}
+          onPress={() => {
+            setIsOpen((open) => !open);
+          }}
+          style={({ pressed }) => [styles.headingBody, pressed && styles.pressed]}
+        >
+          <View style={styles.text}>
+            <Text numberOfLines={2} style={[styles.title, { color: colors.foreground }]}>
+              {cookbook.title}
+            </Text>
+            <Text style={[styles.count, { color: colors.mutedForeground }]}>
+              {countLabel(recipes.length)}
+            </Text>
+          </View>
 
-        <MaterialIcons
-          name={isOpen ? "expand-less" : "expand-more"}
-          size={24}
-          color={colors.mutedForeground}
-        />
-      </Pressable>
+          <MaterialIcons
+            name={isOpen ? "expand-less" : "expand-more"}
+            size={24}
+            color={colors.mutedForeground}
+          />
+        </Pressable>
+      </View>
 
       {isOpen && (
         <View style={styles.children}>
@@ -103,6 +107,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: tokens.spacing.row + 2,
     paddingVertical: tokens.spacing.row,
+  },
+  headingBody: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: tokens.spacing.row + 2,
   },
   pressed: { opacity: 0.85 },
   cover: { width: 44, height: 44, borderRadius: tokens.radius.md },
