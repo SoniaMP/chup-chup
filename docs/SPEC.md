@@ -42,6 +42,10 @@ Principio rector: ninguna decisión del MVP obliga a migrar datos cuando llegue 
 - Varias fotos por receta o fotos por paso.
 - Límites de uso y planes de pago. Cuando lleguen, el retoque de foto con IA es el primer
   candidato a quedarse en el plan PRO, por ser lo único con un coste por uso apreciable.
+  **Estructurar la receta con IA no se va al plan PRO en ningún caso**: es lo que hace útil la
+  app, y sin ello la versión gratuita no permite ni crear una receta. Si hay que limitar el
+  plan gratuito, se limita el volumen (cuántas recetas se guardan o se crean al mes), no el
+  acceso a estructurar.
 
 ## Navegación
 
