@@ -1,8 +1,10 @@
 import type { Cookbook } from "@/domain/cookbooks/cookbook";
 import { DEFAULT_COOKBOOK_TITLE } from "@/domain/cookbooks/defaultCookbookTitle";
+import { recipesLeftWithoutCookbook } from "@/domain/cookbooks/recipesLeftWithoutCookbook";
 import { positionBetween } from "@/domain/ordering/positionBetween";
 import { supabase } from "@/lib/supabase";
 import { cookbookFromRow } from "./cookbookFromRow";
+import { supabaseCookbookRecipeStore } from "./supabaseCookbookRecipeStore";
 
 /**
  * Los libros de la usuaria, en Supabase.
@@ -92,7 +94,22 @@ export const supabaseCookbookStore = {
     return cookbookFromRow(data);
   },
 
+  /**
+   * Borra el libro, nunca sus recetas.
+   *
+   * Las que solo estaban aquí pasan antes al libro por defecto: una receta sin libro no sale en
+   * ninguna parte de la biblioteca, así que borrar un libro no puede dejarla escondida.
+   */
   async remove(id: string): Promise<void> {
+    const loose = recipesLeftWithoutCookbook(await supabaseCookbookRecipeStore.listAll(), id);
+
+    if (loose.length > 0) {
+      const fallback = await this.ensureDefault();
+      for (const recipeId of loose) {
+        await supabaseCookbookRecipeStore.add(fallback.id, recipeId);
+      }
+    }
+
     const { error } = await supabase.from("cookbooks").delete().eq("id", id);
 
     if (error !== null) throw new Error(error.message);
