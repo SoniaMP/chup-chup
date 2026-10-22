@@ -54,5 +54,5 @@ export function CookbookList({ cookbooks, recipeCounts, onChanged }: CookbookLis
 }
 
 const styles = StyleSheet.create({
-  list: { gap: tokens.spacing.row / 2 },
+  list: { gap: tokens.spacing.row },
 });
