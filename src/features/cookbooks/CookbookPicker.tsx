@@ -17,7 +17,7 @@ type CookbookPickerProps = {
 export function CookbookPicker({ selectedId, onSelect }: CookbookPickerProps) {
   const colors = useColors();
   const [isOpen, setIsOpen] = useState(false);
-  const cookbooks = (useCookbooks() ?? []).filter((cookbook) => !cookbook.isSystem);
+  const cookbooks = (useCookbooks().cookbooks ?? []).filter((cookbook) => !cookbook.isSystem);
 
   const options = [{ id: null, title: DEFAULT_COOKBOOK_TITLE }, ...cookbooks];
   const selected = options.find((option) => option.id === selectedId) ?? options[0];

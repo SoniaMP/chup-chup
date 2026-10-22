@@ -38,6 +38,7 @@ Principio rector: ninguna decisión del MVP obliga a migrar datos cuando llegue 
 
 - Compartir recetas o libros, y registro "La he hecho" con fecha y foto (fase 2).
 - Libro "Por probar" de serie y "Quiero hacerla" como funcionalidad propia (fase 2).
+- Hacer un libro público o privado, y fijarlo arriba de la biblioteca (fase 2).
 - Entrada por voz propia (se usa el dictado del teclado).
 - Etiquetas sueltas, recetarios anidados.
 - Escritura offline y sincronización.
@@ -66,6 +67,22 @@ Decisiones:
 - Ajustes y perfil se abren desde un avatar en la cabecera de Mi cocina, como en Spotify.
 - "Amigos" no existe en el MVP (sería una pestaña vacía). La barra inferior llega en la fase 2,
   cuando haya destinos que la llenen: **Mi cocina · Buscar · Crear · Amigos**.
+
+Acciones de un libro:
+
+Un libro se maneja desde un solo menú, nunca desde botones repartidos por la pantalla. Se abre
+dejando el dedo encima del libro en la biblioteca, como en las listas de Spotify, o con el botón
+**···** dentro del propio libro. El menú es una hoja que sube desde abajo, igual que la pregunta
+de borrar.
+
+| Acción | Estado |
+| --- | --- |
+| Cambiar nombre | Hecho. También vale para el libro por defecto: la app lo reconoce por `is_system`, no por el título |
+| Eliminar libro | Hecho. Nunca para el libro por defecto, y las recetas que solo estuvieran ahí pasan al libro por defecto antes de borrarlo |
+| Crear portada | Pendiente, va con el paso 8 (fotos): hoy la portada es un degradado |
+| Compartir | Fase 2 |
+| Información (hacerlo público o privado) | Fase 2 |
+| Fijar arriba / Dejar de fijar | Fase 2 |
 
 Crear libros y recetarios:
 

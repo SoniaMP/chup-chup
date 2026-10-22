@@ -1,21 +1,26 @@
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
+import { BottomSheet } from "@/components/BottomSheet";
+import { DestructiveButton } from "@/components/DestructiveButton";
+import { SecondaryButton } from "@/components/SecondaryButton";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 import { supabaseCookbookStore } from "./supabaseCookbookStore";
 
 type ConfirmDeleteCookbookProps = {
   cookbookId: string;
+  isOpen: boolean;
   onDeleted: () => void;
-  onCancel: () => void;
+  onClose: () => void;
 };
 
-/** La pregunta antes de borrar un libro. Se responde en la pantalla, sin diálogos del sistema. */
+/** La pregunta antes de borrar un libro, en la misma hoja desde la que se ha pedido. */
 export function ConfirmDeleteCookbook({
   cookbookId,
+  isOpen,
   onDeleted,
-  onCancel,
+  onClose,
 }: ConfirmDeleteCookbookProps) {
   const colors = useColors();
   const [error, setError] = useState<string | null>(null);
@@ -31,48 +36,39 @@ export function ConfirmDeleteCookbook({
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={[styles.question, { color: colors.foreground }]}>
-        Se borra el libro, no sus recetas: las seguirás teniendo. ¿Seguro?
-      </Text>
-      <View style={styles.choices}>
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => {
-            void remove();
-          }}
-          style={[styles.choice, { backgroundColor: colors.destructive }]}
-        >
-          <Text style={[styles.choiceLabel, { color: colors.primaryForeground }]}>Sí, borrar</Text>
-        </Pressable>
-        <Pressable
-          accessibilityRole="button"
-          onPress={onCancel}
-          style={[styles.choice, { backgroundColor: colors.muted }]}
-        >
-          <Text style={[styles.choiceLabel, { color: colors.foreground }]}>Cancelar</Text>
-        </Pressable>
+    <BottomSheet isOpen={isOpen} onClose={onClose}>
+      <View style={styles.body}>
+        <Text style={[styles.heading, { color: colors.foreground }]}>¿Eliminar el libro?</Text>
+        <Text style={[styles.line, { color: colors.mutedForeground }]}>
+          Se borra el libro, no sus recetas: las que solo estuvieran aquí pasan al libro por
+          defecto.
+        </Text>
+        {error !== null && (
+          <Text style={[styles.error, { color: colors.destructive }]}>{error}</Text>
+        )}
+        <View style={styles.choices}>
+          <View style={styles.choice}>
+            <SecondaryButton label="Cancelar" onPress={onClose} />
+          </View>
+          <View style={styles.choice}>
+            <DestructiveButton
+              label="Eliminar"
+              onPress={() => {
+                void remove();
+              }}
+            />
+          </View>
+        </View>
       </View>
-      {error !== null && <Text style={[styles.error, { color: colors.destructive }]}>{error}</Text>}
-    </View>
+    </BottomSheet>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { marginTop: tokens.spacing.block * 1.5, gap: tokens.spacing.row },
-  question: {
-    fontFamily: tokens.fontFamily.bodyStrong,
-    fontSize: tokens.fontSize.body,
-    textAlign: "center",
-  },
-  choices: { flexDirection: "row", gap: tokens.spacing.row, justifyContent: "center" },
-  choice: {
-    height: tokens.touch.headerButton,
-    paddingHorizontal: tokens.spacing.block,
-    borderRadius: tokens.radius.pill,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  choiceLabel: { fontFamily: tokens.fontFamily.bodyStrong, fontSize: tokens.fontSize.body },
-  error: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.label, textAlign: "center" },
+  body: { gap: tokens.spacing.row + 4, paddingHorizontal: tokens.spacing.row + 4 },
+  heading: { fontFamily: tokens.fontFamily.display, fontSize: tokens.fontSize.sectionHeading },
+  line: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.body, lineHeight: 24 },
+  choices: { flexDirection: "row", gap: tokens.spacing.row },
+  choice: { flex: 1 },
+  error: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.label },
 });

@@ -2,13 +2,11 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { ActionSheet, type SheetAction } from "@/components/ActionSheet";
 import { BackButton } from "@/components/BackButton";
 import { IconButton } from "@/components/IconButton";
 import { EmptyState } from "@/components/EmptyState";
 import { Screen } from "@/components/Screen";
-import { ConfirmDeleteCookbook } from "@/features/cookbooks/ConfirmDeleteCookbook";
-import { CookbookTitle } from "@/features/cookbooks/CookbookTitle";
+import { CookbookActions } from "@/features/cookbooks/CookbookActions";
 import { useCookbook } from "@/features/cookbooks/useCookbook";
 import { useCookbookRecipes } from "@/features/cookbooks/useCookbookRecipes";
 import { RecipeRow } from "@/features/library/RecipeRow";
@@ -23,8 +21,6 @@ export default function CookbookScreen() {
   const { cookbook, isLoaded, replace } = useCookbook(cookbookId);
   const recipes = useCookbookRecipes(cookbookId);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isRenaming, setIsRenaming] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   if (cookbook === null) {
     return (
@@ -35,30 +31,6 @@ export default function CookbookScreen() {
         </Text>
       </Screen>
     );
-  }
-
-  // Todas las acciones del libro en un sitio, no repartidas por las esquinas de la pantalla.
-  const actions: SheetAction[] = [
-    {
-      label: "Cambiar el nombre",
-      icon: "edit",
-      onPress: () => {
-        setIsMenuOpen(false);
-        setIsRenaming(true);
-      },
-    },
-  ];
-
-  if (!cookbook.isSystem) {
-    actions.push({
-      label: "Borrar el libro",
-      icon: "delete-outline",
-      isDestructive: true,
-      onPress: () => {
-        setIsMenuOpen(false);
-        setIsDeleting(true);
-      },
-    });
   }
 
   return (
@@ -76,31 +48,7 @@ export default function CookbookScreen() {
         </View>
 
         <Text style={[styles.label, { color: colors.primary }]}>LIBRO</Text>
-        <View style={styles.title}>
-          <CookbookTitle
-            cookbook={cookbook}
-            isRenaming={isRenaming}
-            onRenamed={(renamed) => {
-              replace(renamed);
-              setIsRenaming(false);
-            }}
-            onCancel={() => {
-              setIsRenaming(false);
-            }}
-          />
-        </View>
-
-        {isDeleting && (
-          <ConfirmDeleteCookbook
-            cookbookId={cookbook.id}
-            onDeleted={() => {
-              router.replace("/");
-            }}
-            onCancel={() => {
-              setIsDeleting(false);
-            }}
-          />
-        )}
+        <Text style={[styles.title, { color: colors.foreground }]}>{cookbook.title}</Text>
 
         {recipes !== null && recipes.length === 0 && (
           <EmptyState
@@ -123,11 +71,15 @@ export default function CookbookScreen() {
 
       </ScrollView>
 
-      <ActionSheet
+      <CookbookActions
+        cookbook={cookbook}
         isOpen={isMenuOpen}
-        actions={actions}
         onClose={() => {
           setIsMenuOpen(false);
+        }}
+        onRenamed={replace}
+        onDeleted={() => {
+          router.replace("/");
         }}
       />
     </Screen>
@@ -148,7 +100,12 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     marginBottom: tokens.spacing.row / 2,
   },
-  title: { marginBottom: tokens.spacing.gutter },
+  title: {
+    fontFamily: tokens.fontFamily.display,
+    fontSize: tokens.fontSize.screenTitle,
+    letterSpacing: -0.4,
+    marginBottom: tokens.spacing.gutter,
+  },
   message: {
     fontFamily: tokens.fontFamily.body,
     fontSize: tokens.fontSize.body,

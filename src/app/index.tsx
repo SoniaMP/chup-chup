@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 import { Screen } from "@/components/Screen";
@@ -20,10 +20,16 @@ export default function KitchenScreen() {
   const colors = useColors();
   const router = useRouter();
   const recipes = useRecipes();
-  const cookbooks = useCookbooks();
-  const membership = useCookbookMembership();
+  const { cookbooks, reload: reloadCookbooks } = useCookbooks();
+  const { membership, reload: reloadMembership } = useCookbookMembership();
   const [query, setQuery] = useState("");
   const [isOnlyFavorites, setIsOnlyFavorites] = useState(false);
+
+  // Renombrar o borrar un libro cambia las dos cosas: la lista de libros y qué receta está dónde.
+  const refreshLibrary = useCallback(() => {
+    reloadCookbooks();
+    reloadMembership();
+  }, [reloadCookbooks, reloadMembership]);
 
   // Sin buscar ni filtrar se ve la biblioteca: los libros con sus recetas dentro. Buscando, lo
   // que se quiere son recetas, vengan del libro que vengan.
@@ -57,6 +63,7 @@ export default function KitchenScreen() {
               cookbooks={cookbooks ?? []}
               recipes={recipes}
               membership={membership ?? new Map()}
+              onChanged={refreshLibrary}
             />
           </ScrollView>
         )}

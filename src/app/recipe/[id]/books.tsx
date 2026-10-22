@@ -15,7 +15,7 @@ export default function RecipeCookbooksScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ id: string }>();
   const recipeId = params.id ?? "";
-  const cookbooks = useCookbooks();
+  const { cookbooks } = useCookbooks();
   const { cookbookIds, toggle } = useRecipeCookbookIds(recipeId);
 
   return (

@@ -14,6 +14,12 @@ import { RecipeRow } from "./RecipeRow";
 const countLabel = (total: number): string =>
   total === 1 ? "1 receta" : `${String(total)} recetas`;
 
+type CookbookListItemProps = {
+  cookbook: Cookbook;
+  recipes: Recipe[];
+  onOpenActions: () => void;
+};
+
 /**
  * Un libro de la biblioteca: un rótulo, no un objeto.
  *
@@ -21,9 +27,10 @@ const countLabel = (total: number): string =>
  * recetas conservan la suya. El contador va en su propia línea: compartiéndola con el título,
  * un nombre largo no cabe nunca en un móvil.
  *
- * Tocar el encabezado despliega; tocar la portada entra en el libro.
+ * Tocar el encabezado despliega; tocar la portada entra en el libro; dejar el dedo encima abre
+ * las acciones del libro, como en las listas de Spotify.
  */
-export function CookbookListItem({ cookbook, recipes }: { cookbook: Cookbook; recipes: Recipe[] }) {
+export function CookbookListItem({ cookbook, recipes, onOpenActions }: CookbookListItemProps) {
   const colors = useColors();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -40,6 +47,7 @@ export function CookbookListItem({ cookbook, recipes }: { cookbook: Cookbook; re
           onPress={() => {
             router.push({ pathname: "/cookbook/[id]", params: { id: cookbook.id } });
           }}
+          onLongPress={onOpenActions}
           style={({ pressed }) => pressed && styles.pressed}
         >
           <LinearGradient
@@ -57,6 +65,7 @@ export function CookbookListItem({ cookbook, recipes }: { cookbook: Cookbook; re
           onPress={() => {
             setIsOpen((open) => !open);
           }}
+          onLongPress={onOpenActions}
           style={({ pressed }) => [styles.headingBody, pressed && styles.pressed]}
         >
           <View style={styles.text}>
