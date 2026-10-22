@@ -1,10 +1,10 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import type { ComponentProps } from "react";
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Pressable, StyleSheet, Text } from "react-native";
 
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
+import { BottomSheet } from "./BottomSheet";
 
 export type SheetAction = {
   label: string;
@@ -19,81 +19,32 @@ type ActionSheetProps = {
   actions: SheetAction[];
 };
 
-/** Hoja inferior con las acciones de una pantalla, para no repartirlas por las esquinas. */
+/** El menú de acciones de algo: una lista corta en una hoja, no botones por las esquinas. */
 export function ActionSheet({ isOpen, onClose, actions }: ActionSheetProps) {
   const colors = useColors();
-  const insets = useSafeAreaInsets();
 
   return (
-    <Modal visible={isOpen} transparent animationType="slide" onRequestClose={onClose}>
-      <View style={styles.root}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Cerrar el menú"
-          onPress={onClose}
-          style={styles.backdrop}
-        />
-        <View
-          style={[
-            styles.panel,
-            {
-              backgroundColor: colors.card,
-              paddingBottom: insets.bottom + tokens.spacing.gutter,
-            },
-          ]}
-        >
-          <View style={[styles.grip, { backgroundColor: colors.border }]} />
-          {actions.map((action) => (
-            <Pressable
-              key={action.label}
-              accessibilityRole="button"
-              onPress={action.onPress}
-              style={({ pressed }) => [styles.action, pressed && styles.pressed]}
-            >
-              <MaterialIcons
-                name={action.icon}
-                size={22}
-                color={action.isDestructive === true ? colors.destructive : colors.foreground}
-              />
-              <Text
-                style={[
-                  styles.label,
-                  { color: action.isDestructive === true ? colors.destructive : colors.foreground },
-                ]}
-              >
-                {action.label}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-      </View>
-    </Modal>
+    <BottomSheet isOpen={isOpen} onClose={onClose}>
+      {actions.map((action) => {
+        const color = action.isDestructive === true ? colors.destructive : colors.foreground;
+
+        return (
+          <Pressable
+            key={action.label}
+            accessibilityRole="button"
+            onPress={action.onPress}
+            style={({ pressed }) => [styles.action, pressed && styles.pressed]}
+          >
+            <MaterialIcons name={action.icon} size={22} color={color} />
+            <Text style={[styles.label, { color }]}>{action.label}</Text>
+          </Pressable>
+        );
+      })}
+    </BottomSheet>
   );
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, justifyContent: "flex-end" },
-  backdrop: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(44, 26, 20, 0.45)",
-  },
-  panel: {
-    borderTopLeftRadius: tokens.radius.xxxl,
-    borderTopRightRadius: tokens.radius.xxxl,
-    paddingTop: tokens.spacing.row + 4,
-    paddingHorizontal: tokens.spacing.row,
-  },
-  grip: {
-    width: 44,
-    height: 4,
-    borderRadius: tokens.radius.pill,
-    alignSelf: "center",
-    marginBottom: tokens.spacing.row + 4,
-  },
   action: {
     flexDirection: "row",
     alignItems: "center",
