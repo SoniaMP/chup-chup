@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
+import { FavoritesFilter } from "./FavoritesFilter";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 import { webFocusReset } from "@/theme/webFocusReset";
@@ -7,10 +8,17 @@ import { webFocusReset } from "@/theme/webFocusReset";
 type KitchenHeaderProps = {
   query: string;
   onQueryChange: (query: string) => void;
+  isOnlyFavorites: boolean;
+  onOnlyFavoritesChange: () => void;
 };
 
 /** Title, profile and + on one row, with the search field underneath. */
-export function KitchenHeader({ query, onQueryChange }: KitchenHeaderProps) {
+export function KitchenHeader({
+  query,
+  onQueryChange,
+  isOnlyFavorites,
+  onOnlyFavoritesChange,
+}: KitchenHeaderProps) {
   const colors = useColors();
 
   return (
@@ -45,6 +53,7 @@ export function KitchenHeader({ query, onQueryChange }: KitchenHeaderProps) {
         placeholderTextColor={colors.mutedForeground}
         style={[styles.search, webFocusReset, { backgroundColor: colors.muted, color: colors.foreground }]}
       />
+      <FavoritesFilter isOn={isOnlyFavorites} onToggle={onOnlyFavoritesChange} />
     </View>
   );
 }

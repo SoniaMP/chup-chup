@@ -6,6 +6,7 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { Screen } from "@/components/Screen";
 import { DeleteRecipeButton } from "@/features/recipes/DeleteRecipeButton";
 import { EditRecipeButton } from "@/features/recipes/EditRecipeButton";
+import { FavoriteButton } from "@/features/recipes/FavoriteButton";
 import { RecipeFacts } from "@/features/recipes/RecipeFacts";
 import { RecipeIngredients } from "@/features/recipes/RecipeIngredients";
 import { RecipeNotes } from "@/features/recipes/RecipeNotes";
@@ -38,7 +39,10 @@ export default function RecipeScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <BackButton />
-          <EditRecipeButton recipe={recipe} />
+          <View style={styles.headerActions}>
+            <FavoriteButton recipe={recipe} onChange={replace} />
+            <EditRecipeButton recipe={recipe} />
+          </View>
         </View>
 
         <Text style={[styles.title, { color: colors.foreground }]}>{recipe.title}</Text>
@@ -88,6 +92,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: tokens.spacing.block,
   },
+  headerActions: { flexDirection: "row", gap: tokens.spacing.row },
   message: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.body, marginTop: tokens.spacing.block },
   title: {
     fontFamily: tokens.fontFamily.display,

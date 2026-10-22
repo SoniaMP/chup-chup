@@ -18,19 +18,31 @@ export default function KitchenScreen() {
   const router = useRouter();
   const recipes = useRecipes();
   const [query, setQuery] = useState("");
+  const [isOnlyFavorites, setIsOnlyFavorites] = useState(false);
 
   const found = useMemo(
-    () => (recipes ?? []).filter((recipe) => recipeMatchesQuery(recipe, query)),
-    [recipes, query],
+    () =>
+      (recipes ?? []).filter(
+        (recipe) =>
+          (!isOnlyFavorites || recipe.isFavorite) && recipeMatchesQuery(recipe, query),
+      ),
+    [recipes, query, isOnlyFavorites],
   );
 
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
       <Screen>
-        <KitchenHeader query={query} onQueryChange={setQuery} />
+        <KitchenHeader
+          query={query}
+          onQueryChange={setQuery}
+          isOnlyFavorites={isOnlyFavorites}
+          onOnlyFavoritesChange={() => {
+            setIsOnlyFavorites((isOn) => !isOn);
+          }}
+        />
         {recipes !== null && recipes.length === 0 && <EmptyKitchen />}
         {recipes !== null && recipes.length > 0 && found.length === 0 && (
-          <NoSearchResults query={query} />
+          <NoSearchResults query={query} isOnlyFavorites={isOnlyFavorites} />
         )}
         {found.length > 0 && (
           <ScrollView contentContainerStyle={styles.list} showsVerticalScrollIndicator={false}>

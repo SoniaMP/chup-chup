@@ -1,3 +1,4 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Pressable, StyleSheet, Text, View, useColorScheme } from "react-native";
 
@@ -27,9 +28,12 @@ export function RecipeRow({ recipe, onPress }: { recipe: Recipe; onPress: () => 
     >
       <LinearGradient colors={gradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.thumbnail} />
       <View style={styles.text}>
-        <Text numberOfLines={1} style={[styles.title, { color: colors.foreground }]}>
-          {recipe.title}
-        </Text>
+        <View style={styles.titleRow}>
+          <Text numberOfLines={1} style={[styles.title, { color: colors.foreground }]}>
+            {recipe.title}
+          </Text>
+          {recipe.isFavorite && <MaterialIcons name="favorite" size={16} color={colors.primary} />}
+        </View>
         <Text numberOfLines={1} style={[styles.summary, { color: colors.mutedForeground }]}>
           {summaryOf(recipe)}
         </Text>
@@ -49,6 +53,7 @@ const styles = StyleSheet.create({
   pressed: { opacity: 0.85 },
   thumbnail: { width: 64, height: 64, borderRadius: tokens.radius.md },
   text: { flex: 1, gap: 2 },
+  titleRow: { flexDirection: "row", alignItems: "center", gap: tokens.spacing.row - 2 },
   title: { fontFamily: tokens.fontFamily.bodyStrong, fontSize: tokens.fontSize.body },
   summary: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.label },
 });

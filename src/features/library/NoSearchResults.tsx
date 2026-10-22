@@ -3,15 +3,22 @@ import { StyleSheet, Text, View } from "react-native";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 
-/** Lo que ve la usuaria cuando sí tiene recetas, pero ninguna responde a la búsqueda. */
-export function NoSearchResults({ query }: { query: string }) {
+type NoSearchResultsProps = {
+  query: string;
+  isOnlyFavorites: boolean;
+};
+
+/** Lo que ve la usuaria cuando sí tiene recetas, pero ninguna responde a lo que pide. */
+export function NoSearchResults({ query, isOnlyFavorites }: NoSearchResultsProps) {
   const colors = useColors();
+  const isSearching = query.trim() !== "";
 
   return (
     <View style={styles.container}>
       <Text style={[styles.title, { color: colors.foreground }]}>Nada por aquí</Text>
       <Text style={[styles.line, { color: colors.mutedForeground }]}>
-        Ninguna receta tuya habla de «{query.trim()}».
+        {isSearching && `Ninguna receta ${isOnlyFavorites ? "favorita " : ""}habla de «${query.trim()}».`}
+        {!isSearching && "Todavía no has marcado ninguna receta como favorita."}
       </Text>
     </View>
   );
