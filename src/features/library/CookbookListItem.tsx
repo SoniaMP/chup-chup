@@ -1,6 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View, useColorScheme } from "react-native";
 
@@ -12,9 +12,17 @@ import { useColors } from "@/theme/useColors";
 import { RecipeRow } from "./RecipeRow";
 
 const countLabel = (total: number): string =>
-  total === 1 ? "Libro · 1 receta" : `Libro · ${String(total)} recetas`;
+  total === 1 ? "1 receta" : `${String(total)} recetas`;
 
-/** Un libro de la biblioteca, con sus recetas dentro al desplegarlo. */
+/**
+ * Un libro de la biblioteca: un rótulo, no un objeto.
+ *
+ * El libro separa y las recetas mandan, así que el encabezado va sin tarjeta y discreto, y las
+ * recetas conservan la suya. El contador va en su propia línea: compartiéndola con el título,
+ * un nombre largo no cabe nunca en un móvil.
+ *
+ * Tocar el encabezado despliega; tocar la portada entra en el libro.
+ */
 export function CookbookListItem({ cookbook, recipes }: { cookbook: Cookbook; recipes: Recipe[] }) {
   const colors = useColors();
   const router = useRouter();
@@ -23,7 +31,7 @@ export function CookbookListItem({ cookbook, recipes }: { cookbook: Cookbook; re
     useColorScheme() === "dark" ? tokens.gradient.placeholderDark : tokens.gradient.placeholder;
 
   return (
-    <View>
+    <View style={styles.group}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={cookbook.title}
@@ -31,35 +39,41 @@ export function CookbookListItem({ cookbook, recipes }: { cookbook: Cookbook; re
         onPress={() => {
           setIsOpen((open) => !open);
         }}
-        style={({ pressed }) => [
-          styles.row,
-          { backgroundColor: colors.card },
-          pressed && styles.pressed,
-        ]}
+        style={({ pressed }) => [styles.heading, pressed && styles.pressed]}
       >
-        <LinearGradient
-          colors={gradient}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.cover}
-        />
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Abrir el libro ${cookbook.title}`}
+          onPress={() => {
+            router.push({ pathname: "/cookbook/[id]", params: { id: cookbook.id } });
+          }}
+        >
+          <LinearGradient
+            colors={gradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.cover}
+          />
+        </Pressable>
+
         <View style={styles.text}>
-          <Text numberOfLines={1} style={[styles.title, { color: colors.foreground }]}>
+          <Text numberOfLines={2} style={[styles.title, { color: colors.foreground }]}>
             {cookbook.title}
           </Text>
-          <Text style={[styles.summary, { color: colors.mutedForeground }]}>
+          <Text style={[styles.count, { color: colors.mutedForeground }]}>
             {countLabel(recipes.length)}
           </Text>
         </View>
+
         <MaterialIcons
           name={isOpen ? "expand-less" : "expand-more"}
-          size={26}
+          size={24}
           color={colors.mutedForeground}
         />
       </Pressable>
 
       {isOpen && (
-        <View style={[styles.children, { borderLeftColor: colors.oliveSoft }]}>
+        <View style={styles.children}>
           {recipes.length === 0 && (
             <EmptyState
               isCompact
@@ -76,15 +90,6 @@ export function CookbookListItem({ cookbook, recipes }: { cookbook: Cookbook; re
               }}
             />
           ))}
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => {
-              router.push({ pathname: "/cookbook/[id]", params: { id: cookbook.id } });
-            }}
-            style={styles.open}
-          >
-            <Text style={[styles.openLabel, { color: colors.primary }]}>Abrir el libro</Text>
-          </Pressable>
         </View>
       )}
     </View>
@@ -92,25 +97,22 @@ export function CookbookListItem({ cookbook, recipes }: { cookbook: Cookbook; re
 }
 
 const styles = StyleSheet.create({
-  row: {
+  group: { paddingTop: tokens.spacing.row },
+  heading: {
     flexDirection: "row",
     alignItems: "center",
-    gap: tokens.spacing.row + 4,
-    padding: tokens.spacing.row + 2,
-    borderRadius: tokens.radius.xl,
+    gap: tokens.spacing.row + 2,
+    paddingVertical: tokens.spacing.row,
   },
   pressed: { opacity: 0.85 },
-  cover: { width: 64, height: 64, borderRadius: tokens.radius.md },
-  text: { flex: 1, gap: 2 },
-  title: { fontFamily: tokens.fontFamily.bodyStrong, fontSize: tokens.fontSize.body },
-  summary: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.label },
-  children: {
-    marginLeft: tokens.spacing.block,
-    paddingLeft: tokens.spacing.row + 4,
-    borderLeftWidth: 2,
-    gap: tokens.spacing.row / 2,
-    paddingVertical: tokens.spacing.row / 2,
+  cover: { width: 44, height: 44, borderRadius: tokens.radius.md },
+  text: { flex: 1, gap: 1 },
+  title: {
+    fontFamily: tokens.fontFamily.display,
+    fontSize: 20,
+    lineHeight: 26,
+    letterSpacing: -0.2,
   },
-  open: { alignSelf: "flex-start", padding: tokens.spacing.row },
-  openLabel: { fontFamily: tokens.fontFamily.bodyStrong, fontSize: tokens.fontSize.label },
+  count: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.label },
+  children: { gap: tokens.spacing.row / 2, marginTop: tokens.spacing.row / 2 },
 });
