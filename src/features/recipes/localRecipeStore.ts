@@ -35,4 +35,10 @@ export const localRecipeStore = {
     const recipes = await readAll();
     await AsyncStorage.setItem(KEY, JSON.stringify([...recipes, recipe]));
   },
+
+  async update(recipe: Recipe): Promise<void> {
+    const recipes = await readAll();
+    const next = recipes.map((stored) => (stored.id === recipe.id ? recipe : stored));
+    await AsyncStorage.setItem(KEY, JSON.stringify(next));
+  },
 };
