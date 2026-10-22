@@ -191,3 +191,14 @@ Cosas acordadas que todavía no tienen forma. Antes de construirlas, una ronda d
   en su propia pantalla; si ordena por cuántos ingredientes coinciden (y si enseña cuáles te
   faltan); si busca solo por el nombre exacto del ingrediente o entiende que «tomate cherry» es
   tomate; y si eso último necesita la IA o basta con buscar en la base de datos.
+- **Buscar en mi cocina o buscar fuera.** Hoy solo hay una búsqueda, porque solo hay recetas
+  propias. Cuando se compartan (fase 2) habrá dos preguntas distintas con la misma caja de
+  texto: «¿qué tengo yo?» y «¿qué tienen los demás?». Está por decidir: si son dos pestañas,
+  dos modos de la misma caja o dos pantallas; cuál manda por defecto; y qué se ve de una receta
+  ajena antes de quedársela.
+- **Quitar una receta de mi cocina frente a borrarla.** En cuanto una receta pueda venir de otra
+  usuaria, «borrar» deja de ser una sola cosa: borrar lo que es mío es destruirlo, y quitar de mi
+  cocina algo de otra persona es soltarlo, porque sigue existiendo donde su dueña lo tenga. Son
+  dos acciones distintas con dos textos distintos, y el menú de la receta tendrá que elegir cuál
+  enseña según de quién sea. Va junto con lo anterior: hasta que no se decida cómo se busca y se
+  guarda lo ajeno, esto no se puede cerrar.
