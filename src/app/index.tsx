@@ -4,8 +4,9 @@ import { ScrollView, StyleSheet, View } from "react-native";
 
 import { Screen } from "@/components/Screen";
 import { recipeMatchesQuery } from "@/domain/recipes/recipeMatchesQuery";
-import { CookbookShelf } from "@/features/cookbooks/CookbookShelf";
+import { useCookbookMembership } from "@/features/cookbooks/useCookbookMembership";
 import { useCookbooks } from "@/features/cookbooks/useCookbooks";
+import { CookbookList } from "@/features/library/CookbookList";
 import { EmptyKitchen } from "@/features/library/EmptyKitchen";
 import { KitchenHeader } from "@/features/library/KitchenHeader";
 import { NoSearchResults } from "@/features/library/NoSearchResults";
@@ -20,8 +21,13 @@ export default function KitchenScreen() {
   const router = useRouter();
   const recipes = useRecipes();
   const cookbooks = useCookbooks();
+  const membership = useCookbookMembership();
   const [query, setQuery] = useState("");
   const [isOnlyFavorites, setIsOnlyFavorites] = useState(false);
+
+  // Sin buscar ni filtrar se ve la biblioteca: los libros con sus recetas dentro. Buscando, lo
+  // que se quiere son recetas, vengan del libro que vengan.
+  const isBrowsing = query.trim() === "" && !isOnlyFavorites;
 
   const found = useMemo(
     () =>
@@ -43,13 +49,22 @@ export default function KitchenScreen() {
             setIsOnlyFavorites((isOn) => !isOn);
           }}
         />
-        {/* Buscando o filtrando, los libros estorban: lo que se quiere ver son las recetas. */}
-        {query.trim() === "" && !isOnlyFavorites && <CookbookShelf cookbooks={cookbooks ?? []} />}
         {recipes !== null && recipes.length === 0 && <EmptyKitchen />}
-        {recipes !== null && recipes.length > 0 && found.length === 0 && (
+
+        {isBrowsing && recipes !== null && recipes.length > 0 && (
+          <ScrollView contentContainerStyle={styles.list} showsVerticalScrollIndicator={false}>
+            <CookbookList
+              cookbooks={cookbooks ?? []}
+              recipes={recipes}
+              membership={membership ?? new Map()}
+            />
+          </ScrollView>
+        )}
+
+        {!isBrowsing && found.length === 0 && (
           <NoSearchResults query={query} isOnlyFavorites={isOnlyFavorites} />
         )}
-        {found.length > 0 && (
+        {!isBrowsing && found.length > 0 && (
           <ScrollView contentContainerStyle={styles.list} showsVerticalScrollIndicator={false}>
             {found.map((recipe) => (
               <RecipeRow

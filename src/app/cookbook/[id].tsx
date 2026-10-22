@@ -2,6 +2,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { BackButton } from "@/components/BackButton";
+import { EmptyState } from "@/components/EmptyState";
 import { Screen } from "@/components/Screen";
 import { useCookbook } from "@/features/cookbooks/useCookbook";
 import { useCookbookRecipes } from "@/features/cookbooks/useCookbookRecipes";
@@ -39,10 +40,10 @@ export default function CookbookScreen() {
         <Text style={[styles.title, { color: colors.foreground }]}>{cookbook.title}</Text>
 
         {recipes !== null && recipes.length === 0 && (
-          <Text style={[styles.message, { color: colors.mutedForeground }]}>
-            Este libro está vacío. Las recetas se añaden desde la propia receta, con «Añadir a un
-            libro».
-          </Text>
+          <EmptyState
+            title="Este libro está vacío"
+            line="Las recetas se añaden desde la propia receta, con «Añadir a un libro»."
+          />
         )}
 
         <View style={styles.list}>

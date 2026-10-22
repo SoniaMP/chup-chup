@@ -23,6 +23,17 @@ export const supabaseCookbookRecipeStore = {
     return data.map((row) => recipeFromRow(row.recipes));
   },
 
+  /** Qué receta está en qué libro, todo de una vez: la pantalla principal lo necesita entero. */
+  async listAll(): Promise<{ cookbookId: string; recipeId: string }[]> {
+    const { data, error } = await supabase
+      .from(TABLE)
+      .select("cookbook_id, recipe_id")
+      .order("position");
+
+    if (error !== null) throw new Error(error.message);
+    return data.map((row) => ({ cookbookId: row.cookbook_id, recipeId: row.recipe_id }));
+  },
+
   async listCookbookIds(recipeId: string): Promise<string[]> {
     const { data, error } = await supabase
       .from(TABLE)
