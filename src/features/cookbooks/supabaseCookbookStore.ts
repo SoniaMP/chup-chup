@@ -80,6 +80,18 @@ export const supabaseCookbookStore = {
     return data === null ? null : cookbookFromRow(data);
   },
 
+  async rename(id: string, title: string): Promise<Cookbook> {
+    const { data, error } = await supabase
+      .from("cookbooks")
+      .update({ title: title.trim() })
+      .eq("id", id)
+      .select("*")
+      .single();
+
+    if (error !== null) throw new Error(error.message);
+    return cookbookFromRow(data);
+  },
+
   async remove(id: string): Promise<void> {
     const { error } = await supabase.from("cookbooks").delete().eq("id", id);
 

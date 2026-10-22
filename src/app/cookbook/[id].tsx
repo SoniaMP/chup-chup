@@ -1,9 +1,14 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
+import { ActionSheet, type SheetAction } from "@/components/ActionSheet";
 import { BackButton } from "@/components/BackButton";
+import { IconButton } from "@/components/IconButton";
 import { EmptyState } from "@/components/EmptyState";
 import { Screen } from "@/components/Screen";
+import { ConfirmDeleteCookbook } from "@/features/cookbooks/ConfirmDeleteCookbook";
+import { CookbookTitle } from "@/features/cookbooks/CookbookTitle";
 import { useCookbook } from "@/features/cookbooks/useCookbook";
 import { useCookbookRecipes } from "@/features/cookbooks/useCookbookRecipes";
 import { RecipeRow } from "@/features/library/RecipeRow";
@@ -15,8 +20,11 @@ export default function CookbookScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ id: string }>();
   const cookbookId = params.id ?? "";
-  const { cookbook, isLoaded } = useCookbook(cookbookId);
+  const { cookbook, isLoaded, replace } = useCookbook(cookbookId);
   const recipes = useCookbookRecipes(cookbookId);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isRenaming, setIsRenaming] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   if (cookbook === null) {
     return (
@@ -29,15 +37,70 @@ export default function CookbookScreen() {
     );
   }
 
+  // Todas las acciones del libro en un sitio, no repartidas por las esquinas de la pantalla.
+  const actions: SheetAction[] = [
+    {
+      label: "Cambiar el nombre",
+      icon: "edit",
+      onPress: () => {
+        setIsMenuOpen(false);
+        setIsRenaming(true);
+      },
+    },
+  ];
+
+  if (!cookbook.isSystem) {
+    actions.push({
+      label: "Borrar el libro",
+      icon: "delete-outline",
+      isDestructive: true,
+      onPress: () => {
+        setIsMenuOpen(false);
+        setIsDeleting(true);
+      },
+    });
+  }
+
   return (
     <Screen>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <BackButton />
+          <IconButton
+            name="more-horiz"
+            label="Acciones del libro"
+            onPress={() => {
+              setIsMenuOpen(true);
+            }}
+          />
         </View>
 
         <Text style={[styles.label, { color: colors.primary }]}>LIBRO</Text>
-        <Text style={[styles.title, { color: colors.foreground }]}>{cookbook.title}</Text>
+        <View style={styles.title}>
+          <CookbookTitle
+            cookbook={cookbook}
+            isRenaming={isRenaming}
+            onRenamed={(renamed) => {
+              replace(renamed);
+              setIsRenaming(false);
+            }}
+            onCancel={() => {
+              setIsRenaming(false);
+            }}
+          />
+        </View>
+
+        {isDeleting && (
+          <ConfirmDeleteCookbook
+            cookbookId={cookbook.id}
+            onDeleted={() => {
+              router.replace("/");
+            }}
+            onCancel={() => {
+              setIsDeleting(false);
+            }}
+          />
+        )}
 
         {recipes !== null && recipes.length === 0 && (
           <EmptyState
@@ -57,26 +120,35 @@ export default function CookbookScreen() {
             />
           ))}
         </View>
+
       </ScrollView>
+
+      <ActionSheet
+        isOpen={isMenuOpen}
+        actions={actions}
+        onClose={() => {
+          setIsMenuOpen(false);
+        }}
+      />
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   content: { paddingBottom: tokens.spacing.block * 2 },
-  header: { marginBottom: tokens.spacing.block },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: tokens.spacing.block,
+  },
   label: {
     fontFamily: tokens.fontFamily.bodyStrong,
     fontSize: tokens.fontSize.label,
     letterSpacing: 2,
     marginBottom: tokens.spacing.row / 2,
   },
-  title: {
-    fontFamily: tokens.fontFamily.display,
-    fontSize: tokens.fontSize.screenTitle,
-    letterSpacing: -0.4,
-    marginBottom: tokens.spacing.gutter,
-  },
+  title: { marginBottom: tokens.spacing.gutter },
   message: {
     fontFamily: tokens.fontFamily.body,
     fontSize: tokens.fontSize.body,
