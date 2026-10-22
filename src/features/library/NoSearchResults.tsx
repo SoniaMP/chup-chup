@@ -17,7 +17,10 @@ export function NoSearchResults({ query, isOnlyFavorites }: NoSearchResultsProps
     <View style={styles.container}>
       <Text style={[styles.title, { color: colors.foreground }]}>Nada por aquí</Text>
       <Text style={[styles.line, { color: colors.mutedForeground }]}>
-        {isSearching && `Ninguna receta ${isOnlyFavorites ? "favorita " : ""}habla de «${query.trim()}».`}
+        {isSearching &&
+          (isOnlyFavorites
+            ? `Ninguna receta favorita habla de «${query.trim()}».`
+            : `Ni tus libros ni tus recetas hablan de «${query.trim()}».`)}
         {!isSearching && "Todavía no has marcado ninguna receta como favorita."}
       </Text>
     </View>

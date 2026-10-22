@@ -3,14 +3,15 @@ import { useCallback, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 import { Screen } from "@/components/Screen";
+import { cookbookMatchesQuery } from "@/domain/cookbooks/cookbookMatchesQuery";
 import { recipeMatchesQuery } from "@/domain/recipes/recipeMatchesQuery";
 import { useCookbookMembership } from "@/features/cookbooks/useCookbookMembership";
 import { useCookbooks } from "@/features/cookbooks/useCookbooks";
 import { CookbookList } from "@/features/library/CookbookList";
 import { EmptyKitchen } from "@/features/library/EmptyKitchen";
 import { KitchenHeader } from "@/features/library/KitchenHeader";
+import { FilteredLibrary } from "@/features/library/FilteredLibrary";
 import { NoSearchResults } from "@/features/library/NoSearchResults";
-import { RecipeRow } from "@/features/library/RecipeRow";
 import { useRecipes } from "@/features/library/useRecipes";
 import { CreateRecipeButton } from "@/features/recipes/CreateRecipeButton";
 import { tokens } from "@/theme/tokens";
@@ -50,6 +51,15 @@ export default function KitchenScreen() {
     [recipes, query, isOnlyFavorites],
   );
 
+  // Los libros solo salen cuando se escribe: marcar favoritas es una pregunta sobre recetas.
+  const foundCookbooks = useMemo(
+    () =>
+      query.trim() === ""
+        ? []
+        : (cookbooks ?? []).filter((cookbook) => cookbookMatchesQuery(cookbook, query)),
+    [cookbooks, query],
+  );
+
   return (
     <View style={[styles.root, { backgroundColor: colors.background }]}>
       <Screen>
@@ -73,20 +83,19 @@ export default function KitchenScreen() {
           </ScrollView>
         )}
 
-        {!isBrowsing && found.length === 0 && (
+        {!isBrowsing && found.length === 0 && foundCookbooks.length === 0 && (
           <NoSearchResults query={query} isOnlyFavorites={isOnlyFavorites} />
         )}
-        {!isBrowsing && found.length > 0 && (
+        {!isBrowsing && (found.length > 0 || foundCookbooks.length > 0) && (
           <ScrollView contentContainerStyle={styles.list} showsVerticalScrollIndicator={false}>
-            {found.map((recipe) => (
-              <RecipeRow
-                key={recipe.id}
-                recipe={recipe}
-                onPress={() => {
-                  router.push({ pathname: "/recipe/[id]", params: { id: recipe.id } });
-                }}
-              />
-            ))}
+            <FilteredLibrary
+              cookbooks={foundCookbooks}
+              recipeCounts={recipeCounts}
+              recipes={found}
+              onOpenRecipe={(recipeId) => {
+                router.push({ pathname: "/recipe/[id]", params: { id: recipeId } });
+              }}
+            />
           </ScrollView>
         )}
       </Screen>

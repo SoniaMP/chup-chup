@@ -14,7 +14,8 @@ const countLabel = (total: number): string =>
 type CookbookListItemProps = {
   cookbook: Cookbook;
   recipeCount: number;
-  onOpenActions: () => void;
+  /** Sin acciones, la tarjeta solo entra en el libro: así sale en los resultados de buscar. */
+  onOpenActions?: () => void;
   /** El asa de arrastrar, cuando la biblioteca está en modo reordenar. */
   handle?: ReactNode;
 };
