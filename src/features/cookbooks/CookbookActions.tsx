@@ -15,10 +15,12 @@ type CookbookActionsProps = {
   onClose: () => void;
   onRenamed: (cookbook: Cookbook) => void;
   onDeleted: () => void;
+  onReorder: () => void;
 };
 
 const LABELS: Record<CookbookAction, Omit<SheetAction, "onPress">> = {
   rename: { label: "Cambiar nombre", icon: "edit" },
+  reorder: { label: "Reordenar libros", icon: "swap-vert" },
   delete: { label: "Eliminar libro", icon: "delete-outline", isDestructive: true },
 };
 
@@ -34,15 +36,18 @@ export function CookbookActions({
   onClose,
   onRenamed,
   onDeleted,
+  onReorder,
 }: CookbookActionsProps) {
   const [open, setOpen] = useState<CookbookAction | null>(null);
 
+  // Reordenar no abre nada: cierra el menú y deja la lista en modo arrastrar.
   const actions = availableCookbookActions(cookbook).map(
     (action): SheetAction => ({
       ...LABELS[action],
       onPress: () => {
         onClose();
-        setOpen(action);
+        if (action === "reorder") onReorder();
+        else setOpen(action);
       },
     }),
   );

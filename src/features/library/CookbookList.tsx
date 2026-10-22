@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
+import { ReorderBar } from "@/components/ReorderBar";
+import { ReorderableList } from "@/components/ReorderableList";
 import type { Cookbook } from "@/domain/cookbooks/cookbook";
 import { CookbookActions } from "@/features/cookbooks/CookbookActions";
+import { useReorderCookbooks } from "@/features/cookbooks/useReorderCookbooks";
 import { tokens } from "@/theme/tokens";
 import { CookbookListItem } from "./CookbookListItem";
 
@@ -18,10 +21,41 @@ type CookbookListProps = {
 export function CookbookList({ cookbooks, recipeCounts, onChanged }: CookbookListProps) {
   // El libro cuyas acciones se han pedido dejando el dedo encima. Una hoja para toda la lista.
   const [chosen, setChosen] = useState<Cookbook | null>(null);
+  const [isReordering, setIsReordering] = useState(false);
+  const { items, move } = useReorderCookbooks(cookbooks, onChanged);
+
+  if (isReordering) {
+    return (
+      <View>
+        <ReorderBar
+          hint="Arrastra los libros por el asa para ponerlos en orden."
+          onDone={() => {
+            setIsReordering(false);
+          }}
+        />
+        <ReorderableList
+          items={items}
+          gap={tokens.spacing.row}
+          keyOf={(cookbook) => cookbook.id}
+          onMove={move}
+          renderItem={(cookbook, handle) => (
+            <CookbookListItem
+              cookbook={cookbook}
+              recipeCount={recipeCounts.get(cookbook.id) ?? 0}
+              onOpenActions={() => {
+                setChosen(cookbook);
+              }}
+              handle={handle}
+            />
+          )}
+        />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.list}>
-      {cookbooks.map((cookbook) => (
+      {items.map((cookbook) => (
         <CookbookListItem
           key={cookbook.id}
           cookbook={cookbook}
@@ -46,6 +80,10 @@ export function CookbookList({ cookbooks, recipeCounts, onChanged }: CookbookLis
           onDeleted={() => {
             setChosen(null);
             onChanged();
+          }}
+          onReorder={() => {
+            setChosen(null);
+            setIsReordering(true);
           }}
         />
       )}

@@ -94,6 +94,13 @@ export const supabaseCookbookStore = {
     return cookbookFromRow(data);
   },
 
+  /** Cambia el sitio de un libro en la lista. Solo toca esa fila: la clave es fraccionaria. */
+  async move(id: string, position: string): Promise<void> {
+    const { error } = await supabase.from("cookbooks").update({ position }).eq("id", id);
+
+    if (error !== null) throw new Error(error.message);
+  },
+
   /**
    * Borra el libro, nunca sus recetas.
    *

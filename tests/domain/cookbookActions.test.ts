@@ -22,6 +22,11 @@ describe("availableCookbookActions", () => {
   });
 
   it("offers to delete any other cookbook", () => {
-    expect(availableCookbookActions(cookbook(false))).toEqual(["rename", "delete"]);
+    expect(availableCookbookActions(cookbook(false))).toEqual(["rename", "reorder", "delete"]);
+  });
+
+  it("lets the library be reordered from any cookbook", () => {
+    expect(availableCookbookActions(cookbook(true))).toContain("reorder");
+    expect(availableCookbookActions(cookbook(false))).toContain("reorder");
   });
 });

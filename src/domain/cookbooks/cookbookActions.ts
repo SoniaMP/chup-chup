@@ -1,7 +1,7 @@
 import type { Cookbook } from "./cookbook";
 
 /** Lo que se puede hacer con un libro desde su menú. */
-export type CookbookAction = "rename" | "delete";
+export type CookbookAction = "rename" | "reorder" | "delete";
 
 /**
  * Qué acciones ofrece un libro.
@@ -11,5 +11,5 @@ export type CookbookAction = "rename" | "delete";
  * igualmente; esto es para no enseñar una opción que va a fallar.
  */
 export function availableCookbookActions(cookbook: Cookbook): CookbookAction[] {
-  return cookbook.isSystem ? ["rename"] : ["rename", "delete"];
+  return cookbook.isSystem ? ["rename", "reorder"] : ["rename", "reorder", "delete"];
 }

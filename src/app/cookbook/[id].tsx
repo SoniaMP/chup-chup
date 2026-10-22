@@ -1,12 +1,13 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { BackButton } from "@/components/BackButton";
-import { EmptyState } from "@/components/EmptyState";
+import { IconButton } from "@/components/IconButton";
 import { Screen } from "@/components/Screen";
+import { CookbookRecipeList } from "@/features/cookbooks/CookbookRecipeList";
 import { useCookbook } from "@/features/cookbooks/useCookbook";
 import { useCookbookRecipes } from "@/features/cookbooks/useCookbookRecipes";
-import { RecipeRow } from "@/features/library/RecipeRow";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 
@@ -16,7 +17,8 @@ export default function CookbookScreen() {
   const params = useLocalSearchParams<{ id: string }>();
   const cookbookId = params.id ?? "";
   const { cookbook, isLoaded } = useCookbook(cookbookId);
-  const recipes = useCookbookRecipes(cookbookId);
+  const { entries, reload } = useCookbookRecipes(cookbookId);
+  const [isReordering, setIsReordering] = useState(false);
 
   if (cookbook === null) {
     return (
@@ -34,29 +36,35 @@ export default function CookbookScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <BackButton />
+          {/* Ordenar solo tiene sentido con más de una receta, y con una sola estorba. */}
+          {!isReordering && entries !== null && entries.length > 1 && (
+            <IconButton
+              name="swap-vert"
+              label="Reordenar recetas"
+              onPress={() => {
+                setIsReordering(true);
+              }}
+            />
+          )}
         </View>
 
         <Text style={[styles.label, { color: colors.primary }]}>LIBRO</Text>
         <Text style={[styles.title, { color: colors.foreground }]}>{cookbook.title}</Text>
 
-        {recipes !== null && recipes.length === 0 && (
-          <EmptyState
-            title="Este libro está vacío"
-            line="Las recetas se añaden desde la propia receta, con «Añadir a un libro»."
+        {entries !== null && (
+          <CookbookRecipeList
+            cookbookId={cookbookId}
+            entries={entries}
+            isReordering={isReordering}
+            onOpenRecipe={(recipeId) => {
+              router.push({ pathname: "/recipe/[id]", params: { id: recipeId } });
+            }}
+            onDoneReordering={() => {
+              setIsReordering(false);
+            }}
+            onFailed={reload}
           />
         )}
-
-        <View style={styles.list}>
-          {(recipes ?? []).map((recipe) => (
-            <RecipeRow
-              key={recipe.id}
-              recipe={recipe}
-              onPress={() => {
-                router.push({ pathname: "/recipe/[id]", params: { id: recipe.id } });
-              }}
-            />
-          ))}
-        </View>
 
       </ScrollView>
     </Screen>
@@ -65,7 +73,13 @@ export default function CookbookScreen() {
 
 const styles = StyleSheet.create({
   content: { paddingBottom: tokens.spacing.block * 2 },
-  header: { flexDirection: "row", alignItems: "center", marginBottom: tokens.spacing.block },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    minHeight: tokens.touch.headerButton,
+    marginBottom: tokens.spacing.block,
+  },
   label: {
     fontFamily: tokens.fontFamily.bodyStrong,
     fontSize: tokens.fontSize.label,
@@ -84,5 +98,4 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     marginTop: tokens.spacing.block,
   },
-  list: { gap: tokens.spacing.row / 2 },
 });

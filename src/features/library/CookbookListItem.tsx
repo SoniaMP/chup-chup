@@ -1,6 +1,7 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
+import type { ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View, useColorScheme } from "react-native";
 
 import type { Cookbook } from "@/domain/cookbooks/cookbook";
@@ -14,6 +15,8 @@ type CookbookListItemProps = {
   cookbook: Cookbook;
   recipeCount: number;
   onOpenActions: () => void;
+  /** El asa de arrastrar, cuando la biblioteca está en modo reordenar. */
+  handle?: ReactNode;
 };
 
 /**
@@ -23,11 +26,51 @@ type CookbookListItemProps = {
  * rótulo que separa, así que tiene fondo, bordes redondeados y su sombra. La tarjeta entera
  * entra en el libro; dejando el dedo encima se abren sus acciones.
  */
-export function CookbookListItem({ cookbook, recipeCount, onOpenActions }: CookbookListItemProps) {
+export function CookbookListItem({
+  cookbook,
+  recipeCount,
+  onOpenActions,
+  handle,
+}: CookbookListItemProps) {
   const colors = useColors();
   const router = useRouter();
   const gradient =
     useColorScheme() === "dark" ? tokens.gradient.placeholderDark : tokens.gradient.placeholder;
+  const isReordering = handle !== undefined;
+
+  const body = (
+    <>
+      <LinearGradient
+        colors={gradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.cover}
+      />
+
+      <View style={styles.text}>
+        {/* Reordenando, el título va a una línea: todas las tarjetas miden lo mismo. */}
+        <Text
+          numberOfLines={isReordering ? 1 : 2}
+          style={[styles.title, { color: colors.foreground }]}
+        >
+          {cookbook.title}
+        </Text>
+        <Text style={[styles.count, { color: colors.mutedForeground }]}>
+          {countLabel(recipeCount)}
+        </Text>
+      </View>
+
+      {handle ?? <MaterialIcons name="chevron-right" size={24} color={colors.mutedForeground} />}
+    </>
+  );
+
+  if (isReordering) {
+    return (
+      <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
+        {body}
+      </View>
+    );
+  }
 
   return (
     <Pressable
@@ -43,23 +86,7 @@ export function CookbookListItem({ cookbook, recipeCount, onOpenActions }: Cookb
         pressed && styles.pressed,
       ]}
     >
-      <LinearGradient
-        colors={gradient}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.cover}
-      />
-
-      <View style={styles.text}>
-        <Text numberOfLines={2} style={[styles.title, { color: colors.foreground }]}>
-          {cookbook.title}
-        </Text>
-        <Text style={[styles.count, { color: colors.mutedForeground }]}>
-          {countLabel(recipeCount)}
-        </Text>
-      </View>
-
-      <MaterialIcons name="chevron-right" size={24} color={colors.mutedForeground} />
+      {body}
     </Pressable>
   );
 }

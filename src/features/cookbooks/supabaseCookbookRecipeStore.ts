@@ -1,7 +1,7 @@
-import type { Recipe } from "@/domain/recipes/recipe";
 import { positionBetween } from "@/domain/ordering/positionBetween";
 import { recipeFromRow } from "@/features/recipes/recipeFromRow";
 import { supabase } from "@/lib/supabase";
+import type { CookbookEntry } from "./cookbookEntry";
 
 const TABLE = "cookbook_recipes";
 
@@ -12,7 +12,8 @@ const TABLE = "cookbook_recipes";
  * las claves foráneas en cascada, no esta capa.
  */
 export const supabaseCookbookRecipeStore = {
-  async listRecipes(cookbookId: string): Promise<Recipe[]> {
+  /** Las recetas del libro con su sitio dentro de él, que es lo que hace falta para moverlas. */
+  async listEntries(cookbookId: string): Promise<CookbookEntry[]> {
     const { data, error } = await supabase
       .from(TABLE)
       .select("position, recipes (*)")
@@ -20,7 +21,7 @@ export const supabaseCookbookRecipeStore = {
       .order("position");
 
     if (error !== null) throw new Error(error.message);
-    return data.map((row) => recipeFromRow(row.recipes));
+    return data.map((row) => ({ recipe: recipeFromRow(row.recipes), position: row.position }));
   },
 
   /** Qué receta está en qué libro, todo de una vez: la pantalla principal lo necesita entero. */
@@ -59,6 +60,17 @@ export const supabaseCookbookRecipeStore = {
       recipe_id: recipeId,
       position: positionBetween(data[0]?.position ?? "", ""),
     });
+
+    if (error !== null) throw new Error(error.message);
+  },
+
+  /** Cambia el sitio de una receta dentro de un libro, sin tocar su sitio en los demás. */
+  async move(cookbookId: string, recipeId: string, position: string): Promise<void> {
+    const { error } = await supabase
+      .from(TABLE)
+      .update({ position })
+      .eq("cookbook_id", cookbookId)
+      .eq("recipe_id", recipeId);
 
     if (error !== null) throw new Error(error.message);
   },
