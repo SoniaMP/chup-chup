@@ -202,3 +202,12 @@ Cosas acordadas que todavía no tienen forma. Antes de construirlas, una ronda d
   dos acciones distintas con dos textos distintos, y el menú de la receta tendrá que elegir cuál
   enseña según de quién sea. Va junto con lo anterior: hasta que no se decida cómo se busca y se
   guarda lo ajeno, esto no se puede cerrar.
+- **Un buscador hacia el mundo, como Spotify.** Hoy la caja de la cocina filtra lo que ya es tuyo,
+  y eso se queda así. Además haría falta una segunda superficie para buscar fuera: el catálogo de
+  las demás, como la pestaña Buscar de Spotify frente a su biblioteca. Está por decidir: si es una
+  pantalla propia o un chip más de la fila; qué se enseña (recetas, libros, cocineras); y cómo se
+  trae algo a tu cocina. Va con los dos puntos de arriba y con la fila de chips.
+- **Fila de chips para acotar la cocina.** «Favoritas · Libros · Recetas» como chips que acotan el
+  tipo, mientras el texto filtra dentro, igual que la biblioteca de Spotify. Hoy Favoritas es un
+  chip suelto con su propia lógica; ahí pasaría a ser uno más de la fila. Es la base del buscador
+  avanzado.
