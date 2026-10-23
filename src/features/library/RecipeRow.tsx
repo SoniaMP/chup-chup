@@ -18,20 +18,26 @@ const summaryOf = (recipe: Recipe): string => {
 type RecipeRowProps = {
   recipe: Recipe;
   onPress: () => void;
-  onLongPress?: () => void;
+  /** Las acciones de la receta, por los tres puntos y dejando el dedo encima. */
+  onOpenActions?: () => void;
   /** El asa de arrastrar, cuando el libro está en modo reordenar. */
   handle?: ReactNode;
 };
 
-/** Una receta en la lista de la pantalla principal. Sin foto todavía: miniatura en degradado. */
-export function RecipeRow({ recipe, onPress, onLongPress, handle }: RecipeRowProps) {
+/** Una receta en una lista. Sin foto todavía: miniatura en degradado. */
+export function RecipeRow({ recipe, onPress, onOpenActions, handle }: RecipeRowProps) {
   const colors = useColors();
   const gradient =
     useColorScheme() === "dark" ? tokens.gradient.placeholderDark : tokens.gradient.placeholder;
 
   const body = (
     <>
-      <LinearGradient colors={gradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.thumbnail} />
+      <LinearGradient
+        colors={gradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.thumbnail}
+      />
       <View style={styles.text}>
         <View style={styles.titleRow}>
           <Text numberOfLines={1} style={[styles.title, { color: colors.foreground }]}>
@@ -43,31 +49,43 @@ export function RecipeRow({ recipe, onPress, onLongPress, handle }: RecipeRowPro
           {summaryOf(recipe)}
         </Text>
       </View>
-      {handle}
     </>
   );
 
+  const card = [styles.row, { backgroundColor: colors.card, borderColor: colors.border }];
+
   if (handle !== undefined) {
     return (
-      <View style={[styles.row, { backgroundColor: colors.card, borderColor: colors.border }]}>
+      <View style={card}>
         {body}
+        {handle}
       </View>
     );
   }
 
+  // Dos botones hermanos, nunca uno dentro de otro: en web un Pressable es un <button>.
   return (
-    <Pressable
-      accessibilityRole="button"
-      onPress={onPress}
-      onLongPress={onLongPress}
-      style={({ pressed }) => [
-        styles.row,
-        { backgroundColor: colors.card, borderColor: colors.border },
-        pressed && styles.pressed,
-      ]}
-    >
-      {body}
-    </Pressable>
+    <View style={card}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={onPress}
+        onLongPress={onOpenActions}
+        style={({ pressed }) => [styles.main, pressed && styles.pressed]}
+      >
+        {body}
+      </Pressable>
+
+      {onOpenActions !== undefined && (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Acciones de ${recipe.title}`}
+          onPress={onOpenActions}
+          style={({ pressed }) => [styles.actions, pressed && styles.pressed]}
+        >
+          <MaterialIcons name="more-vert" size={22} color={colors.mutedForeground} />
+        </Pressable>
+      )}
+    </View>
   );
 }
 
@@ -77,12 +95,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: tokens.spacing.row + 4,
     padding: tokens.spacing.row + 2,
-    borderRadius: tokens.radius.xl,
+    borderRadius: tokens.radius.card,
     // El mismo filo que la tarjeta del libro: todo lo que es una tarjeta se dibuja igual.
     borderWidth: 1,
   },
+  main: { flex: 1, flexDirection: "row", alignItems: "center", gap: tokens.spacing.row + 4 },
+  actions: { width: 36, height: 44, alignItems: "center", justifyContent: "center" },
   pressed: { opacity: 0.85 },
-  thumbnail: { width: 64, height: 64, borderRadius: tokens.radius.md },
+  thumbnail: { width: 64, height: 64, borderRadius: tokens.radius.card },
   text: { flex: 1, gap: 2 },
   titleRow: { flexDirection: "row", alignItems: "center", gap: tokens.spacing.row - 2 },
   title: { fontFamily: tokens.fontFamily.bodyStrong, fontSize: tokens.fontSize.body },

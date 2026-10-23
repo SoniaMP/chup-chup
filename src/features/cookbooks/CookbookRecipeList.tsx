@@ -8,7 +8,8 @@ import { ReorderableList } from "@/components/ReorderableList";
 import { RecipeRow } from "@/features/library/RecipeRow";
 import { tokens } from "@/theme/tokens";
 import type { CookbookEntry } from "./cookbookEntry";
-import { CookbookRecipeActions, type RemoveOutcome } from "./CookbookRecipeActions";
+import { CookbookRecipeActions } from "./CookbookRecipeActions";
+import { removalNotice } from "./removalNotice";
 import { useReorderCookbookRecipes } from "./useReorderCookbookRecipes";
 
 type CookbookRecipeListProps = {
@@ -21,16 +22,6 @@ type CookbookRecipeListProps = {
   onCookbookDeleted: () => void;
   /** Para releer el libro cuando algo cambia, y si no se ha podido guardar un arrastre. */
   onReload: () => void;
-};
-
-const noticeFor = (outcome: RemoveOutcome, cookbookId: string): string | null => {
-  if (outcome.kind === "failed") return "No se ha podido quitar del libro. Inténtalo otra vez.";
-  if (outcome.kind === "removed") return null;
-
-  // Era su único libro: ninguna receta puede quedarse sin ninguno.
-  return outcome.cookbook.id === cookbookId
-    ? "Esta receta solo estaba aquí, así que se queda: ninguna receta puede quedarse sin libro."
-    : `Era su único libro, así que se ha ido a «${outcome.cookbook.title}».`;
 };
 
 /** Las recetas de un libro: se abren tocando y se manejan dejando el dedo encima. */
@@ -103,7 +94,7 @@ export function CookbookRecipeList({
           onPress={() => {
             onOpenRecipe(entry.recipe.id);
           }}
-          onLongPress={() => {
+          onOpenActions={() => {
             setNotice(null);
             setChosenId(entry.recipe.id);
           }}
@@ -131,7 +122,7 @@ export function CookbookRecipeList({
           }}
           onRemoved={(outcome) => {
             setChosenId(null);
-            setNotice(noticeFor(outcome, cookbookId));
+            setNotice(removalNotice(outcome, cookbookId));
             onReload();
           }}
           onDeleted={() => {
