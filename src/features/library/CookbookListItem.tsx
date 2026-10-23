@@ -11,9 +11,15 @@ import { useColors } from "@/theme/useColors";
 const countLabel = (total: number): string =>
   total === 1 ? "1 receta" : `${String(total)} recetas`;
 
+/** De quién es el libro y cuánto lleva dentro: «Sonia · 12 recetas». */
+const subtitleOf = (ownerName: string | null, total: number): string =>
+  ownerName === null ? countLabel(total) : `${ownerName} · ${countLabel(total)}`;
+
 type CookbookListItemProps = {
   cookbook: Cookbook;
   recipeCount: number;
+  /** De quién es el libro. `null` mientras no se sabe, y entonces no se firma. */
+  ownerName: string | null;
   /** Sin acciones, la tarjeta solo entra en el libro: así sale en los resultados de buscar. */
   onOpenActions?: () => void;
   /** El asa de arrastrar, cuando la biblioteca está en modo reordenar. */
@@ -30,6 +36,7 @@ type CookbookListItemProps = {
 export function CookbookListItem({
   cookbook,
   recipeCount,
+  ownerName,
   onOpenActions,
   handle,
 }: CookbookListItemProps) {
@@ -56,8 +63,8 @@ export function CookbookListItem({
         >
           {cookbook.title}
         </Text>
-        <Text style={[styles.count, { color: colors.mutedForeground }]}>
-          {countLabel(recipeCount)}
+        <Text numberOfLines={1} style={[styles.count, { color: colors.mutedForeground }]}>
+          {subtitleOf(ownerName, recipeCount)}
         </Text>
       </View>
 
@@ -98,19 +105,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: tokens.spacing.row + 4,
     padding: tokens.spacing.row + 4,
-    borderRadius: tokens.radius.xxl,
+    borderRadius: tokens.radius.card,
     // Sin sombra: la pantalla la recorta contra su propio margen. Un filo basta para separar
     // la tarjeta del fondo, que son dos cremas muy parecidas.
     borderWidth: 1,
   },
   pressed: { opacity: 0.9, transform: [{ scale: 0.995 }] },
-  cover: { width: 64, height: 64, borderRadius: tokens.radius.lg },
-  title: {
-    fontFamily: tokens.fontFamily.display,
-    fontSize: 20,
-    lineHeight: 26,
-    letterSpacing: -0.2,
-  },
+  cover: { width: 64, height: 64, borderRadius: tokens.radius.card },
+  // La misma tipografía que el título de una receta: en la cocina todo se lee igual.
+  title: { fontFamily: tokens.fontFamily.bodyStrong, fontSize: tokens.fontSize.body },
   text: { flex: 1, gap: 2 },
   count: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.label },
 });

@@ -5,6 +5,7 @@ import { ReorderBar } from "@/components/ReorderBar";
 import { ReorderableList } from "@/components/ReorderableList";
 import type { Cookbook } from "@/domain/cookbooks/cookbook";
 import { CookbookActions } from "@/features/cookbooks/CookbookActions";
+import { useDisplayName } from "@/features/auth/useDisplayName";
 import { useReorderCookbooks } from "@/features/cookbooks/useReorderCookbooks";
 import { tokens } from "@/theme/tokens";
 import { CookbookListItem } from "./CookbookListItem";
@@ -20,6 +21,7 @@ type CookbookListProps = {
 /** La biblioteca: tus libros a lo ancho. Cada uno se abre en su pantalla. */
 export function CookbookList({ cookbooks, recipeCounts, onChanged }: CookbookListProps) {
   // El libro cuyas acciones se han pedido dejando el dedo encima. Una hoja para toda la lista.
+  const ownerName = useDisplayName();
   const [chosen, setChosen] = useState<Cookbook | null>(null);
   const [isReordering, setIsReordering] = useState(false);
   const { items, move } = useReorderCookbooks(cookbooks, onChanged);
@@ -42,6 +44,7 @@ export function CookbookList({ cookbooks, recipeCounts, onChanged }: CookbookLis
             <CookbookListItem
               cookbook={cookbook}
               recipeCount={recipeCounts.get(cookbook.id) ?? 0}
+              ownerName={ownerName}
               onOpenActions={() => {
                 setChosen(cookbook);
               }}
@@ -60,6 +63,7 @@ export function CookbookList({ cookbooks, recipeCounts, onChanged }: CookbookLis
           key={cookbook.id}
           cookbook={cookbook}
           recipeCount={recipeCounts.get(cookbook.id) ?? 0}
+          ownerName={ownerName}
           onOpenActions={() => {
             setChosen(cookbook);
           }}

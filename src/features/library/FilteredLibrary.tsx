@@ -2,6 +2,7 @@ import { StyleSheet, View } from "react-native";
 
 import type { Cookbook } from "@/domain/cookbooks/cookbook";
 import type { Recipe } from "@/domain/recipes/recipe";
+import { useDisplayName } from "@/features/auth/useDisplayName";
 import { tokens } from "@/theme/tokens";
 import { CookbookListItem } from "./CookbookListItem";
 import { RecipeRow } from "./RecipeRow";
@@ -26,6 +27,8 @@ export function FilteredLibrary({
   recipes,
   onOpenRecipe,
 }: FilteredLibraryProps) {
+  const ownerName = useDisplayName();
+
   return (
     <View style={styles.list}>
       {cookbooks.map((cookbook) => (
@@ -33,6 +36,7 @@ export function FilteredLibrary({
           key={cookbook.id}
           cookbook={cookbook}
           recipeCount={recipeCounts.get(cookbook.id) ?? 0}
+          ownerName={ownerName}
         />
       ))}
 
