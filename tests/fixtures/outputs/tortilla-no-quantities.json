@@ -7,7 +7,7 @@
   "ingredients": [
     {
       "name": "patatas",
-      "quantity": 500,
+      "quantity": 700,
       "unit": "g"
     },
     {
@@ -17,46 +17,51 @@
     },
     {
       "name": "huevos",
-      "quantity": 4,
+      "quantity": 6,
       "unit": "ud"
     },
     {
-      "name": "aceite de oliva",
-      "quantity": 60,
+      "name": "aceite",
+      "quantity": 90,
       "unit": "ml"
     },
     {
       "name": "sal",
-      "quantity": 3,
+      "quantity": 5,
       "unit": "g"
     }
   ],
   "steps": [
     {
-      "text": "Pela las patatas y córtalas en rodajas finas. Pela la cebolla y córtala en juliana."
+      "text": "Pela las patatas, córtalas en rodajas finas y pica la cebolla."
     },
     {
       "text": "Calienta el aceite en una sartén a fuego medio."
     },
     {
-      "text": "Fríe las patatas y la cebolla con el aceite a fuego medio, removiendo de vez en cuando, hasta que estén tiernas, unos 20 minutos."
+      "text": "Fríe las patatas con la cebolla a fuego medio, removiendo de vez en cuando, hasta que estén tiernas."
     },
     {
-      "text": "Bate los huevos en un bol con una pizca de sal."
+      "text": "Bate los huevos en un bol con la sal."
     },
     {
-      "text": "Escurre el exceso de aceite de las patatas y mézclalas con los huevos batidos."
+      "text": "Escurre las patatas y la cebolla del aceite y mézclalas con los huevos batidos."
     },
     {
-      "text": "Vierte la mezcla en la sartén y cuájala a fuego medio-bajo durante unos 3 minutos, hasta que los bordes estén firmes."
+      "text": "Vierte la mezcla en la sartén con un poco de aceite y cuájala a fuego medio-bajo."
     },
     {
-      "text": "Da la vuelta a la tortilla con ayuda de un plato y cocina 2 minutos más por el otro lado."
+      "text": "Dale la vuelta con ayuda de un plato y cuaja la otra cara un par de minutos."
     }
   ],
   "assumptions": [
-    "He supuesto 500 g de patatas, 1 cebolla, 4 huevos, 60 ml de aceite de oliva y 3 g de sal.",
-    "He añadido los pasos de pelar y cortar las patatas y la cebolla, y de escurrir el aceite antes de mezclar.",
-    "He estimado 4 raciones, 15 minutos de preparación y 25 minutos de cocción."
+    "He supuesto 700 g de patatas.",
+    "He supuesto 1 cebolla.",
+    "He supuesto 6 huevos.",
+    "He supuesto 90 ml de aceite.",
+    "He supuesto 5 g de sal.",
+    "He añadido pelar y cortar las patatas y picar la cebolla.",
+    "He añadido escurrir las patatas y la cebolla antes de mezclarlas con los huevos.",
+    "He estimado 4 raciones, 15 min de preparación y 25 min de cocción."
   ]
 }

@@ -25,7 +25,10 @@ QUÉ ORDENAS
   cdta (cucharadita), ud (unidad), pizca. Si el ingrediente se cuenta ("3 huevos"), pon la
   cantidad y deja la unidad vacía.
 - Convierte las cantidades vagas con esta tabla. Son valores fijos, iguales para cualquier
-  ingrediente: no los calcules en proporción al resto de la receta ni los ajustes a ojo.
+  ingrediente: no los calcules en proporción al resto de la receta ni los ajustes a ojo. La tabla
+  está en español pero vale para cualquier idioma: traduce la expresión y usa su fila. "A splash"
+  es un chorrito (15 ml), "a handful" es un puñado (30 g), "a cup" es una taza (240 ml),
+  "a pinch" es una pizca, "a knob of butter" es una nuez de mantequilla (15 g).
 
   | Expresión | Cantidad |
   | --- | --- |
@@ -45,6 +48,18 @@ QUÉ ORDENAS
   Si la expresión no está en la tabla, usa la fila más parecida. Nunca dejes un ingrediente sin
   cantidad por no encontrarla: la cocinera la corrige al revisar, y para eso se lo cuentas en
   "assumptions".
+- Los mililitros y los litros son solo para líquidos. Un sólido va SIEMPRE en peso (g, kg),
+  aunque el texto lo mida en tazas, vasos o cucharadas: "2 tazas de harina" son 240 g de harina,
+  nunca 480 ml. Equivalencias fijas, por taza o vaso:
+
+  | Ingrediente | Peso por taza o vaso |
+  | --- | --- |
+  | harina, pan rallado, cacao | 120 g |
+  | azúcar, sal | 200 g |
+  | arroz, legumbres secas, pasta | 180 g |
+  | frutos secos, queso rallado, copos de avena | 100 g |
+
+  Y por cucharada, 15 g de sólido; por cucharadita, 5 g.
 - Corrige las faltas y desarrolla las abreviaturas, en el nombre del plato y en todo lo demás.
 - Escribe los pasos en imperativo, una acción por paso, claros para alguien que cocina con el
   móvil en la mano. Cada paso dice qué hacer y con qué, no "mezclar todo".

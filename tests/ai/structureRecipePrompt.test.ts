@@ -19,8 +19,17 @@ const everyWord = (recipe: StructuredRecipe): string =>
 const ingredient = (recipe: StructuredRecipe, needle: string) =>
   recipe.ingredients.find((i) => i.name.toLowerCase().includes(needle));
 
+/** Sólidos que nunca se miden en volumen, por mucho que el texto venga en tazas. */
+const SOLIDS = ["harina", "flour", "azúcar", "sugar", "arroz", "rice", "pan rallado", "lenteja"];
+
 /** Lo que tiene que cumplir cualquier receta, venga del texto que venga. */
 const checkAlways = (recipe: StructuredRecipe): void => {
+  // Un sólido en mililitros no se puede pesar ni comprar: va en gramos.
+  for (const { name, unit } of recipe.ingredients) {
+    const isSolid = SOLIDS.some((solid) => name.toLowerCase().includes(solid));
+    if (isSolid) expect(unit, `"${name}" viene en ${unit ?? "nada"}`).not.toMatch(/^(ml|l)$/);
+  }
+
   // La cantidad va en `quantity`, nunca dentro del nombre.
   for (const { name } of recipe.ingredients) {
     expect(name, `"${name}" lleva cifras en el nombre`).not.toMatch(/\d/);

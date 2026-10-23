@@ -2,39 +2,31 @@
   "title": "Pollo asado",
   "locale": "es-ES",
   "servings": 4,
-  "prepMin": 15,
+  "prepMin": 10,
   "cookMin": 90,
   "ingredients": [
     {
       "name": "pollo entero",
-      "quantity": 1,
-      "unit": "ud"
+      "quantity": 1
     },
     {
       "name": "limón",
-      "quantity": 1,
-      "unit": "ud"
+      "quantity": 1
     },
     {
       "name": "romero",
-      "quantity": 3,
-      "unit": "ud",
-      "note": "ramitas"
+      "quantity": 20,
+      "unit": "g"
     },
     {
       "name": "sal gorda",
-      "quantity": 10,
-      "unit": "g"
+      "quantity": 1,
+      "unit": "pizca"
     },
     {
       "name": "aceite de oliva",
-      "quantity": 30,
+      "quantity": 15,
       "unit": "ml"
-    },
-    {
-      "name": "patatas",
-      "quantity": 800,
-      "unit": "g"
     }
   ],
   "steps": [
@@ -42,25 +34,25 @@
       "text": "Precalienta el horno a 180 °C."
     },
     {
-      "text": "Unta el pollo por fuera con el aceite de oliva, la sal gorda y el romero."
+      "text": "Unta el pollo con el aceite de oliva, la sal gorda y el romero, por fuera y por dentro."
     },
     {
-      "text": "Parte el limón por la mitad e introduce los trozos dentro del pollo."
+      "text": "Parte el limón por la mitad y mételo dentro del pollo."
     },
     {
-      "text": "Pela las patatas, córtalas en gajos y colócalas en la bandeja alrededor del pollo."
+      "text": "Hornea el pollo durante hora y media, hasta que esté dorado y bien cocido."
     },
     {
-      "text": "Mete la bandeja en el horno y asa durante 90 minutos."
-    },
-    {
-      "text": "Sirve el pollo asado con las patatas."
+      "text": "Sirve el pollo con las papas."
     }
   ],
   "assumptions": [
-    "He supuesto 10 g de sal gorda y 30 ml de aceite de oliva, ya que no se indicaban cantidades.",
-    "He supuesto 3 ramitas de romero.",
-    "He supuesto 800 g de patatas para acompañar el pollo, y he añadido el paso de asarlas en la misma bandeja.",
-    "He estimado 4 raciones, 15 minutos de preparación y 90 minutos de cocción."
+    "He supuesto 4 raciones para un pollo entero.",
+    "He supuesto 20 g de romero, un manojo.",
+    "He supuesto 15 ml de aceite de oliva, un chorrito.",
+    "He supuesto 1 pizca de sal gorda, al gusto.",
+    "He estimado 10 minutos de preparación y 90 de cocción.",
+    "He añadido el paso de precalentar el horno a 180 °C.",
+    "Las papas no tienen cantidad en la receta, así que no las he añadido a la lista de ingredientes."
   ]
 }
