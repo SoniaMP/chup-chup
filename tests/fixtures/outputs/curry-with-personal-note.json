@@ -1,0 +1,81 @@
+{
+  "title": "Curry de garbanzos rápido",
+  "locale": "es-ES",
+  "servings": 3,
+  "prepMin": 10,
+  "cookMin": 35,
+  "ingredients": [
+    {
+      "name": "garbanzos cocidos",
+      "quantity": 500,
+      "unit": "g",
+      "note": "escurridos, equivalen a 2 botes"
+    },
+    {
+      "name": "leche de coco",
+      "quantity": 400,
+      "unit": "ml",
+      "note": "1 lata"
+    },
+    {
+      "name": "curry en polvo",
+      "quantity": 2,
+      "unit": "cdta"
+    },
+    {
+      "name": "cebolla",
+      "quantity": 1
+    },
+    {
+      "name": "ajo",
+      "quantity": 2,
+      "unit": "ud",
+      "note": "dientes"
+    },
+    {
+      "name": "tomate triturado",
+      "quantity": 200,
+      "unit": "g"
+    },
+    {
+      "name": "aceite de oliva",
+      "quantity": 15,
+      "unit": "ml"
+    }
+  ],
+  "steps": [
+    {
+      "text": "Pela y pica la cebolla. Pela y pica los dientes de ajo."
+    },
+    {
+      "text": "Calienta el aceite de oliva en una cazuela a fuego medio y pocha la cebolla unos 8 min, hasta que esté transparente."
+    },
+    {
+      "text": "Añade el ajo picado y rehógalo 1 min."
+    },
+    {
+      "text": "Añade el curry en polvo y remueve 30 segundos para que suelte aroma."
+    },
+    {
+      "text": "Añade el tomate triturado y cocina 3 min."
+    },
+    {
+      "text": "Añade los garbanzos escurridos y la leche de coco, y remueve bien."
+    },
+    {
+      "text": "Cocina a fuego lento durante 20 min, removiendo de vez en cuando."
+    },
+    {
+      "text": "Sirve caliente."
+    }
+  ],
+  "assumptions": [
+    "He supuesto 500 g de garbanzos escurridos para los 2 botes.",
+    "He supuesto 400 ml de leche de coco por la lata.",
+    "He supuesto 2 cucharaditas de curry en polvo, ya que no indicaba cantidad.",
+    "He supuesto 200 g de tomate triturado, ya que no indicaba cantidad.",
+    "He supuesto 15 ml de aceite de oliva para pochar, ya que no se mencionaba.",
+    "He añadido el paso de pochar la cebolla durante unos 8 min y el de rehogar el ajo y el curry.",
+    "He supuesto 3 raciones y unos 10 min de preparación y 35 min de cocción."
+  ]
+}

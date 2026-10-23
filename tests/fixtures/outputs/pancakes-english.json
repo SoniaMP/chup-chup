@@ -1,0 +1,81 @@
+{
+  "title": "Quick Pancakes",
+  "locale": "en",
+  "servings": 4,
+  "prepMin": 5,
+  "cookMin": 15,
+  "ingredients": [
+    {
+      "name": "all-purpose flour",
+      "quantity": 240,
+      "unit": "g"
+    },
+    {
+      "name": "eggs",
+      "quantity": 2
+    },
+    {
+      "name": "milk",
+      "quantity": 30,
+      "unit": "ml"
+    },
+    {
+      "name": "baking powder",
+      "quantity": 2,
+      "unit": "cdta"
+    },
+    {
+      "name": "salt",
+      "quantity": 1,
+      "unit": "pizca"
+    },
+    {
+      "name": "butter",
+      "quantity": 20,
+      "unit": "g",
+      "note": "for greasing the pan"
+    },
+    {
+      "name": "maple syrup",
+      "quantity": 60,
+      "unit": "ml",
+      "note": "to serve"
+    }
+  ],
+  "steps": [
+    {
+      "text": "In a bowl, whisk the flour, baking powder and salt together."
+    },
+    {
+      "text": "Add the eggs and milk, then mix until you have a smooth batter with no lumps."
+    },
+    {
+      "text": "Heat a non-stick pan over medium heat and melt a small knob of butter."
+    },
+    {
+      "text": "Pour a ladle of batter into the pan."
+    },
+    {
+      "text": "Cook until bubbles form on the surface and the edges look set, about 2 minutes."
+    },
+    {
+      "text": "Flip the pancake and cook for another minute until golden underneath."
+    },
+    {
+      "text": "Repeat with the remaining batter, adding a little butter to the pan as needed."
+    },
+    {
+      "text": "Serve the pancakes hot with maple syrup."
+    }
+  ],
+  "assumptions": [
+    "Converted 2 cups of flour to 240 g of all-purpose flour.",
+    "Assumed 30 ml of milk for 'a splash'.",
+    "Assumed 2 teaspoons of baking powder, since no amount was given.",
+    "Assumed 1 pinch of salt as 1 pizca.",
+    "Assumed 20 g of butter for greasing the pan.",
+    "Assumed 60 ml of maple syrup for serving.",
+    "Estimated 4 servings, 5 minutes of prep and 15 minutes of cooking.",
+    "Added the step of whisking the dry ingredients first, and the step of melting the butter in the pan."
+  ]
+}

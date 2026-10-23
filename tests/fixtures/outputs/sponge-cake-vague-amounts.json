@@ -1,0 +1,65 @@
+{
+  "title": "Bizcocho de yogur",
+  "locale": "es-ES",
+  "servings": 8,
+  "prepMin": 10,
+  "cookMin": 40,
+  "ingredients": [
+    {
+      "name": "yogur natural",
+      "quantity": 1
+    },
+    {
+      "name": "harina de trigo",
+      "quantity": 210,
+      "unit": "g"
+    },
+    {
+      "name": "azúcar",
+      "quantity": 200,
+      "unit": "g"
+    },
+    {
+      "name": "huevos",
+      "quantity": 3
+    },
+    {
+      "name": "aceite",
+      "quantity": 15,
+      "unit": "ml"
+    },
+    {
+      "name": "levadura en polvo",
+      "quantity": 16,
+      "unit": "g"
+    }
+  ],
+  "steps": [
+    {
+      "text": "Precalienta el horno a 180 °C con calor arriba y abajo."
+    },
+    {
+      "text": "En un bol grande, bate el yogur, los huevos, el azúcar y el aceite hasta obtener una mezcla homogénea."
+    },
+    {
+      "text": "Tamiza la harina con la levadura e incorpórala poco a poco a la mezcla, removiendo hasta que no queden grumos."
+    },
+    {
+      "text": "Vierte la masa en un molde de unos 22 cm engrasado y enharinado, y alísala con una espátula."
+    },
+    {
+      "text": "Hornea durante unos 40 minutos, hasta que el bizcocho esté dorado y al pinchar con un palillo salga seco."
+    },
+    {
+      "text": "Deja enfriar el bizcocho unos 10 minutos en el molde y después desmóldalo sobre una rejilla."
+    }
+  ],
+  "assumptions": [
+    "He supuesto 210 g de harina y 200 g de azúcar para los 3 y 2 vasos, usando un vaso de unos 125 ml.",
+    "He supuesto 15 ml de aceite para el chorrito.",
+    "He supuesto 16 g de levadura para el sobre.",
+    "He añadido el precalentamiento del horno a 180 °C.",
+    "He añadido el paso de tamizar la harina con la levadura y el de engrasar y enharinar el molde de 22 cm.",
+    "He estimado 10 minutos de preparación, 40 minutos de horno y 8 raciones."
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "title": "Lentejas pardinas con chorizo",
+  "locale": "es-ES",
+  "servings": 4,
+  "prepMin": 15,
+  "cookMin": 50,
+  "ingredients": [
+    {
+      "name": "Lentejas pardinas",
+      "quantity": 1000,
+      "unit": "g"
+    },
+    {
+      "name": "Zanahorias",
+      "quantity": 2,
+      "unit": "ud",
+      "note": "picadas"
+    },
+    {
+      "name": "Cebolla",
+      "quantity": 1,
+      "unit": "ud",
+      "note": "picada"
+    },
+    {
+      "name": "Chorizo",
+      "quantity": 1,
+      "unit": "ud",
+      "note": "en rodajas"
+    },
+    {
+      "name": "Pimentón de la Vera",
+      "quantity": 1,
+      "unit": "cda"
+    },
+    {
+      "name": "Aceite de oliva",
+      "quantity": 30,
+      "unit": "ml"
+    }
+  ],
+  "steps": [
+    {
+      "text": "Pela y pica la cebolla y las zanahorias."
+    },
+    {
+      "text": "Calienta el aceite en una cazuela a fuego medio y sofríe la cebolla y la zanahoria picadas hasta que estén blandas, unos 8 minutos."
+    },
+    {
+      "text": "Añade el chorizo en rodajas y rehógalo un par de minutos."
+    },
+    {
+      "text": "Echa el pimentón de la Vera y remueve para que se integre."
+    },
+    {
+      "text": "Incorpora las lentejas pardinas y remueve para que se impregnen."
+    },
+    {
+      "text": "Cubre con agua hasta que el agua supere las lentejas en un par de dedos y cuece a fuego suave durante 40 minutos."
+    }
+  ],
+  "assumptions": [
+    "He supuesto 30 ml de aceite de oliva.",
+    "He supuesto 4 raciones.",
+    "He estimado 15 min de preparación y 50 min de cocción, incluido el sofrito.",
+    "He concretado 1 cucharada como cucharada rasa de pimentón de la Vera.",
+    "He añadido el paso de pelar y picar la verdura, el de rehogar el chorizo y el de cubrir las lentejas con agua hasta que el agua supere las lentejas en un par de dedos."
+  ]
+}

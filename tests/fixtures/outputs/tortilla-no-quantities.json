@@ -1,0 +1,62 @@
+{
+  "title": "Tortilla de patatas",
+  "locale": "es-ES",
+  "servings": 4,
+  "prepMin": 15,
+  "cookMin": 25,
+  "ingredients": [
+    {
+      "name": "patatas",
+      "quantity": 500,
+      "unit": "g"
+    },
+    {
+      "name": "cebolla",
+      "quantity": 1,
+      "unit": "ud"
+    },
+    {
+      "name": "huevos",
+      "quantity": 4,
+      "unit": "ud"
+    },
+    {
+      "name": "aceite de oliva",
+      "quantity": 60,
+      "unit": "ml"
+    },
+    {
+      "name": "sal",
+      "quantity": 3,
+      "unit": "g"
+    }
+  ],
+  "steps": [
+    {
+      "text": "Pela las patatas y córtalas en rodajas finas. Pela la cebolla y córtala en juliana."
+    },
+    {
+      "text": "Calienta el aceite en una sartén a fuego medio."
+    },
+    {
+      "text": "Fríe las patatas y la cebolla con el aceite a fuego medio, removiendo de vez en cuando, hasta que estén tiernas, unos 20 minutos."
+    },
+    {
+      "text": "Bate los huevos en un bol con una pizca de sal."
+    },
+    {
+      "text": "Escurre el exceso de aceite de las patatas y mézclalas con los huevos batidos."
+    },
+    {
+      "text": "Vierte la mezcla en la sartén y cuájala a fuego medio-bajo durante unos 3 minutos, hasta que los bordes estén firmes."
+    },
+    {
+      "text": "Da la vuelta a la tortilla con ayuda de un plato y cocina 2 minutos más por el otro lado."
+    }
+  ],
+  "assumptions": [
+    "He supuesto 500 g de patatas, 1 cebolla, 4 huevos, 60 ml de aceite de oliva y 3 g de sal.",
+    "He añadido los pasos de pelar y cortar las patatas y la cebolla, y de escurrir el aceite antes de mezclar.",
+    "He estimado 4 raciones, 15 minutos de preparación y 25 minutos de cocción."
+  ]
+}

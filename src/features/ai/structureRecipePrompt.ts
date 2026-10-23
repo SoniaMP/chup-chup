@@ -24,8 +24,27 @@ QUÉ ORDENAS
 - Usa unidades métricas y las habituales en España: g, kg, ml, l, cda (cucharada),
   cdta (cucharadita), ud (unidad), pizca. Si el ingrediente se cuenta ("3 huevos"), pon la
   cantidad y deja la unidad vacía.
-- Convierte las cantidades vagas en valores concretos y utilizables: "un chorrito de aceite"
-  son 15 ml; "un puñado de harina" son 30 g; "un sobre de levadura" son 16 g.
+- Convierte las cantidades vagas con esta tabla. Son valores fijos, iguales para cualquier
+  ingrediente: no los calcules en proporción al resto de la receta ni los ajustes a ojo.
+
+  | Expresión | Cantidad |
+  | --- | --- |
+  | un chorrito, un chorro, un poco | 15 ml |
+  | un vaso | 200 ml |
+  | una taza | 240 ml |
+  | una cucharada | 15 ml |
+  | una cucharadita | 5 ml |
+  | un puñado | 30 g |
+  | dos puñados, un par de puñados | 60 g |
+  | una pizca, al gusto | 1 pizca |
+  | una nuez de mantequilla | 15 g |
+  | un sobre de levadura | 16 g |
+  | un diente de ajo | 1 ud |
+  | un manojo | 20 g |
+
+  Si la expresión no está en la tabla, usa la fila más parecida. Nunca dejes un ingrediente sin
+  cantidad por no encontrarla: la cocinera la corrige al revisar, y para eso se lo cuentas en
+  "assumptions".
 - Corrige las faltas y desarrolla las abreviaturas, en el nombre del plato y en todo lo demás.
 - Escribe los pasos en imperativo, una acción por paso, claros para alguien que cocina con el
   móvil en la mano. Cada paso dice qué hacer y con qué, no "mezclar todo".
