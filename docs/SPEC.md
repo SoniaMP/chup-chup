@@ -97,7 +97,9 @@ La IA estructura y sugiere, pero nada se guarda sin revisión.
 
 1. La usuaria escribe ingredientes base y pasos, rápido y sin cuidar la forma.
 2. La Edge Function envía el texto a la IA y pide una salida que cumpla el esquema de receta.
-3. La respuesta se valida con Zod. Si no cumple, se reintenta una vez y después se devuelve un error.
+3. La respuesta se valida con Zod. Si no cumple, se reintenta una vez con un modelo mejor y
+   después se devuelve un error. Ese reintento es también la red de calidad: lo corriente lo
+   resuelve el modelo barato y solo se paga el caro cuando hace falta.
 4. Se abre un borrador editable, guardado en el dispositivo: sobrevive a cerrar la app y nunca
    viaja a la base de datos. No se resalta nada; la receta se revisa entera.
 5. La usuaria corrige lo que quiera y acepta.
@@ -112,6 +114,23 @@ Reglas para la IA:
   y no se guarda con la receta.
 - No cambia el plato: no añade ni quita ingredientes principales.
 - Nunca genera ni modifica las notas personales.
+
+### Límites de la Edge Function
+
+Lo que protege la factura el día que esto sea público, por orden de importancia:
+
+| Puerta | Cómo |
+| --- | --- |
+| Solo con sesión | La función lee la sesión de quien llama; sin ella, 401 |
+| Tope por cocinera y día | Tabla `ai_usage`, contada con la clave de servicio para que no se pueda reescribir desde el cliente. Del cupo solo descuentan los aciertos: un intento que no da receta se devuelve |
+| Tope de texto | 6.000 caracteres por receta |
+| Caché del prompt | El prompt y el esquema no cambian: se envían marcados para cachear |
+| Modelo configurable | `AI_MODEL` y `AI_BACKUP_MODEL` son secretos, no código: cambiarlos no es desplegar |
+| Tope de gasto | En la consola del proveedor, como último cinturón |
+
+| Tabla | Campos | Notas |
+| --- | --- | --- |
+| `ai_usage` | `owner_id`, `day`, `used` | Sin políticas RLS a propósito: solo la Edge Function escribe aquí |
 
 ## Modelo de datos
 
@@ -219,3 +238,10 @@ Cosas acordadas que todavía no tienen forma. Antes de construirlas, una ronda d
   si vive en un campo `categories` de la propia receta o en su tabla; si la IA las propone al
   estructurar (paso 3) y la usuaria solo confirma; y si acaban siendo chips de filtro en la
   cocina, que es donde se volverían útiles de verdad.
+- **Plan gratuito y plan PRO.** La idea: estructurar tu texto libre entra en el plan gratuito
+  (con tope de volumen, nunca de acceso) y lo caro de verdad —la foto con IA— vive en un PRO de
+  unos 2 € al mes, lo justo para cubrir el uso. Está por decidir: qué más entra en PRO; cuántas
+  recetas al día da el plan gratuito; si el tope es diario o mensual; qué pasa cuando se agota
+  (esperar a mañana o pagar); y cómo se cobra, que es tanto una decisión de producto como de
+  papeles. Lo técnico ya está preparado: el límite por cocinera y día existe y se cuenta donde
+  no se puede tocar.
