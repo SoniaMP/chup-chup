@@ -211,3 +211,11 @@ Cosas acordadas que todavía no tienen forma. Antes de construirlas, una ronda d
   tipo, mientras el texto filtra dentro, igual que la biblioteca de Spotify. Hoy Favoritas es un
   chip suelto con su propia lógica; ahí pasaría a ser uno más de la fila. Es la base del buscador
   avanzado.
+- **Categorías de la receta.** Al crearla se podría etiquetar por tipo de cocina (asiática,
+  japonesa, italiana) y por propiedad (sin gluten, sin lactosa, antiinflamatoria). Ojo: «etiquetas
+  sueltas» está hoy *fuera* del MVP, y la razón era el desorden; esto solo lo evita si el
+  vocabulario es cerrado, es decir, una lista nuestra que se elige, no texto libre que cada una
+  escribe a su manera. Está por decidir: lista cerrada o libre; si «cocina» admite una o varias;
+  si vive en un campo `categories` de la propia receta o en su tabla; si la IA las propone al
+  estructurar (paso 3) y la usuaria solo confirma; y si acaban siendo chips de filtro en la
+  cocina, que es donde se volverían útiles de verdad.
