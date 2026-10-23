@@ -41,4 +41,18 @@ describe("ingredientSchema", () => {
     const result = ingredientSchema.parse({ name: "azúcar", quantity: 300, unit: "g", color: "blanco" });
     expect(result).not.toHaveProperty("color");
   });
+
+  it("takes an empty unit as no unit, which is what the AI sends for things you count", () => {
+    const result = ingredientSchema.safeParse({ name: "huevos", quantity: 3, unit: "" });
+
+    expect(result.success).toBe(true);
+    expect(result.data).toEqual({ name: "huevos", quantity: 3 });
+  });
+
+  it("takes an empty note as no note", () => {
+    const result = ingredientSchema.safeParse({ name: "sal", note: "   " });
+
+    expect(result.success).toBe(true);
+    expect(result.data).toEqual({ name: "sal" });
+  });
 });
