@@ -1,7 +1,9 @@
+// Las extensiones van escritas porque este esquema también lo importa la Edge Function, y Deno
+// no adivina el fichero: el contrato tiene que ser el mismo en la app y en el servidor.
 import { z } from "zod";
-import { ingredientSchema } from "./ingredient";
-import { localeSchema } from "./locale";
-import { stepSchema } from "./step";
+import { ingredientSchema } from "./ingredient.ts";
+import { localeSchema } from "./locale.ts";
+import { stepSchema } from "./step.ts";
 
 /**
  * Lo que devuelve la IA al estructurar un texto libre.
