@@ -22,8 +22,14 @@ import { STRUCTURE_RECIPE_PROMPT } from "../src/features/ai/structureRecipePromp
 
 const INPUTS_DIR = join(import.meta.dirname, "../tests/fixtures/inputs");
 const OUTPUTS_DIR = join(import.meta.dirname, "../tests/fixtures/outputs");
-/** Cambiable para comparar modelos contra los mismos textos: MODEL=claude-haiku-5-5 npm run … */
-const MODEL = process.env.MODEL ?? "claude-opus-5-5";
+/**
+ * El mismo modelo que usa la app de verdad (`AI_MODEL` en la Edge Function).
+ *
+ * Grabar con uno mejor que el de producción sería hacerse trampas al solitario: los fixtures
+ * dejarían de decir cómo sale la receta de verdad. Cambiable para comparar modelos sobre los
+ * mismos textos: MODEL=claude-sonnet-5-5 npm run record:fixtures -- --all
+ */
+const MODEL = process.env.MODEL ?? "claude-haiku-5-5";
 
 const client = new Anthropic();
 
@@ -71,20 +77,28 @@ const recordFixtures = async (names: string[]): Promise<void> => {
   console.log("\nListo. Ejecuta `npm test` para comprobarlos.");
 };
 
-const names = fixturesToRecord(process.argv.slice(2));
-if (names.length === 0) {
-  console.log("Nada que grabar. Usa --all para regrabar todos los fixtures.");
-} else {
+/** Todo dentro de una función: `tsx` compila esto como CommonJS, donde no hay `await` suelto. */
+const main = async (): Promise<void> => {
+  const names = fixturesToRecord(process.argv.slice(2));
+
+  if (names.length === 0) {
+    console.log("Nada que grabar. Usa --all para regrabar todos los fixtures.");
+    return;
+  }
+
   try {
     await recordFixtures(names);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
+
     if (message.includes("authentication")) {
       console.error("\n\nNo hay credenciales. Exporta tu clave y vuelve a intentarlo:");
       console.error("  export ANTHROPIC_API_KEY=sk-ant-...\n");
-      process.exit(1);
+    } else {
+      console.error(`\n\nHa fallado: ${message}\n`);
     }
-    console.error(`\n\nHa fallado: ${message}\n`);
-    process.exit(1);
+    process.exitCode = 1;
   }
-}
+};
+
+void main();
