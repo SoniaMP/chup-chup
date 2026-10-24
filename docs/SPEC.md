@@ -53,8 +53,8 @@ Principio rector: ninguna decisión del MVP obliga a migrar datos cuando llegue 
 
 ## Navegación
 
-**El MVP no tiene barra inferior.** Mi cocina ocupa la pantalla y **Crear** es un botón flotante
-abajo a la derecha. Con solo dos elementos, y siendo uno de ellos una acción y no un destino, una
+**El MVP no tiene barra inferior.** Mi cocina ocupa la pantalla y **Nueva receta** es un botón
+flotante abajo a la derecha, con su nombre escrito y no un `+` pelado. Con solo dos elementos, y siendo uno de ellos una acción y no un destino, una
 barra de dos huecos se vería descompensada.
 
 - **Mi cocina:** la biblioteca, al estilo de "Tu biblioteca" de Spotify. Arriba, la lista fija de Favoritos; debajo, los recetarios desplegables con sus libros y los libros sueltos. Filtros (Recetarios / Libros / Recetas).
@@ -87,7 +87,18 @@ que solo enseña sus recetas.
 
 Crear libros y recetarios:
 
-- Botón **+** en la cabecera de Mi cocina, que abre una hoja con *Nuevo libro* y *Nuevo recetario*.
+- Chip **+ Nuevo libro** a la derecha de la fila de chips de Mi cocina. En la cabecera y no en
+  la lista, porque la lista se va hacia arriba en cuanto hay libros; a la derecha y separado de
+  los chips que filtran, porque esa fila acabará siendo «Favoritas · Recetarios · Libros ·
+  Recetas» y los filtros crecen por la izquierda. Sin relleno y con filo de puntos: en esa fila
+  conviven un chip que filtra y otro que crea, y tienen que distinguirse a la vista.
+  **Es provisional, y de las que se van solas:** en la fase 2, la barra inferior trae un
+  destino **Crear**, y ahí es donde acaban yendo las dos creaciones, la de libro y la de
+  receta. Vive en la cabecera mientras dure el MVP.
+- **En la cabecera no hay `+`.** Hubo uno y no se entendía: en la misma pantalla había dos `+`
+  iguales y sin nombre, uno que hacía libros y otro que hacía recetas. Crear un libro es una
+  acción rara, así que se pide donde están los libros, con su nombre puesto; crear una receta
+  es la acción diaria y se queda a un solo toque en el botón flotante.
 - **+ Nuevo libro** arriba del todo en la hoja "Añadir a libro" de una receta: crea el libro y añade la receta en un solo paso.
 
 Pantallas: Mi cocina, detalle de libro, detalle de receta (con modo cocina), crear receta (entrada + revisión), foto y retoque, perfil y ajustes.

@@ -91,7 +91,10 @@ el principio para no tener que repintar nada después.
   botones gigantes del modo cocina.
 - `shadowSoft`: color `#6B3725` al 25 %, desplazamiento Y 10, radio 30. En RN, `shadowColor` +
   `shadowOpacity 0.25` + `shadowRadius 15` y `elevation: 6` en Android.
-- `shadowGlow`: color `#CF542C` al 55 %, Y 12, radio 28. Solo para el botón principal y el botón Crear.
+- `shadowGlow`: color `#CF542C` al 55 %, Y 12, radio 28. Solo para el botón principal y el de
+  nueva receta.
+- `[cambio]` `shadowGlowDark`: el mismo color al 28 %, Y 10, radio 36. En oscuro, el halo al 55 %
+  no se lee como luz sino como una mancha naranja alrededor del botón.
 
 ## Movimiento
 
@@ -106,9 +109,10 @@ Curva de entrada: `cubic-bezier(0.2, 0.8, 0.2, 1)`.
 
 ## Navegación
 
-`[cambio]` **El MVP no tiene barra inferior.** Mi cocina ocupa la pantalla y **Crear** es un botón
-flotante: el mismo círculo de 64 con `gradientWarm` y `shadowGlow` del prototipo, pero sacado de la
-barra. Abajo a la derecha, a 20 del borde y 24 del área segura.
+`[cambio]` **El MVP no tiene barra inferior.** Mi cocina ocupa la pantalla y **Nueva receta** es un
+botón flotante: el `gradientWarm` y el `shadowGlow` del prototipo, pero pastilla de 64 de alto con
+el icono y el texto «Nueva receta» dentro, no círculo. Abajo a la derecha, a 20 del borde y 24 del
+área segura.
 
 - `[cambio]` La pantalla se llama **Mi cocina**, no «Biblioteca».
 - `[cambio]` **Favoritas no es una pestaña**: es la primera fila de Mi cocina. Era una duplicidad.
@@ -120,16 +124,18 @@ barra. Abajo a la derecha, a 20 del borde y 24 del área segura.
 ## Pantallas
 
 ### Mi cocina
-Cabecera con el título grande, el avatar (perfil y ajustes) y un **+** que abre una hoja con *Nuevo
-libro* / *Nuevo recetario*. Debajo, el buscador, y una lista única con tres tipos de fila, todas con
-miniatura de 64:
+Cabecera con el título grande y el avatar (perfil y ajustes). Debajo, el buscador, y una lista
+única con tres tipos de fila, todas con miniatura de 64:
 
 1. **Favoritas** — azulejo con `gradientWarm` y estrella. Subtítulo «Lista automática · N recetas».
 2. **Recetarios** — carpeta sobre `oliveSoft`, desplegable con un chevrón que gira. Al abrirse, los
    libros de dentro se indentan 24 con una línea vertical `oliveSoft` a la izquierda.
 3. **Libros sueltos** — portada en mosaico. Subtítulo «Libro · N recetas».
 
-Chips de filtro: Recetarios · Libros · Recetas. Activo = relleno terracota.
+Chips de filtro: Recetarios · Libros · Recetas. Activo = relleno terracota. `[cambio]` A la
+derecha de esa fila, fijo, el chip **+ Nuevo libro**: sin relleno, filo de puntos y terracota,
+para que no se lea como un filtro más. Ahí se crean los libros; el **+** de la cabecera se
+quitó por confundirse con el de crear recetas.
 
 `[cambio]` No hay libro «Por probar» de serie: eso pasa a la fase 2.
 
