@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import type { Cookbook } from "@/domain/cookbooks/cookbook";
+import { cachedKitchen } from "@/features/offline/cachedKitchen";
 import { supabaseCookbookStore } from "./supabaseCookbookStore";
 
 type LoadedCookbook = {
@@ -21,7 +22,7 @@ export function useCookbook(id: string): LoadedCookbook {
       .getById(id)
       .catch((cause: unknown) => {
         console.warn("No se ha podido leer el libro", cause);
-        return null;
+        return cachedKitchen.cookbook(id);
       })
       .then((cookbook) => {
         if (isCurrent) setLoaded({ cookbook, isLoaded: true });

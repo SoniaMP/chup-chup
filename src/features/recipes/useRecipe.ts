@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import type { SavedRecipe } from "@/domain/recipes/savedRecipe";
+import { cachedKitchen } from "@/features/offline/cachedKitchen";
 import { supabaseRecipeStore } from "./supabaseRecipeStore";
 
 type LoadedRecipe = {
@@ -22,8 +23,9 @@ export function useRecipe(id: string): LoadedRecipe {
     void supabaseRecipeStore
       .getById(id)
       .catch((cause: unknown) => {
+        // Sin red queda lo que guardó la pantalla principal, que trae la receta entera.
         console.warn("No se ha podido leer la receta", cause);
-        return null;
+        return cachedKitchen.recipe(id);
       })
       .then((recipe) => {
         if (isCurrent) setLoaded({ recipe, isLoaded: true });

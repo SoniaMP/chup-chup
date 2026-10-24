@@ -1,6 +1,7 @@
 import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 
+import { cachedKitchen } from "@/features/offline/cachedKitchen";
 import type { CookbookEntry } from "./cookbookEntry";
 import { supabaseCookbookRecipeStore } from "./supabaseCookbookRecipeStore";
 
@@ -11,9 +12,10 @@ type LoadedEntries = {
 };
 
 const readEntries = async (cookbookId: string): Promise<CookbookEntry[]> =>
-  supabaseCookbookRecipeStore.listEntries(cookbookId).catch((cause: unknown) => {
+  supabaseCookbookRecipeStore.listEntries(cookbookId).catch(async (cause: unknown) => {
+    // Sin red se arman con lo guardado: qué receta va en qué libro, y la receta entera.
     console.warn("No se han podido leer las recetas del libro", cause);
-    return [];
+    return (await cachedKitchen.entries(cookbookId)) ?? [];
   });
 
 /** Las recetas de un libro, en el orden del libro. */

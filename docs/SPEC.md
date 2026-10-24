@@ -212,9 +212,15 @@ Recetario = carpeta. Libro = playlist. Receta = canción.
 
 ## Offline
 
-- Las recetas guardadas se leen sin conexión desde una caché local.
+- Las recetas guardadas, los libros y qué receta está en qué libro se leen sin conexión desde una
+  copia en el disco del móvil. La escribe la pantalla principal cuando el servidor contesta, y al
+  leerla se vuelve a validar con Zod: si ya no encaja, se tira en vez de reventar.
+- **Las fotos quedan fuera.** Sin red se lee la receta entera, pero sin imágenes. Guardar los
+  ficheros obligaría a gestionar espacio y, en la fase 2, a borrarlos del disco al perder el
+  acceso. Decidido el 24 de octubre de 2026.
 - Crear, editar y la IA requieren red. Sin sincronización offline en el MVP.
-- Lo prestado se borra de la caché cuando se pierde el acceso: ver «Recetas ajenas».
+- Lo prestado se borra de la caché cuando se pierde el acceso: ver «Recetas ajenas». Hoy, con una
+  sola cocina, la copia se borra entera al cerrar sesión.
 
 ## Recetas ajenas: acceso, no propiedad
 
@@ -314,7 +320,8 @@ Existe un prototipo hecho en Lovable. Lovable genera React web (no React Native)
 6. Búsqueda en Mi cocina: por título e ingrediente.
 7. Notas personales y modo cocina.
 8. Fotos y retoque.
-9. Caché offline de lectura, sabiendo ya que lo prestado se borra al perder el acceso.
+9. Caché offline de lectura, sabiendo ya que lo prestado se borra al perder el acceso. Hecha,
+   sin las fotos.
 10. Sacar lo personal de `recipes` a `saved_recipes`, que pasa a ser «mi cocina». Hecho.
 
 ## Ideas por concretar

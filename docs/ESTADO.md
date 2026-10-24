@@ -19,7 +19,7 @@ abiertas. El qué y el por qué del producto siguen en [`SPEC.md`](SPEC.md); los
 | 7. Notas personales y modo cocina | Hecho |
 | 8a. Foto de la receta | **Hecho.** Cámara o galería, encogida, a un bucket privado que se lee con URLs firmadas |
 | 8b. «Mejorar con IA» | Por hacer. Falta elegir servicio de retoque: es una decisión, no código |
-| 9. Caché offline de lectura | Por hacer. Lo prestado tendrá que borrarse al perder el acceso: nace sabiéndolo |
+| 9. Caché offline de lectura | **Hecho.** Recetas, libros y pertenencias en el disco del móvil; las fotos fuera. Al cerrar sesión se borra |
 | 10. Sacar lo personal de `recipes` a `saved_recipes` | **Hecho.** `recipes` es contenido; `saved_recipes` es «mi cocina». Nada de acceso ni revocación todavía |
 
 ## Lo último que se estaba haciendo

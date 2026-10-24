@@ -1,40 +1,22 @@
-import { useFocusEffect } from "expo-router";
-import { useCallback, useState } from "react";
-
 import type { SavedRecipe } from "@/domain/recipes/savedRecipe";
+import { cachedKitchen } from "@/features/offline/cachedKitchen";
+import { useCachedRead } from "@/features/offline/useCachedRead";
 import { supabaseRecipeStore } from "@/features/recipes/supabaseRecipeStore";
 
 type LoadedRecipes = {
   recipes: SavedRecipe[] | null;
+  /** Lo que se ve salió del disco: el servidor no ha contestado. */
+  isStale: boolean;
   /** Para releerlas sin salir de la pantalla, después de borrar una o cambiarle la portada. */
   reload: () => void;
 };
 
-const readRecipes = async (): Promise<SavedRecipe[]> =>
-  supabaseRecipeStore.list().catch((cause: unknown) => {
-    console.warn("No se han podido leer las recetas", cause);
-    return [];
-  });
+const NONE: SavedRecipe[] = [];
+const readRecipes = (): Promise<SavedRecipe[]> => supabaseRecipeStore.list();
 
 /** Las recetas guardadas, recargadas cada vez que se vuelve a la pantalla. */
 export function useRecipes(): LoadedRecipes {
-  const [recipes, setRecipes] = useState<SavedRecipe[] | null>(null);
+  const { value, isStale, reload } = useCachedRead(cachedKitchen.what.recipes, cachedKitchen.schema.recipes, readRecipes, NONE);
 
-  useFocusEffect(
-    useCallback(() => {
-      let isCurrent = true;
-      void readRecipes().then((stored) => {
-        if (isCurrent) setRecipes(stored);
-      });
-      return () => {
-        isCurrent = false;
-      };
-    }, []),
-  );
-
-  const reload = useCallback(() => {
-    void readRecipes().then(setRecipes);
-  }, []);
-
-  return { recipes, reload };
+  return { recipes: value, isStale, reload };
 }

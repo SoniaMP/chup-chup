@@ -2,6 +2,7 @@ import { positionBetween } from "@/domain/ordering/positionBetween";
 import { savedRecipeFromRow } from "@/features/recipes/savedRecipeFromRow";
 import { supabase } from "@/lib/supabase";
 import type { CookbookEntry } from "./cookbookEntry";
+import type { Placement } from "./placement";
 
 const TABLE = "cookbook_recipes";
 
@@ -36,14 +37,18 @@ export const supabaseCookbookRecipeStore = {
   },
 
   /** Qué receta está en qué libro, todo de una vez: la pantalla principal lo necesita entero. */
-  async listAll(): Promise<{ cookbookId: string; recipeId: string }[]> {
+  async listAll(): Promise<Placement[]> {
     const { data, error } = await supabase
       .from(TABLE)
-      .select("cookbook_id, recipe_id")
+      .select("cookbook_id, recipe_id, position")
       .order("position");
 
     if (error !== null) throw new Error(error.message);
-    return data.map((row) => ({ cookbookId: row.cookbook_id, recipeId: row.recipe_id }));
+    return data.map((row) => ({
+      cookbookId: row.cookbook_id,
+      recipeId: row.recipe_id,
+      position: row.position,
+    }));
   },
 
   async listCookbookIds(recipeId: string): Promise<string[]> {

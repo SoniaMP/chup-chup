@@ -13,6 +13,7 @@ import { KitchenHeader } from "@/features/library/KitchenHeader";
 import { FilteredLibrary } from "@/features/library/FilteredLibrary";
 import { NoSearchResults } from "@/features/library/NoSearchResults";
 import { useRecipes } from "@/features/library/useRecipes";
+import { StaleNotice } from "@/features/offline/StaleNotice";
 import { CreateRecipeButton } from "@/features/recipes/CreateRecipeButton";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
@@ -20,9 +21,9 @@ import { useColors } from "@/theme/useColors";
 export default function KitchenScreen() {
   const colors = useColors();
   const router = useRouter();
-  const { recipes, reload: reloadRecipes } = useRecipes();
-  const { cookbooks, reload: reloadCookbooks } = useCookbooks();
-  const { membership, reload: reloadMembership } = useCookbookMembership();
+  const { recipes, isStale: isRecipesStale, reload: reloadRecipes } = useRecipes();
+  const { cookbooks, isStale: isCookbooksStale, reload: reloadCookbooks } = useCookbooks();
+  const { membership, isStale: isMembershipStale, reload: reloadMembership } = useCookbookMembership();
   const [query, setQuery] = useState("");
   const [isOnlyFavorites, setIsOnlyFavorites] = useState(false);
 
@@ -73,6 +74,7 @@ export default function KitchenScreen() {
             setIsOnlyFavorites((isOn) => !isOn);
           }}
         />
+        <StaleNotice isStale={isRecipesStale || isCookbooksStale || isMembershipStale} />
         {/* La lista sale aunque la cocina esté vacía: dentro vive «+ Nuevo libro», y una usuaria
             recién registrada no tiene ni recetas ni libros todavía. */}
         {isBrowsing && recipes !== null && (

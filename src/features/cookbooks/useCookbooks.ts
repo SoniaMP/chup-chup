@@ -1,40 +1,22 @@
-import { useFocusEffect } from "expo-router";
-import { useCallback, useState } from "react";
-
 import type { Cookbook } from "@/domain/cookbooks/cookbook";
+import { cachedKitchen } from "@/features/offline/cachedKitchen";
+import { useCachedRead } from "@/features/offline/useCachedRead";
 import { supabaseCookbookStore } from "./supabaseCookbookStore";
 
 type LoadedCookbooks = {
   cookbooks: Cookbook[] | null;
+  /** Lo que se ve salió del disco: el servidor no ha contestado. */
+  isStale: boolean;
   /** Para releerlos sin salir de la pantalla, después de renombrar o borrar uno. */
   reload: () => void;
 };
 
-const readCookbooks = async (): Promise<Cookbook[]> =>
-  supabaseCookbookStore.list().catch((cause: unknown) => {
-    console.warn("No se han podido leer los libros", cause);
-    return [];
-  });
+const NONE: Cookbook[] = [];
+const readCookbooks = (): Promise<Cookbook[]> => supabaseCookbookStore.list();
 
 /** Los libros de la usuaria, recargados cada vez que se vuelve a la pantalla. */
 export function useCookbooks(): LoadedCookbooks {
-  const [cookbooks, setCookbooks] = useState<Cookbook[] | null>(null);
+  const { value, isStale, reload } = useCachedRead(cachedKitchen.what.cookbooks, cachedKitchen.schema.cookbooks, readCookbooks, NONE);
 
-  useFocusEffect(
-    useCallback(() => {
-      let isCurrent = true;
-      void readCookbooks().then((stored) => {
-        if (isCurrent) setCookbooks(stored);
-      });
-      return () => {
-        isCurrent = false;
-      };
-    }, []),
-  );
-
-  const reload = useCallback(() => {
-    void readCookbooks().then(setCookbooks);
-  }, []);
-
-  return { cookbooks, reload };
+  return { cookbooks: value, isStale, reload };
 }
