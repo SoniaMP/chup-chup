@@ -15,7 +15,7 @@ abiertas. El qué y el por qué del producto siguen en [`SPEC.md`](SPEC.md); los
 | 3. Edge Function de estructuración | **Hecho y desplegado.** Haiku por defecto, Sonnet de rescate, prompt cacheado, tope por cocinera y día |
 | 4. App Expo: crear, revisar, listar y ver receta | Hecho |
 | 5. Mi cocina | Libros, favoritas, búsqueda y reordenación arrastrando, hechos. **Faltan los recetarios** (las carpetas que agrupan libros) |
-| 6. Búsqueda por título e ingrediente | Hecho, y además busca libros por su nombre |
+| 6. Búsqueda por título e ingrediente | Hecho, y además busca libros por su nombre. Las recetas de los resultados traen su menú: portada, añadir a un libro y borrar |
 | 7. Notas personales y modo cocina | Hecho |
 | 8. Fotos y retoque | **Por hacer.** Es lo siguiente que tocaba |
 | 9. Caché offline de lectura | Por hacer |
@@ -39,15 +39,19 @@ definitivo lo hará un diseñador, y cambiarlo será sustituir los PNG y volver 
 
 ## Decisiones abiertas
 
-En `SPEC.md`, sección «Ideas por concretar», están las cinco con sus preguntas: buscar por los
-ingredientes que tienes, la fila de chips, buscar fuera de tu cocina, categorizar recetas y el
-plan gratuito frente al PRO (~2 €). Además:
+En `SPEC.md`, sección «Ideas por concretar», están las seis con sus preguntas: qué pasa al
+borrar una receta, buscar por los ingredientes que tienes, la fila de chips, buscar fuera de tu
+cocina, categorizar recetas y el plan gratuito frente al PRO (~2 €). Además:
 
 - **El diseño de la pantalla principal** está parado a la espera de un diseñador. Por eso los
   recetarios del paso 5 no se han hecho: cambian esa pantalla.
 - **Pantalla de registro**: dentro del MVP y sin hacer. Hoy la usuaria se crea a mano en el panel.
-- **Borrar una receta** solo se puede desde el menú de la receta dentro de un libro; desde los
-  resultados de buscar, no.
+- **Qué pasa al borrar una receta**: borrarla para siempre, o solo sacarla de la cocina de su
+  dueña dejando la fila en la base de datos. Es de la fase 1 y está sin decidir; toca una
+  ronda de `/grill-me`. El por qué, en «Ideas por concretar» de `SPEC.md`.
+- **Compartir sigue siendo fase 2.** Cómo será (enlace que abre la app, y visor HTML en la web
+  para quien no la tiene) está descrito en `SPEC.md` para no cerrarle la puerta, y no se
+  construye nada de eso ahora.
 
 ## Lo que se aprende por las malas
 

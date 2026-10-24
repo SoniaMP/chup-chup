@@ -36,7 +36,8 @@ Principio rector: ninguna decisión del MVP obliga a migrar datos cuando llegue 
 
 **Fuera del MVP**
 
-- Compartir recetas o libros, y registro "La he hecho" con fecha y foto (fase 2).
+- Compartir recetas o libros, y registro "La he hecho" con fecha y foto (fase 2). Cómo será
+  compartir una receta ya está descrito en su sección, para no cerrarle la puerta.
 - Libro "Por probar" de serie y "Quiero hacerla" como funcionalidad propia (fase 2).
 - Hacer un libro público o privado, y fijarlo arriba de la biblioteca (fase 2).
 - Entrada por voz propia (se usa el dictado del teclado).
@@ -185,6 +186,37 @@ Recetario = carpeta. Libro = playlist. Receta = canción.
 - Las recetas guardadas se leen sin conexión desde una caché local.
 - Crear, editar y la IA requieren red. Sin sincronización offline en el MVP.
 
+## Compartir una receta (fase 2)
+
+**No se construye en el MVP.** Está escrito para que las
+decisiones de la fase 1 no le cierren la puerta.
+
+La propietaria envía un enlace a una receta suya. Quien lo recibe cae en uno de dos sitios:
+
+1. **Tiene la app.** El enlace abre la receta dentro de la app. Puede leerla, usar el modo cocina
+   y guardarla en su cocina. **No puede editarla**: no es suya. Es la misma pantalla de receta de
+   siempre, con otro juego de acciones según de quién sea.
+2. **No tiene la app.** El enlace abre un **visor HTML** en la web: la receta y nada más. Sin
+   sesión, sin acciones, sin editar. No es la app en web, es una página de solo lectura.
+
+Será la primera pieza de la fase 2, y es lo que obliga a decidir en la fase 1 **qué pasa de
+verdad cuando se borra una receta**: ver el punto de «Ideas por concretar».
+
+Lo que hay que decidir antes de construirlo:
+
+- **Qué viaja y qué no.** Las notas personales son privadas y no deberían salir en el enlace; el
+  `raw_input` tampoco. Hay que decidirlo campo por campo, porque el visor es público.
+- **Quién puede abrir el enlace.** Enlace secreto que basta tener, o receta marcada como pública.
+  Lo primero no necesita sesión en el receptor y lo segundo sí necesita una política de lectura
+  anónima en Postgres.
+- **Si el enlace se puede retirar**, y qué pasa entonces con quien ya guardó la receta.
+- **Qué significa «guardar»**: una copia propia que ya se puede editar, o una referencia a la
+  receta de la otra persona, que cambia cuando su dueña la cambia. Va con «quitar frente a
+  borrar».
+- **Dónde vive el visor.** El enlace tiene que ser uno solo y decidir él a dónde va: abrir la app
+  si está instalada (enlaces universales) y caer en la web si no.
+- **Qué se ve en el visor** cuando la receta tiene foto, y si desde ahí se invita a instalar la app.
+
 ## Referencia visual
 
 Existe un prototipo hecho en Lovable. Lovable genera React web (no React Native), así que sirve como referencia visual y de flujos, no como código reutilizable. Los tokens de color y tipografía, las pantallas y los patrones de interacción ya extraídos están en `DESIGN.md`.
@@ -205,6 +237,11 @@ Existe un prototipo hecho en Lovable. Lovable genera React web (no React Native)
 
 Cosas acordadas que todavía no tienen forma. Antes de construirlas, una ronda de preguntas.
 
+- **Qué pasa cuando se borra una receta.** Hoy `remove` borra la fila y se acabó. La pregunta es
+  si eso debe seguir siendo así o si una receta borrada solo sale de la cocina de su dueña y sigue
+  existiendo en la base de datos. **Es una decisión de la fase 1**, no de cuando se comparta: el
+  día que una receta pueda estar en la cocina de otra persona, borrarla de verdad se la quita a
+  ella, y cambiar eso después es una migración. Pendiente de una ronda de preguntas (`/grill-me`).
 - **Buscar recetas por los ingredientes que tengo.** Escribes «pepino, tomate, sandía» y la app
   propone recetas que lleven al menos uno. Está por decidir: si vive en el buscador de siempre o
   en su propia pantalla; si ordena por cuántos ingredientes coinciden (y si enseña cuáles te
