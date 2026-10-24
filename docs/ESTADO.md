@@ -1,6 +1,6 @@
 # Dónde estamos
 
-Última actualización: 24 de octubre de 2026.
+Última actualización: 25 de octubre de 2026.
 
 Este documento es el traspaso entre sesiones: qué funciona, qué falta y qué decisiones están
 abiertas. El qué y el por qué del producto siguen en [`SPEC.md`](SPEC.md); los comandos, en el
@@ -81,6 +81,45 @@ decir que el MVP está hecho:
       cae la usuaria *después* de confirmar, que hoy es la URL por defecto y es una página rota.
       La cuenta se confirma igual, porque eso pasa al tocar el enlace. Si algún día tiene que
       volver a un sitio concreto, es el parámetro `emailRedirectTo` en `signUp`.
+
+## El despliegue, que es lo siguiente
+
+Hablado el 25 de octubre de 2026. Lo que hay en la mano: el dominio **`soniadev.es`** y un **VPS
+listo**. Lo que se quiere: **la web y la app de Android**, las dos.
+
+El orden importa, porque la web desbloquea cosas que hoy están a medias:
+
+1. **La web primero.** Export estático de Expo, nginx en el VPS y certificado de Let's Encrypt.
+   Con `https` de verdad se arreglan solos tres pendientes: la hoja de compartir del móvil, el
+   portapapeles del enlace (hoy no copia porque la página va por IP y sin cifrar) y la *Site URL*
+   de la confirmación de correo.
+2. **El visor, colgado del mismo dominio.** La idea es `/r/<testigo>` en nginx, que llama por
+   detrás a la Edge Function y **tira sus cabeceras** (`content-type: text/plain` y
+   `content-security-policy: sandbox`, que es lo que hace que el enlace se vea como código).
+   Así el visor se arregla sin tocar una línea del código.
+3. **Android después**, con EAS. Lo que marca el calendario no es el código: una cuenta de
+   desarrollador personal nueva necesita **doce probadores durante catorce días** antes de poder
+   publicar. Eso se empieza pronto o se espera dos semanas al final.
+
+### Lo que hay que decidir antes de la primera compilación
+
+- **Qué dominio.** O `chupchup.soniadev.es` ahora, o comprar `chupchup.es` y lanzar ya ahí.
+  Mudarse después es **barato** mientras `soniadev.es` siga siendo suyo: una redirección
+  permanente en el subdominio viejo mantiene vivos los enlaces ya repartidos, que es lo único
+  que está fuera de nuestro control. En Supabase es cambiar la *Site URL* y la lista de
+  redirecciones; en el código, una variable de entorno.
+- **El identificador del paquete de Android, que no se puede cambiar nunca.** Una vez publicada
+  en Play, cambiarlo es publicar otra app y dejar sin actualizaciones a quien tenga la primera.
+  No se ve en pantalla (el nombre visible sí se cambia cuando se quiera), pero sale en la URL de
+  la ficha. **Hay que elegirlo pensando en dónde quiere acabar la marca**, no en dónde vive hoy
+  la web: `es.chupchup.app` aunque de momento la web cuelgue de `soniadev.es`.
+- **La base del enlace del visor tiene que ser configuración desde el primer día**
+  (`EXPO_PUBLIC_…`), no una constante. Hoy `src/features/sharing/shareLink.ts` la arma con
+  `EXPO_PUBLIC_SUPABASE_URL`; al desplegar hay que sacarla a su propia variable para que mudarse
+  sea tocar el `.env`.
+
+Propuesto y no decidido: **etiquetas `og:` en el visor**, para que al pegar el enlace en WhatsApp
+salga la tarjeta con la foto y el título en vez de una línea de texto.
 
 ## Decisiones abiertas
 
