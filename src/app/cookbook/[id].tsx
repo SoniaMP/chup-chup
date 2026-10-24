@@ -1,8 +1,11 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { BackButton } from "@/components/BackButton";
+import { IconButton } from "@/components/IconButton";
 import { Screen } from "@/components/Screen";
+import { CookbookActions } from "@/features/cookbooks/CookbookActions";
 import { CookbookRecipeList } from "@/features/cookbooks/CookbookRecipeList";
 import { useCookbook } from "@/features/cookbooks/useCookbook";
 import { useCookbookRecipes } from "@/features/cookbooks/useCookbookRecipes";
@@ -14,8 +17,9 @@ export default function CookbookScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ id: string }>();
   const cookbookId = params.id ?? "";
-  const { cookbook, isLoaded } = useCookbook(cookbookId);
+  const { cookbook, isLoaded, replace } = useCookbook(cookbookId);
   const { entries, reload } = useCookbookRecipes(cookbookId);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   if (cookbook === null) {
     return (
@@ -33,6 +37,14 @@ export default function CookbookScreen() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <BackButton />
+          {/* Las acciones del libro se piden aquí, que es donde se buscan: dentro del libro. */}
+          <IconButton
+            name="more-vert"
+            label={`Acciones del libro ${cookbook.title}`}
+            onPress={() => {
+              setIsMenuOpen(true);
+            }}
+          />
         </View>
 
         <Text style={[styles.label, { color: colors.primary }]}>LIBRO</Text>
@@ -57,13 +69,33 @@ export default function CookbookScreen() {
         )}
 
       </ScrollView>
+      <CookbookActions
+        cookbook={cookbook}
+        isOpen={isMenuOpen}
+        onClose={() => {
+          setIsMenuOpen(false);
+        }}
+        onRenamed={(renamed) => {
+          setIsMenuOpen(false);
+          replace(renamed);
+        }}
+        onDeleted={() => {
+          setIsMenuOpen(false);
+          router.replace("/");
+        }}
+      />
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   content: { paddingBottom: tokens.spacing.block * 2 },
-  header: { flexDirection: "row", alignItems: "center", marginBottom: tokens.spacing.block },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: tokens.spacing.block,
+  },
   label: {
     fontFamily: tokens.fontFamily.bodyStrong,
     fontSize: tokens.fontSize.label,

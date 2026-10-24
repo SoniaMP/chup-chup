@@ -17,7 +17,8 @@ type CookbookActionsProps = {
   onClose: () => void;
   onRenamed: (cookbook: Cookbook) => void;
   onDeleted: () => void;
-  onReorder: () => void;
+  /** Sin esto, el menú no ofrece reordenar: desde dentro del libro no hay nada que ordenar. */
+  onReorder?: (() => void) | undefined;
 };
 
 const LABELS: Record<CookbookAction, Omit<SheetAction, "onPress">> = {
@@ -30,8 +31,8 @@ const LABELS: Record<CookbookAction, Omit<SheetAction, "onPress">> = {
 /**
  * Las acciones de un libro: el menú y lo que abre cada una.
  *
- * Vive junto al libro, no en la pantalla, para que se pida igual desde la biblioteca (dejando
- * el dedo encima) y desde el propio libro (con el botón de los tres puntos).
+ * Vive junto al libro, no en la pantalla, para que se pida igual desde la biblioteca (con los
+ * tres puntos de su tarjeta) y desde dentro del propio libro (con los tres puntos de arriba).
  */
 export function CookbookActions({
   cookbook,
@@ -46,19 +47,27 @@ export function CookbookActions({
   // Reordenar no abre nada: cierra el menú y deja la lista en modo arrastrar. Las otras dos sí
   // abren un diálogo, y entonces el menú no se "cierra": quien manda la hoja sigue montado,
   // porque cerrarlo desde fuera se llevaría por delante el diálogo que acaba de abrirse.
-  const actions = availableCookbookActions(cookbook).map(
-    (action): SheetAction => ({
-      ...LABELS[action],
-      onPress: () => {
-        if (action === "reorder") {
-          onClose();
-          onReorder();
-          return;
-        }
-        setOpen(action);
-      },
-    }),
-  );
+  const actions = availableCookbookActions(cookbook)
+    .filter((action) => action !== "reorder" || onReorder !== undefined)
+    .map(
+      (action): SheetAction => ({
+        ...LABELS[action],
+        onPress: () => {
+          if (action === "reorder") {
+            onClose();
+            onReorder?.();
+            return;
+          }
+          setOpen(action);
+        },
+      }),
+    );
+
+  // Al libro por defecto le falta «Eliminar», y una opción que falta sin explicación parece un
+  // fallo de la app. Se dice por qué, en vez de dejar el hueco.
+  const hint = cookbook.isSystem
+    ? "Aquí caen las recetas que no guardas en ningún libro, así que este no se elimina."
+    : undefined;
 
   const close = (): void => {
     setOpen(null);
@@ -67,7 +76,12 @@ export function CookbookActions({
 
   return (
     <>
-      <ActionSheet isOpen={isOpen && open === null} actions={actions} onClose={onClose} />
+      <ActionSheet
+        isOpen={isOpen && open === null}
+        actions={actions}
+        onClose={onClose}
+        {...(hint === undefined ? {} : { title: hint })}
+      />
       <RenameCookbookDialog
         cookbook={cookbook}
         isOpen={open === "rename"}

@@ -64,34 +64,49 @@ export function CookbookListItem({
         </Text>
       </View>
 
-      {handle ?? <MaterialIcons name="chevron-right" size={24} color={colors.mutedForeground} />}
     </>
   );
 
+  const card = [styles.card, { backgroundColor: colors.card, borderColor: colors.border }];
+
   if (isReordering) {
     return (
-      <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
+      <View style={card}>
         {body}
+        {handle}
       </View>
     );
   }
 
+  // Dos botones hermanos, nunca uno dentro de otro: en web un Pressable es un <button>. Igual
+  // que en la fila de una receta, para que la lista se comporte igual de arriba abajo.
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={`Abrir el libro ${cookbook.title}`}
-      onPress={() => {
-        router.push({ pathname: "/cookbook/[id]", params: { id: cookbook.id } });
-      }}
-      onLongPress={onOpenActions}
-      style={({ pressed }) => [
-        styles.card,
-        { backgroundColor: colors.card, borderColor: colors.border },
-        pressed && styles.pressed,
-      ]}
-    >
-      {body}
-    </Pressable>
+    <View style={card}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`Abrir el libro ${cookbook.title}`}
+        onPress={() => {
+          router.push({ pathname: "/cookbook/[id]", params: { id: cookbook.id } });
+        }}
+        onLongPress={onOpenActions}
+        style={({ pressed }) => [styles.main, pressed && styles.pressed]}
+      >
+        {body}
+      </Pressable>
+
+      {onOpenActions === undefined ? (
+        <MaterialIcons name="chevron-right" size={24} color={colors.mutedForeground} />
+      ) : (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Acciones del libro ${cookbook.title}`}
+          onPress={onOpenActions}
+          style={({ pressed }) => [styles.actions, pressed && styles.pressed]}
+        >
+          <MaterialIcons name="more-vert" size={22} color={colors.mutedForeground} />
+        </Pressable>
+      )}
+    </View>
   );
 }
 
@@ -106,7 +121,9 @@ const styles = StyleSheet.create({
     // la tarjeta del fondo, que son dos cremas muy parecidas.
     borderWidth: 1,
   },
-  pressed: { opacity: 0.9, transform: [{ scale: 0.995 }] },
+  main: { flex: 1, flexDirection: "row", alignItems: "center", gap: tokens.spacing.row + 4 },
+  actions: { width: 36, height: 44, alignItems: "center", justifyContent: "center" },
+  pressed: { opacity: 0.9 },
   // La misma tipografía que el título de una receta: en la cocina todo se lee igual.
   title: { fontFamily: tokens.fontFamily.bodyStrong, fontSize: tokens.fontSize.body },
   text: { flex: 1, gap: 2 },
