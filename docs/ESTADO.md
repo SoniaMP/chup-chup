@@ -31,9 +31,10 @@ libros y recetas, curadas por quien desarrolla.
   aplicados en el proyecto.
 - Selector de portada, tarjetas que pintan la portada elegida y acción «Crear portada» en los dos
   menús: hechos.
-- `npm run covers -- <carpeta>` deja las imágenes cuadradas y en dos tamaños; se suben arrastrando
-  al bucket desde el panel.
-- **Pendiente: subir imágenes.** Hasta que haya alguna en el bucket, el selector sale vacío.
+- `npm run covers -- library/originals` deja las imágenes cuadradas y en dos tamaños; se suben
+  con el CLI, una a una y a la raíz del bucket, como explica `library/README.md`.
+- **Las doce primeras están dentro**: dibujo a línea, dos colores, sobre cuatro fondos de la
+  paleta. Nadie ha visto todavía el selector con imágenes de verdad.
 
 Y el **logotipo**: `assets/logo.png` (el gorro con el tenedor y la cuchara) ya genera icono,
 splash, icono adaptativo de Android y favicon, conectados en `app.json`. Es provisional: el
@@ -69,7 +70,6 @@ fila de chips, categorizar recetas y el plan gratuito frente al PRO (~2 €). Ad
 
 - **El diseño de la pantalla principal** está parado a la espera de un diseñador. Por eso los
   recetarios del paso 5 no se han hecho: cambian esa pantalla.
-- **Pantalla de registro**: dentro del MVP y sin hacer. Hoy la usuaria se crea a mano en el panel.
 - **Compartir sigue siendo fase 2**, y la pasarela de recetarios de pago es una fase 3 nueva.
   Nada de eso se construye ahora; está descrito en `SPEC.md` para no cerrarle la puerta.
 
@@ -98,5 +98,9 @@ hay que recordar es esto:
   viejo y tapan el arreglo.
 - **Nunca tapar el error real con un mensaje amable.** Nos ha costado tiempo tres veces: en el
   login, al guardar y al llamar a la IA. Lo que falla tiene que decir por qué.
+- **Un bucket público no es un bucket listable.** «Público» solo quiere decir que sus ficheros se
+  bajan por URL sin credenciales; listarlos pasa por `storage.objects`, que tiene RLS, y sin
+  política de lectura la app recibe una lista vacía sin error ninguno. Le pasó al catálogo de
+  portadas: las doce imágenes estaban subidas y el selector seguía vacío.
 - **Un borrado bloqueado por una política no da error en Postgres**, simplemente no borra nada: hay
   que pedir de vuelta la fila borrada para saberlo.
