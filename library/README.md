@@ -5,10 +5,10 @@ quien desarrolla; nadie las sube desde la app.
 
 ## Cómo se añade una imagen
 
-1. Guarda los originales en una carpeta cualquiera (sirven JPG, PNG, HEIC o WebP) y pásalos por:
+1. Guarda los originales en `library/originals/` (sirven JPG, PNG, HEIC o WebP) y pásalos por:
 
    ```
-   npm run covers -- ~/Desktop/mis-imagenes
+   npm run covers -- library/originals
    ```
 
    Eso las deja cuadradas y en dos tamaños dentro de `library/ready/`: `<id>.jpg` (1200 px) para
@@ -19,9 +19,24 @@ quien desarrolla; nadie las sube desde la app.
    Va en JPEG y no en WebP porque `sips`, que es lo que trae macOS, no escribe WebP. El código
    acepta los dos, así que si algún día instalas `cwebp`, conviven sin migrar nada.
 
-2. Sube el contenido de `library/ready/` al bucket **`library-images`** desde el panel de Supabase
-   (Storage → library-images → Upload files). El bucket es público para leer y nadie tiene permiso
-   de escritura: por eso se sube desde ahí.
+2. Sube el contenido de `library/ready/` al bucket **`library-images`**, fichero a fichero y a la
+   raíz:
+
+   ```
+   for f in library/ready/*.jpg; do
+     npx supabase storage cp "$f" "ss:///library-images/$(basename "$f")" --experimental
+   done
+   ```
+
+   No sirve `cp -r library/ready ss:///library-images`: el CLI siempre cuelga la carpeta de
+   destino, y las imágenes acaban en `library-images/ready/`, donde `supabaseLibraryImageStore`
+   no las ve porque solo lista la raíz. Para comprobarlo, **la barra final importa**:
+   `npx supabase storage ls ss:///library-images/ --experimental` lista el contenido;
+   sin ella lista el bucket. También se puede subir a mano desde el panel
+   (Storage → library-images → Upload files).
+
+   El bucket es público para leer y nadie tiene permiso de escritura, así que desde la app no
+   sube nadie: el CLI puede porque entra por la API de gestión del proyecto, no como usuaria.
 
 3. Añade su entrada en `manifest.json`, con el origen, la licencia y —si es generada— el prompt.
 
@@ -45,7 +60,11 @@ Esto es el encargo, para poder hacerlas de una sentada (en otra sesión, con un 
 imágenes o buscando en bancos de fotos). Hasta que haya alguna en el bucket, el selector de
 portada sale vacío.
 
-**Doce imágenes para empezar: ocho de textura para libros y cuatro de plato para recetas.** Doce
+Aquí quedan los motivos y las reglas. Los doce prompts ya escritos, uno por imagen y con el
+nombre de fichero de cada una, están en [`PROMPTS.md`](PROMPTS.md): es lo que se pega en el
+generador.
+
+**Doce imágenes para empezar: ocho para libros y cuatro de plato para recetas.** Doce
 llenan la rejilla del selector sin que haya que elegir entre cuarenta, y son pocas para repasarlas
 a mano una por una.
 
@@ -53,41 +72,49 @@ Requisitos que no se negocian, porque la app las pinta así:
 
 - **Cuadradas.** El selector y las tarjetas recortan al centro; si el motivo está descentrado, se
   pierde. Pide 1:1 desde el principio.
-- **Mínimo 1200 × 1200 px.** Es el tamaño grande que guarda `npm run covers`.
-- **El centro, tranquilo.** Encima de la portada va el título en blanco: una imagen con mucho
-  detalle o mucho contraste en el medio se come el texto.
-- **Luz cálida, nada de blanco clínico.** La app es crema (`#FDF6EA`) y terracota (`#CF542C`): una
-  foto azulada o de fondo blanco puro canta al lado de todo lo demás.
+- **1200 × 1200 px.** Es el tamaño grande que guarda `npm run covers`. Si un generador solo da
+  1024, vale: el script escala lo que le llegue y la app pinta las portadas a 64 px en las listas
+  y a 88 px en el selector.
+- **Que se entienda encogida.** A 64 px lo que distingue una portada de otra es el color y la
+  silueta, no el detalle: un motivo y nada más, y de trazo con cuerpo.
+- **A sangre, sin marco.** El color tiene que llegar a los cuatro bordes. Un dibujo montado sobre
+  una hoja con sombra trae el margen puesto, y ese margen acaba en la app.
+- **Colores de la paleta**, que es crema (`#FDF6EA`) y terracota (`#CF542C`). Nada azulado ni de
+  blanco clínico.
+- **Que no sean color crema todas.** Una portada clara y sin contraste, encogida, es un cuadrado
+  del mismo color que la pantalla: parece un hueco en vez de una portada.
 - **Nada de caras, marcas, logotipos ni envases**, ni texto dentro de la imagen.
 
-### Las ocho de libro: textura, no plato
+### Las doce son dibujo a línea
+
+**Ni fotos ni texturas.** Se probaron las dos —un mármol fotográfico y un patrón de madera— y
+ninguna pertenecía a esta app: al lado del logotipo parecían de otro producto, y encogidas no eran
+más que una mancha. Las doce son un trazo de tinta continuo, dos colores y nada más.
+
+Lo que cambia entre ellas no es el estilo, es **sobre qué están dibujadas**: cuatro fondos de la
+paleta —crema, terracota, oliva y marrón—, tres imágenes de cada uno. Doce dibujos sobre crema
+serían, encogidos, doce cuadrados del color de la pantalla.
+
+### Las ocho de libro: utensilios y despensa
 
 Un libro agrupa cosas distintas ("Cenas rápidas", "De mi madre"), así que su portada no puede ser
-un plato concreto. Lo que funciona: superficies y materiales de cocina, de cerca y desenfocados.
+un plato concreto: **cazuela con tapa · mortero con su mano · limones con una ramita de hierbas ·
+varillas y cuchara de madera · sartén · rodillo sobre la masa · tarros de despensa · ajos y
+cebolla.**
 
-Ocho motivos, uno por imagen: **mármol crema · madera de nogal · lino arrugado · barro cocido ·
-mortero de piedra · harina sobre mesa oscura · azulejo artesanal verde oliva · cobre viejo.**
+### Las cuatro de receta: platos
 
-Prompt base, cambiando solo el motivo:
-
-> Close-up texture of <motivo>, soft warm diffused daylight from the left, shallow depth of
-> field, centered composition with a calm empty center, muted terracotta and cream palette,
-> no objects, no text, no people, square 1:1, photographic, 1200x1200.
-
-### Las cuatro de receta: plato, de cerca
-
-Para recetas sí es comida, pero genérica, que valga para muchas: **un guiso en cazuela de barro ·
-verduras asadas en bandeja · masa y pan recién hecho · ensalada de hoja verde.**
-
-> Overhead close-up of <plato> on a rustic ceramic plate, warm natural window light, homemade and
-> slightly imperfect, cream and terracotta tones, dark wood table, no hands, no faces, no
-> branding, no text, square 1:1, photographic, 1200x1200.
+Para recetas sí es comida, pero genérica, que valga para muchas: **cuenco de guiso · fuente de
+verduras asadas · hogaza con una rebanada cortada · ensaladera de hoja verde.** Dibujadas
+igual que las otras ocho: la foto de verdad es la que pone la cocinera, y manda sobre la del
+catálogo.
 
 ### Y después
 
-1. Guarda los doce originales en una carpeta, con el **nombre que quieres que tengan de
-   identificador**: en inglés, sin tildes y con guiones (`cream-marble.jpg`, `clay-pot-stew.jpg`).
-2. `npm run covers -- <esa carpeta>`
+1. Guarda los doce originales en `library/originals/`, con el **nombre que quieres que tengan de
+   identificador**: en inglés, sin tildes y con guiones (`drawn-pot.jpg`, `drawn-salad-bowl.jpg`).
+   Esa carpeta está en `.gitignore`.
+2. `npm run covers -- library/originals`
 3. Sube `library/ready/` al bucket, como dice arriba. **El bucket es la lista**: no hay que
    registrar nada en el código, aparecen solas en el selector, por orden de nombre de fichero.
 4. Rellena `manifest.json` con el origen de cada una. Si son generadas, **pega el prompt exacto**:

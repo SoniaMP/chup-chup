@@ -44,11 +44,18 @@ definitivo lo hará un diseñador, y cambiarlo será sustituir los PNG y volver 
 Cosas que no son código y que, si no están, dejan la app a medias. Repasar esta lista antes de
 decir que el MVP está hecho:
 
-- [ ] **Subir las doce imágenes del catálogo** al bucket `library-images`. El selector de portada
-      está construido y hasta entonces sale vacío. El encargo, con los prompts y las medidas, está
-      en [`library/README.md`](../library/README.md).
-- [ ] **Logotipo definitivo**, con fondo transparente: el provisional lleva fondo crema y se
-      recorta como un cuadrado claro en modo oscuro.
+- [x] **Subir las doce imágenes del catálogo** al bucket `library-images`. Hechas el 24 de
+      octubre de 2026 y subidas: veinticuatro ficheros en la raíz del bucket, doce en el
+      selector. Los originales están en `library/originals/` y los preparados en
+      `library/ready/`, ninguna de las dos carpetas en git. El estilo, los cuatro fondos y los
+      prompts exactos están en [`library/PROMPTS.md`](../library/PROMPTS.md).
+- [ ] **Quitarle el fondo crema al logotipo**, que en modo oscuro se recorta como un cuadrado
+      claro. El dibujo se queda: se intentó rehacerlo en el trazo del catálogo y salió sin
+      carácter. Es un recorte, no un rediseño.
+- [ ] **Icono propio, distinto del logotipo.** Son dos encargos con exigencias contrarias: el
+      icono se pinta a 48 px y Android le recorta todo menos el 66 % central, así que pide una
+      sola forma maciza —el gorro solo—, mientras que el logotipo pide carácter. El prompt y el
+      porqué están al final de [`library/PROMPTS.md`](../library/PROMPTS.md).
 - [ ] **Mirar la confirmación de correo** en el panel de Supabase y, si está activada, que la URL
       de redirección apunte a donde corre la app.
 - [ ] **Elegir el servicio de retoque** (paso 8b), o dejar «Mejorar con IA» fuera del MVP a

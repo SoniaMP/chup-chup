@@ -1,4 +1,101 @@
 {
-  "comment": "De dónde sale cada imagen del catálogo. No lo usa la app: existe para poder justificar la procedencia cuando alguien pregunte. Una entrada por fichero del bucket library-images.",
-  "images": []
+  "comment": "De dónde sale cada imagen del catálogo. No lo usa la app: existe para poder justificar la procedencia cuando alguien pregunte. Una entrada por fichero del bucket library-images; el -small de cada una sale del mismo original con npm run covers. Los prompts son los de PROMPTS.md, copiados literalmente.",
+  "images": [
+    {
+      "id": "drawn-bread-loaf.jpg",
+      "background": "marrón",
+      "source": "generada con IA",
+      "generator": "Google Gemini",
+      "prompt": "Minimal hand-drawn line illustration of a round loaf of bread with one slice cut from it, drawn in a single continuous cream ink line (#FDF6EA) on a flat light warm caffè-latte brown background (#A98057), milky and soft, light but still clearly darker than the cream ink, not a dark chocolate brown, not grey and not beige. The brown background fills the entire square frame edge to edge: no paper sheet, no mounted print, no drop shadow, no outer margin, no frame, no background scene. Confident bold ink line, noticeably thicker than a fine liner so it holds up against the light background, even throughout, clean continuous contours, no sketchy or scratchy strokes, no hatching, no shading, no fill, no second color. The motif is centered and large, filling about 85% of the frame, flat 2D, no perspective, no text, square 1:1.",
+      "licence": "Uso y venta permitidos. No se reclama la autoría: es obra generada."
+    },
+    {
+      "id": "drawn-garlic-onion.jpg",
+      "background": "marrón",
+      "source": "generada con IA",
+      "generator": "Google Gemini",
+      "prompt": "Minimal hand-drawn line illustration of a head of garlic and an onion side by side, drawn in a single continuous cream ink line (#FDF6EA) on a flat light warm caffè-latte brown background (#A98057), milky and soft, light but still clearly darker than the cream ink, not a dark chocolate brown, not grey and not beige. The brown background fills the entire square frame edge to edge: no paper sheet, no mounted print, no drop shadow, no outer margin, no frame, no background scene. Confident bold ink line, noticeably thicker than a fine liner so it holds up against the light background, even throughout, clean continuous contours, no sketchy or scratchy strokes, no hatching, no shading, no fill, no second color. The motifs are centered and large, filling about 85% of the frame, flat 2D, no perspective, no text, square 1:1.",
+      "licence": "Uso y venta permitidos. No se reclama la autoría: es obra generada."
+    },
+    {
+      "id": "drawn-jars.jpg",
+      "background": "oliva",
+      "source": "generada con IA",
+      "generator": "Google Gemini",
+      "prompt": "Minimal hand-drawn line illustration of three pantry jars of different heights with their lids on, drawn in a single continuous cream ink line (#FDF6EA) on a flat medium olive green background (#657B3D), the colour of a green olive, not a dark forest green and not khaki. The olive background fills the entire square frame edge to edge: no paper sheet, no mounted print, no drop shadow, no outer margin, no frame, no background scene. Confident medium-weight ink line, even throughout, clean continuous contours, no sketchy or scratchy strokes, no hatching, no shading, no fill, no second color. The motifs are centered and large, filling about 85% of the frame, flat 2D, no perspective, no text, no labels, square 1:1.",
+      "licence": "Uso y venta permitidos. No se reclama la autoría: es obra generada."
+    },
+    {
+      "id": "drawn-lemons-herbs.jpg",
+      "background": "crema",
+      "source": "generada con IA",
+      "generator": "Google Gemini",
+      "prompt": "Minimal hand-drawn line illustration of two lemons and a small sprig of herbs with five or six large simple leaves, no fine repeated detail, drawn in a single continuous terracotta ink line (#CF542C) on a flat cream background (#FDF6EA). The cream background fills the entire square frame edge to edge: no paper sheet, no mounted print, no drop shadow, no outer margin, no frame, no background scene. Confident medium-weight ink line, even throughout, clean continuous contours, no sketchy or scratchy strokes, no hatching, no shading, no fill, no second color. The motif is centered and large, filling about 85% of the frame, flat 2D, no perspective, no text, square 1:1.",
+      "licence": "Uso y venta permitidos. No se reclama la autoría: es obra generada."
+    },
+    {
+      "id": "drawn-mortar.jpg",
+      "background": "crema",
+      "source": "generada con IA",
+      "generator": "Google Gemini",
+      "prompt": "Minimal hand-drawn line illustration of a mortar with its pestle resting in it, drawn in a single continuous terracotta ink line (#CF542C) on a flat cream background (#FDF6EA). The cream background fills the entire square frame edge to edge: no paper sheet, no mounted print, no drop shadow, no outer margin, no frame, no background scene. Confident medium-weight ink line, even throughout, clean continuous contours, no sketchy or scratchy strokes, no hatching, no shading, no fill, no second color. The motif is centered and large, filling about 85% of the frame, flat 2D, no perspective, no text, square 1:1.",
+      "licence": "Uso y venta permitidos. No se reclama la autoría: es obra generada."
+    },
+    {
+      "id": "drawn-pan.jpg",
+      "background": "terracota",
+      "source": "generada con IA",
+      "generator": "Google Gemini",
+      "prompt": "Minimal hand-drawn line illustration of a frying pan with a long handle, seen from slightly above, drawn in a single continuous cream ink line (#FDF6EA) on a flat deep warm brick terracotta background (#A54228), the colour of a weathered clay roof tile, muted rather than bright, not a vivid orange and not maroon. The terracotta background fills the entire square frame edge to edge: no paper sheet, no mounted print, no drop shadow, no outer margin, no frame, no background scene. Confident medium-weight ink line, even throughout, clean continuous contours, no sketchy or scratchy strokes, no hatching, no shading, no fill, no second color. The motif is centered and large, filling about 85% of the frame, flat 2D, no perspective, no text, square 1:1.",
+      "licence": "Uso y venta permitidos. No se reclama la autoría: es obra generada."
+    },
+    {
+      "id": "drawn-pot.jpg",
+      "background": "crema",
+      "source": "generada con IA",
+      "generator": "Google Gemini",
+      "prompt": "Minimal hand-drawn line illustration of a lidded cooking pot with two handles and a wisp of steam, drawn in a single continuous terracotta ink line (#CF542C) on a flat cream background (#FDF6EA). The cream background fills the entire square frame edge to edge: no paper sheet, no mounted print, no drop shadow, no outer margin, no frame, no background scene. Confident medium-weight ink line, even throughout, clean continuous contours, no sketchy or scratchy strokes, no hatching, no shading, no fill, no second color. The motif is centered and large, filling about 85% of the frame, flat 2D, no perspective, no text, square 1:1.",
+      "licence": "Uso y venta permitidos. No se reclama la autoría: es obra generada."
+    },
+    {
+      "id": "drawn-roast-tray.jpg",
+      "background": "marrón",
+      "source": "generada con IA",
+      "generator": "Google Gemini",
+      "prompt": "Minimal hand-drawn line illustration of a baking tray holding five or six large simple pieces of roasted vegetable, seen from above, no fine repeated detail, drawn in a single continuous cream ink line (#FDF6EA) on a flat light warm caffè-latte brown background (#A98057), milky and soft, light but still clearly darker than the cream ink, not a dark chocolate brown, not grey and not beige. The brown background fills the entire square frame edge to edge: no paper sheet, no mounted print, no drop shadow, no outer margin, no frame, no background scene. Confident bold ink line, noticeably thicker than a fine liner so it holds up against the light background, even throughout, clean continuous contours, no sketchy or scratchy strokes, no hatching, no shading, no fill, no second color. The motif is centered and large, filling about 85% of the frame, flat 2D, no perspective, no text, square 1:1.",
+      "licence": "Uso y venta permitidos. No se reclama la autoría: es obra generada."
+    },
+    {
+      "id": "drawn-rolling-pin.jpg",
+      "background": "oliva",
+      "source": "generada con IA",
+      "generator": "Google Gemini",
+      "prompt": "Minimal hand-drawn line illustration of a rolling pin lying on a round of dough, drawn in a single continuous cream ink line (#FDF6EA) on a flat medium olive green background (#657B3D), the colour of a green olive, not a dark forest green and not khaki. The olive background fills the entire square frame edge to edge: no paper sheet, no mounted print, no drop shadow, no outer margin, no frame, no background scene. Confident medium-weight ink line, even throughout, clean continuous contours, no sketchy or scratchy strokes, no hatching, no shading, no fill, no second color. The motif is centered and large, filling about 85% of the frame, flat 2D, no perspective, no text, square 1:1.",
+      "licence": "Uso y venta permitidos. No se reclama la autoría: es obra generada."
+    },
+    {
+      "id": "drawn-salad-bowl.jpg",
+      "background": "oliva",
+      "source": "generada con IA",
+      "generator": "Google Gemini",
+      "prompt": "Minimal hand-drawn line illustration of a wide bowl holding a few large simple salad leaves, no fine repeated detail, drawn in a single continuous cream ink line (#FDF6EA) on a flat medium olive green background (#657B3D), the colour of a green olive, not a dark forest green and not khaki. The olive background fills the entire square frame edge to edge: no paper sheet, no mounted print, no drop shadow, no outer margin, no frame, no background scene. Confident medium-weight ink line, even throughout, clean continuous contours, no sketchy or scratchy strokes, no hatching, no shading, no fill, no second color. The motif is centered and large, filling about 85% of the frame, flat 2D, no perspective, no text, square 1:1.",
+      "licence": "Uso y venta permitidos. No se reclama la autoría: es obra generada."
+    },
+    {
+      "id": "drawn-stew-bowl.jpg",
+      "background": "terracota",
+      "source": "generada con IA",
+      "generator": "Google Gemini",
+      "prompt": "Minimal hand-drawn line illustration of a deep bowl with a spoon resting in it, the stew suggested by one simple wavy line across the surface and two small curls of steam, no visible chunks, no fine repeated detail, drawn in a single continuous cream ink line (#FDF6EA) on a flat deep warm brick terracotta background (#A54228), the colour of a weathered clay roof tile, muted rather than bright, not a vivid orange and not maroon. The terracotta background fills the entire square frame edge to edge: no paper sheet, no mounted print, no drop shadow, no outer margin, no frame, no background scene. Confident medium-weight ink line, even throughout, clean continuous contours, no sketchy or scratchy strokes, no hatching, no shading, no fill, no second color, outlines only with nothing painted in. The motif is centered and large, filling about 85% of the frame, flat 2D, no perspective, no text, square 1:1.",
+      "licence": "Uso y venta permitidos. No se reclama la autoría: es obra generada."
+    },
+    {
+      "id": "drawn-whisk-spoon.jpg",
+      "background": "terracota",
+      "source": "generada con IA",
+      "generator": "Google Gemini",
+      "prompt": "Minimal hand-drawn line illustration of a balloon whisk with only five or six widely spaced wires, crossed with a wooden spoon, no fine repeated detail, drawn in a single continuous cream ink line (#FDF6EA) on a flat deep warm brick terracotta background (#A54228), the colour of a weathered clay roof tile, muted rather than bright, not a vivid orange and not maroon. The terracotta background fills the entire square frame edge to edge: no paper sheet, no mounted print, no drop shadow, no outer margin, no frame, no background scene. Confident medium-weight ink line, even throughout, clean continuous contours, no sketchy or scratchy strokes, no hatching, no shading, no fill, no second color. The motif is centered and large, filling about 85% of the frame, flat 2D, no perspective, no text, square 1:1.",
+      "licence": "Uso y venta permitidos. No se reclama la autoría: es obra generada."
+    }
+  ]
 }

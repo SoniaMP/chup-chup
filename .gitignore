@@ -17,4 +17,5 @@ web-build/
 # Native projects, generated on build
 /ios
 /android
+library/originals/
 library/ready/
