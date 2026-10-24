@@ -5,6 +5,7 @@ import { BackButton } from "@/components/BackButton";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { Screen } from "@/components/Screen";
 import { SecondaryButton } from "@/components/SecondaryButton";
+import { RecipePhoto } from "@/features/photos/RecipePhoto";
 import { EditRecipeButton } from "@/features/recipes/EditRecipeButton";
 import { FavoriteButton } from "@/features/recipes/FavoriteButton";
 import { RecipeFacts } from "@/features/recipes/RecipeFacts";
@@ -46,6 +47,7 @@ export default function RecipeScreen() {
         </View>
 
         <Text style={[styles.title, { color: colors.foreground }]}>{recipe.title}</Text>
+        <RecipePhoto recipe={recipe} onChange={replace} />
         <RecipeFacts recipe={recipe} />
 
         <View style={styles.actions}>

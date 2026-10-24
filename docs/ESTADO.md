@@ -17,7 +17,8 @@ abiertas. El qué y el por qué del producto siguen en [`SPEC.md`](SPEC.md); los
 | 5. Mi cocina | Libros, favoritas, búsqueda y reordenación arrastrando, hechos. **Faltan los recetarios** (las carpetas que agrupan libros) |
 | 6. Búsqueda por título e ingrediente | Hecho, y además busca libros por su nombre. Las recetas de los resultados traen su menú: portada, añadir a un libro y borrar |
 | 7. Notas personales y modo cocina | Hecho |
-| 8. Fotos y retoque | **Por hacer.** Es lo siguiente que tocaba |
+| 8a. Foto de la receta | **Hecho.** Cámara o galería, encogida, a un bucket privado que se lee con URLs firmadas |
+| 8b. «Mejorar con IA» | Por hacer. Falta elegir servicio de retoque: es una decisión, no código |
 | 9. Caché offline de lectura | Por hacer. Lo prestado tendrá que borrarse al perder el acceso: nace sabiéndolo |
 | 10. Sacar lo personal de `recipes` a `saved_recipes` | **Hecho.** `recipes` es contenido; `saved_recipes` es «mi cocina». Nada de acceso ni revocación todavía |
 

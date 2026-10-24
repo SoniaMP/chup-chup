@@ -11,7 +11,14 @@
     },
     "plugins": [
       "expo-router",
-      "expo-status-bar"
+      "expo-status-bar",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Chup Chup usa tus fotos para ponerle cara a tus recetas.",
+          "cameraPermission": "Chup Chup usa la cámara para hacerle una foto a lo que cocinas."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

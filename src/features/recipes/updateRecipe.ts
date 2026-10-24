@@ -1,5 +1,6 @@
 import type { RecipeInput } from "@/domain/recipes/recipeInput";
 import { recipeWithChanges } from "@/domain/recipes/recipeWithChanges";
+import { savedRecipeWith } from "@/domain/recipes/savedRecipeWith";
 import type { SavedRecipe } from "@/domain/recipes/savedRecipe";
 import { updateRecipeNotes } from "@/domain/recipes/updateRecipeNotes";
 import { supabaseRecipeStore } from "./supabaseRecipeStore";
@@ -17,6 +18,6 @@ export async function updateRecipe(id: string, input: RecipeInput): Promise<Save
   const recipe = await supabaseRecipeStore.update(recipeWithChanges(current, input));
 
   return supabaseRecipeStore.savePersonal(
-    updateRecipeNotes({ ...current, ...recipe }, input.notes ?? ""),
+    updateRecipeNotes(savedRecipeWith(current, recipe), input.notes ?? ""),
   );
 }

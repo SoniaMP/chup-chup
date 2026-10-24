@@ -1,5 +1,7 @@
+import { recipePhotoPath } from "@/domain/photos/recipePhotoPath";
 import type { Recipe } from "@/domain/recipes/recipe";
 import type { SavedRecipe } from "@/domain/recipes/savedRecipe";
+import { currentOwnerId } from "@/features/auth/currentOwnerId";
 import { supabase } from "@/lib/supabase";
 import { recipeFromRow } from "./recipeFromRow";
 import { rowFromRecipe } from "./rowFromRecipe";
@@ -64,10 +66,28 @@ export const supabaseRecipeStore = {
     return savedRecipeFromRow(written.data);
   },
 
+  /**
+   * Borra la receta y, después, sus fotos.
+   *
+   * Primero la fila: si falla, no se ha perdido nada. Las fotos van después y su borrado no puede
+   * tumbar la operación —la receta ya no está, que es lo que se pedía—, pero se avisa, porque una
+   * foto que se queda sola no la ve nadie y ocupa sitio.
+   */
   async remove(id: string): Promise<void> {
     const { error } = await supabase.from("recipes").delete().eq("id", id);
-
     if (error !== null) throw new Error(error.message);
+
+    try {
+      const ownerId = await currentOwnerId();
+      await supabase.storage
+        .from("recipe-photos")
+        .remove([
+          recipePhotoPath(ownerId, id, "original"),
+          recipePhotoPath(ownerId, id, "enhanced"),
+        ]);
+    } catch (cause) {
+      console.warn("La receta se ha borrado, pero sus fotos siguen en el almacén", cause);
+    }
   },
 
   /** Cambia el contenido de la receta. Lo personal no se toca aquí: tiene su propio guardado. */

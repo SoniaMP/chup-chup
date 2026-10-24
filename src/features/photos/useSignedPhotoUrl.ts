@@ -1,23 +1,21 @@
 import { useEffect, useState } from "react";
 
 import { supabase } from "@/lib/supabase";
+import { signedPhotoCache } from "./signedPhotoCache";
 
 const BUCKET = "recipe-photos";
-/** Una hora, que es lo que dura una sesión de cocina de sobra. */
-const LASTS_SECONDS = 3600;
-/** Se vuelve a firmar diez minutos antes de caducar: nunca se enseña una URL muerta. */
-const REUSE_MS = (LASTS_SECONDS - 600) * 1000;
-
-const signed = new Map<string, { url: string; at: number }>();
 
 const signUrl = async (path: string): Promise<string> => {
-  const fresh = signed.get(path);
-  if (fresh !== undefined && Date.now() - fresh.at < REUSE_MS) return fresh.url;
+  const fresh = signedPhotoCache.fresh(path);
+  if (fresh !== null) return fresh;
 
-  const { data, error } = await supabase.storage.from(BUCKET).createSignedUrl(path, LASTS_SECONDS);
+  const { data, error } = await supabase.storage
+    .from(BUCKET)
+    .createSignedUrl(path, signedPhotoCache.lastsSeconds);
+
   if (error !== null) throw new Error(error.message);
 
-  signed.set(path, { url: data.signedUrl, at: Date.now() });
+  signedPhotoCache.keep(path, data.signedUrl);
   return data.signedUrl;
 };
 
@@ -25,12 +23,11 @@ const signUrl = async (path: string): Promise<string> => {
  * La URL con la que se puede pintar una foto del bucket privado.
  *
  * Las fotos no son públicas: en la base se guarda la ruta del objeto y aquí se firma para poder
- * enseñarla. La firma caduca, así que se guarda en memoria y se renueva sola; mientras no haya
- * URL, quien llama pinta lo que pintaría si no hubiera foto.
+ * enseñarla. Mientras no hay URL, quien llama pinta lo que pintaría si no hubiera foto.
  */
 export function useSignedPhotoUrl(path: string | null): string | null {
   const [url, setUrl] = useState<string | null>(() =>
-    path === null ? null : (signed.get(path)?.url ?? null),
+    path === null ? null : signedPhotoCache.fresh(path),
   );
 
   useEffect(() => {
