@@ -20,17 +20,19 @@ import { useColors } from "@/theme/useColors";
 export default function KitchenScreen() {
   const colors = useColors();
   const router = useRouter();
-  const recipes = useRecipes();
+  const { recipes, reload: reloadRecipes } = useRecipes();
   const { cookbooks, reload: reloadCookbooks } = useCookbooks();
   const { membership, reload: reloadMembership } = useCookbookMembership();
   const [query, setQuery] = useState("");
   const [isOnlyFavorites, setIsOnlyFavorites] = useState(false);
 
-  // Renombrar o borrar un libro cambia las dos cosas: la lista de libros y qué receta está dónde.
-  const refreshLibrary = useCallback(() => {
+  // Borrar una receta o un libro cambia las tres cosas: qué recetas hay, qué libros hay y qué
+  // receta está dónde. Se releen juntas y así ninguna pantalla se queda enseñando lo que ya no está.
+  const refreshKitchen = useCallback(() => {
+    reloadRecipes();
     reloadCookbooks();
     reloadMembership();
-  }, [reloadCookbooks, reloadMembership]);
+  }, [reloadRecipes, reloadCookbooks, reloadMembership]);
 
   // Sin buscar ni filtrar se ve la biblioteca: los libros con sus recetas dentro. Buscando, lo
   // que se quiere son recetas, vengan del libro que vengan.
@@ -78,7 +80,7 @@ export default function KitchenScreen() {
             <CookbookList
               cookbooks={cookbooks ?? []}
               recipeCounts={recipeCounts}
-              onChanged={refreshLibrary}
+              onChanged={refreshKitchen}
             />
           </ScrollView>
         )}
@@ -95,6 +97,10 @@ export default function KitchenScreen() {
               onOpenRecipe={(recipeId) => {
                 router.push({ pathname: "/recipe/[id]", params: { id: recipeId } });
               }}
+              onAddToCookbook={(recipeId) => {
+                router.push({ pathname: "/recipe/[id]/books", params: { id: recipeId } });
+              }}
+              onChanged={refreshKitchen}
             />
           </ScrollView>
         )}

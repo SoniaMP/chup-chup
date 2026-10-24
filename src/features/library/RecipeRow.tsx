@@ -90,9 +90,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: tokens.spacing.row + 4,
-    padding: tokens.spacing.row + 2,
+    padding: tokens.spacing.row + 4,
     borderRadius: tokens.radius.card,
-    // El mismo filo que la tarjeta del libro: todo lo que es una tarjeta se dibuja igual.
+    // El mismo filo y el mismo relleno que la tarjeta del libro: todo lo que es una tarjeta se
+    // dibuja igual, y la lista no salta al pasar de libros a recetas.
     borderWidth: 1,
   },
   main: { flex: 1, flexDirection: "row", alignItems: "center", gap: tokens.spacing.row + 4 },

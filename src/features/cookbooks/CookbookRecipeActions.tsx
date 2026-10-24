@@ -6,6 +6,7 @@ import { availableRecipeActions, type RecipeAction } from "@/domain/recipes/reci
 import { CoverPicker } from "@/features/covers/CoverPicker";
 import { saveRecipeCover } from "@/features/covers/saveRecipeCover";
 import { ConfirmDeleteRecipe } from "@/features/recipes/ConfirmDeleteRecipe";
+import { recipeActionLabels } from "@/features/recipes/recipeActionLabels";
 import { ConfirmDeleteCookbook } from "./ConfirmDeleteCookbook";
 import { removeRecipeFromCookbook } from "./removeRecipeFromCookbook";
 
@@ -30,15 +31,6 @@ type CookbookRecipeActionsProps = {
   onCoverChanged: () => void;
   onDeleted: () => void;
   onCookbookDeleted: () => void;
-};
-
-const LABELS: Record<RecipeAction, Omit<SheetAction, "onPress">> = {
-  reorder: { label: "Reordenar recetas", icon: "swap-vert" },
-  cover: { label: "Crear portada", icon: "image" },
-  addToCookbook: { label: "Añadir a otro libro", icon: "library-add" },
-  removeFromCookbook: { label: "Quitar de este libro", icon: "playlist-remove" },
-  delete: { label: "Borrar receta", icon: "delete-outline", isDestructive: true },
-  deleteCookbook: { label: "Eliminar libro", icon: "delete-sweep", isDestructive: true },
 };
 
 /** Lo que se puede hacer con una receta sin salir del libro. */
@@ -94,7 +86,7 @@ export function CookbookRecipeActions({
 
   const actions = availableRecipeActions({ recipeCount, canDeleteCookbook }).map(
     (action): SheetAction => ({
-      ...LABELS[action],
+      ...recipeActionLabels[action],
       onPress: () => {
         run(action);
       },
