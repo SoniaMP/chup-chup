@@ -16,6 +16,7 @@ const row = {
   notes: "la próxima vez, menos sal",
   photo_original: null,
   photo_enhanced: null,
+  library_image: null,
   photo_active: "original",
   is_favorite: false,
   created_at: "2026-10-22T09:00:00+00:00",

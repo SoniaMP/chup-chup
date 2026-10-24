@@ -3,6 +3,8 @@ import { useState } from "react";
 import { ActionSheet, type SheetAction } from "@/components/ActionSheet";
 import type { Cookbook } from "@/domain/cookbooks/cookbook";
 import { availableRecipeActions, type RecipeAction } from "@/domain/recipes/recipeActions";
+import { CoverPicker } from "@/features/covers/CoverPicker";
+import { saveRecipeCover } from "@/features/covers/saveRecipeCover";
 import { ConfirmDeleteRecipe } from "@/features/recipes/ConfirmDeleteRecipe";
 import { ConfirmDeleteCookbook } from "./ConfirmDeleteCookbook";
 import { removeRecipeFromCookbook } from "./removeRecipeFromCookbook";
@@ -16,6 +18,8 @@ export type RemoveOutcome =
 type CookbookRecipeActionsProps = {
   cookbookId: string;
   recipeId: string;
+  /** La portada que lleva ahora, para marcarla en el selector y poder quitarla. */
+  recipeCover: string | undefined;
   recipeCount: number;
   canDeleteCookbook: boolean;
   isOpen: boolean;
@@ -23,12 +27,14 @@ type CookbookRecipeActionsProps = {
   onReorder: () => void;
   onAddToCookbook: () => void;
   onRemoved: (outcome: RemoveOutcome) => void;
+  onCoverChanged: () => void;
   onDeleted: () => void;
   onCookbookDeleted: () => void;
 };
 
 const LABELS: Record<RecipeAction, Omit<SheetAction, "onPress">> = {
   reorder: { label: "Reordenar recetas", icon: "swap-vert" },
+  cover: { label: "Crear portada", icon: "image" },
   addToCookbook: { label: "Añadir a otro libro", icon: "library-add" },
   removeFromCookbook: { label: "Quitar de este libro", icon: "playlist-remove" },
   delete: { label: "Borrar receta", icon: "delete-outline", isDestructive: true },
@@ -39,6 +45,7 @@ const LABELS: Record<RecipeAction, Omit<SheetAction, "onPress">> = {
 export function CookbookRecipeActions({
   cookbookId,
   recipeId,
+  recipeCover,
   recipeCount,
   canDeleteCookbook,
   isOpen,
@@ -46,10 +53,11 @@ export function CookbookRecipeActions({
   onReorder,
   onAddToCookbook,
   onRemoved,
+  onCoverChanged,
   onDeleted,
   onCookbookDeleted,
 }: CookbookRecipeActionsProps) {
-  const [asked, setAsked] = useState<"recipe" | "cookbook" | null>(null);
+  const [asked, setAsked] = useState<"recipe" | "cookbook" | "cover" | null>(null);
 
   const remove = async (): Promise<void> => {
     try {
@@ -66,6 +74,10 @@ export function CookbookRecipeActions({
   const run = (action: RecipeAction): void => {
     if (action === "delete" || action === "deleteCookbook") {
       setAsked(action === "delete" ? "recipe" : "cookbook");
+      return;
+    }
+    if (action === "cover") {
+      setAsked("cover");
       return;
     }
 
@@ -92,6 +104,21 @@ export function CookbookRecipeActions({
   return (
     <>
       <ActionSheet isOpen={isOpen && asked === null} actions={actions} onClose={onClose} />
+      <CoverPicker
+        isOpen={asked === "cover"}
+        chosenId={recipeCover}
+        onChoose={(imageId) => {
+          void saveRecipeCover(recipeId, imageId)
+            .catch((cause: unknown) => {
+              console.warn("No se ha podido poner la portada", cause);
+            })
+            .finally(() => {
+              close();
+              onCoverChanged();
+            });
+        }}
+        onClose={close}
+      />
       <ConfirmDeleteRecipe
         recipeId={recipeId}
         isOpen={asked === "recipe"}

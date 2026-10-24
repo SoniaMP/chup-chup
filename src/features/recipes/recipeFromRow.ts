@@ -25,6 +25,7 @@ export function recipeFromRow(row: RecipeRow): Recipe {
     ...(row.notes !== null && { notes: row.notes }),
     ...(row.photo_original !== null && { photoOriginal: row.photo_original }),
     ...(row.photo_enhanced !== null && { photoEnhanced: row.photo_enhanced }),
+    ...(row.library_image !== null && { libraryImage: row.library_image }),
     photoActive: row.photo_active,
     isFavorite: row.is_favorite,
     createdAt: new Date(row.created_at).toISOString(),

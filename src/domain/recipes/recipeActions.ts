@@ -1,6 +1,7 @@
 /** Lo que se puede hacer desde el menú de una receta dentro de un libro. */
 export type RecipeAction =
   | "reorder"
+  | "cover"
   | "addToCookbook"
   | "removeFromCookbook"
   | "delete"
@@ -23,6 +24,7 @@ export function availableRecipeActions({
 }: RecipeActionsContext): RecipeAction[] {
   return [
     ...(recipeCount > 1 ? (["reorder"] as const) : []),
+    "cover",
     "addToCookbook",
     "removeFromCookbook",
     "delete",

@@ -1,12 +1,15 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import type { ReactNode } from "react";
-import { Pressable, StyleSheet, Text, View, useColorScheme } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import type { Cookbook } from "@/domain/cookbooks/cookbook";
+import { coverFor } from "@/domain/covers/coverFor";
+import { CoverThumbnail } from "@/features/covers/CoverThumbnail";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
+
+const COVER_SIZE = 64;
 
 const countLabel = (total: number): string =>
   total === 1 ? "1 receta" : `${String(total)} recetas`;
@@ -42,18 +45,11 @@ export function CookbookListItem({
 }: CookbookListItemProps) {
   const colors = useColors();
   const router = useRouter();
-  const gradient =
-    useColorScheme() === "dark" ? tokens.gradient.placeholderDark : tokens.gradient.placeholder;
   const isReordering = handle !== undefined;
 
   const body = (
     <>
-      <LinearGradient
-        colors={gradient}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.cover}
-      />
+      <CoverThumbnail cover={coverFor(cookbook)} size={COVER_SIZE} />
 
       <View style={styles.text}>
         {/* Reordenando, el título va a una línea: todas las tarjetas miden lo mismo. */}
@@ -111,7 +107,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   pressed: { opacity: 0.9, transform: [{ scale: 0.995 }] },
-  cover: { width: 64, height: 64, borderRadius: tokens.radius.card },
   // La misma tipografía que el título de una receta: en la cocina todo se lee igual.
   title: { fontFamily: tokens.fontFamily.bodyStrong, fontSize: tokens.fontSize.body },
   text: { flex: 1, gap: 2 },

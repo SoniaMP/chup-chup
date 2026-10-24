@@ -19,6 +19,7 @@ export function rowFromRecipe(recipe: Recipe): RecipeRow {
     notes: recipe.notes ?? null,
     photo_original: recipe.photoOriginal ?? null,
     photo_enhanced: recipe.photoEnhanced ?? null,
+    library_image: recipe.libraryImage ?? null,
     photo_active: recipe.photoActive,
     is_favorite: recipe.isFavorite,
     created_at: recipe.createdAt,

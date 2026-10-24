@@ -39,6 +39,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_usage: {
+        Row: {
+          day: string
+          owner_id: string
+          used: number
+        }
+        Insert: {
+          day?: string
+          owner_id: string
+          used?: number
+        }
+        Update: {
+          day?: string
+          owner_id?: string
+          used?: number
+        }
+        Relationships: []
+      }
       collections: {
         Row: {
           id: string
@@ -98,6 +116,7 @@ export type Database = {
           collection_id: string | null
           id: string
           is_system: boolean
+          library_image: string | null
           owner_id: string
           position: string
           title: string
@@ -106,6 +125,7 @@ export type Database = {
           collection_id?: string | null
           id?: string
           is_system?: boolean
+          library_image?: string | null
           owner_id?: string
           position: string
           title: string
@@ -114,6 +134,7 @@ export type Database = {
           collection_id?: string | null
           id?: string
           is_system?: boolean
+          library_image?: string | null
           owner_id?: string
           position?: string
           title?: string
@@ -135,6 +156,7 @@ export type Database = {
           id: string
           ingredients: Json
           is_favorite: boolean
+          library_image: string | null
           locale: string
           notes: string | null
           owner_id: string
@@ -154,6 +176,7 @@ export type Database = {
           id?: string
           ingredients: Json
           is_favorite?: boolean
+          library_image?: string | null
           locale: string
           notes?: string | null
           owner_id?: string
@@ -173,6 +196,7 @@ export type Database = {
           id?: string
           ingredients?: Json
           is_favorite?: boolean
+          library_image?: string | null
           locale?: string
           notes?: string | null
           owner_id?: string
@@ -193,7 +217,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      claim_ai_use: {
+        Args: { p_limit: number; p_owner: string }
+        Returns: boolean
+      }
+      release_ai_use: { Args: { p_owner: string }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never

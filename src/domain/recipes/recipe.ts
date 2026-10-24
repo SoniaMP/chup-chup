@@ -8,6 +8,8 @@ export const recipeSchema = recipeInputSchema
     ownerId: z.uuid(),
     photoOriginal: z.url().optional(),
     photoEnhanced: z.url().optional(),
+    /** Imagen del catálogo, para cuando no hay foto propia. La foto propia manda siempre. */
+    libraryImage: z.string().trim().min(1).max(120).optional(),
     photoActive: z.enum(["original", "enhanced"]).default("original"),
     isFavorite: z.boolean().default(false),
     createdAt: z.iso.datetime(),

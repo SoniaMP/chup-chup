@@ -21,6 +21,7 @@ describe("availableRecipeActions", () => {
 
   it("always offers the actions about the recipe itself", () => {
     expect(availableRecipeActions({ recipeCount: 1, canDeleteCookbook: false })).toEqual([
+      "cover",
       "addToCookbook",
       "removeFromCookbook",
       "delete",

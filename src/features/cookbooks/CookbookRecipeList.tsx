@@ -105,6 +105,7 @@ export function CookbookRecipeList({
         <CookbookRecipeActions
           cookbookId={cookbookId}
           recipeId={chosenId}
+          recipeCover={items.find((entry) => entry.recipe.id === chosenId)?.recipe.libraryImage}
           recipeCount={items.length}
           canDeleteCookbook={canDeleteCookbook}
           isOpen
@@ -123,6 +124,10 @@ export function CookbookRecipeList({
           onRemoved={(outcome) => {
             setChosenId(null);
             setNotice(removalNotice(outcome, cookbookId));
+            onReload();
+          }}
+          onCoverChanged={() => {
+            setChosenId(null);
             onReload();
           }}
           onDeleted={() => {

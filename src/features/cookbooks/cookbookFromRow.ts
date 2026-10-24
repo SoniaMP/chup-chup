@@ -11,6 +11,7 @@ export function cookbookFromRow(row: CookbookRow): Cookbook {
     ...(row.collection_id !== null && { collectionId: row.collection_id }),
     title: row.title,
     position: row.position,
+    ...(row.library_image !== null && { libraryImage: row.library_image }),
     isSystem: row.is_system,
   });
 }

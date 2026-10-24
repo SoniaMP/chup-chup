@@ -1,11 +1,14 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
 import type { ReactNode } from "react";
-import { Pressable, StyleSheet, Text, View, useColorScheme } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
+import { coverFor } from "@/domain/covers/coverFor";
 import type { Recipe } from "@/domain/recipes/recipe";
+import { CoverThumbnail } from "@/features/covers/CoverThumbnail";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
+
+const THUMBNAIL_SIZE = 64;
 
 const summaryOf = (recipe: Recipe): string => {
   const parts = [`${String(recipe.ingredients.length)} ingredientes`];
@@ -24,20 +27,13 @@ type RecipeRowProps = {
   handle?: ReactNode;
 };
 
-/** Una receta en una lista. Sin foto todavía: miniatura en degradado. */
+/** Una receta en una lista, con su foto, la portada que haya elegido, o el degradado. */
 export function RecipeRow({ recipe, onPress, onOpenActions, handle }: RecipeRowProps) {
   const colors = useColors();
-  const gradient =
-    useColorScheme() === "dark" ? tokens.gradient.placeholderDark : tokens.gradient.placeholder;
 
   const body = (
     <>
-      <LinearGradient
-        colors={gradient}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.thumbnail}
-      />
+      <CoverThumbnail cover={coverFor(recipe)} size={THUMBNAIL_SIZE} />
       <View style={styles.text}>
         <View style={styles.titleRow}>
           <Text numberOfLines={1} style={[styles.title, { color: colors.foreground }]}>
@@ -102,7 +98,6 @@ const styles = StyleSheet.create({
   main: { flex: 1, flexDirection: "row", alignItems: "center", gap: tokens.spacing.row + 4 },
   actions: { width: 36, height: 44, alignItems: "center", justifyContent: "center" },
   pressed: { opacity: 0.85 },
-  thumbnail: { width: 64, height: 64, borderRadius: tokens.radius.card },
   text: { flex: 1, gap: 2 },
   titleRow: { flexDirection: "row", alignItems: "center", gap: tokens.spacing.row - 2 },
   title: { fontFamily: tokens.fontFamily.bodyStrong, fontSize: tokens.fontSize.body },

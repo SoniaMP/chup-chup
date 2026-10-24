@@ -12,6 +12,8 @@ export const cookbookSchema = z.object({
   collectionId: z.uuid().optional(),
   title: z.string().trim().min(1, "El libro necesita un nombre").max(120),
   position: z.string().min(1),
+  /** Identificador de una imagen del catálogo del proyecto, cuando se ha elegido portada. */
+  libraryImage: z.string().trim().min(1).max(120).optional(),
   isSystem: z.boolean().default(false),
 });
 

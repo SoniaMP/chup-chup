@@ -7,6 +7,7 @@ const row = {
   collection_id: null,
   title: "Navidad",
   position: "n",
+  library_image: null,
   is_system: false,
 };
 

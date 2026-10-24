@@ -6,6 +6,8 @@ import {
   availableCookbookActions,
   type CookbookAction,
 } from "@/domain/cookbooks/cookbookActions";
+import { CoverPicker } from "@/features/covers/CoverPicker";
+import { saveCookbookCover } from "@/features/covers/saveCookbookCover";
 import { ConfirmDeleteCookbook } from "./ConfirmDeleteCookbook";
 import { RenameCookbookDialog } from "./RenameCookbookDialog";
 
@@ -20,6 +22,7 @@ type CookbookActionsProps = {
 
 const LABELS: Record<CookbookAction, Omit<SheetAction, "onPress">> = {
   rename: { label: "Cambiar nombre", icon: "edit" },
+  cover: { label: "Crear portada", icon: "image" },
   reorder: { label: "Reordenar libros", icon: "swap-vert" },
   delete: { label: "Eliminar libro", icon: "delete-outline", isDestructive: true },
 };
@@ -71,6 +74,22 @@ export function CookbookActions({
         onRenamed={(renamed) => {
           close();
           onRenamed(renamed);
+        }}
+        onClose={close}
+      />
+      <CoverPicker
+        isOpen={open === "cover"}
+        chosenId={cookbook.libraryImage}
+        onChoose={(imageId) => {
+          void saveCookbookCover(cookbook.id, imageId)
+            .then((updated) => {
+              close();
+              onRenamed(updated);
+            })
+            .catch((cause: unknown) => {
+              console.warn("No se ha podido poner la portada", cause);
+              close();
+            });
         }}
         onClose={close}
       />
