@@ -73,15 +73,19 @@ export default function KitchenScreen() {
             setIsOnlyFavorites((isOn) => !isOn);
           }}
         />
-        {recipes !== null && recipes.length === 0 && <EmptyKitchen />}
-
-        {isBrowsing && recipes !== null && recipes.length > 0 && (
+        {/* La lista sale aunque la cocina esté vacía: dentro vive «+ Nuevo libro», y una usuaria
+            recién registrada no tiene ni recetas ni libros todavía. */}
+        {isBrowsing && recipes !== null && (
           <ScrollView contentContainerStyle={styles.list} showsVerticalScrollIndicator={false}>
             <CookbookList
               cookbooks={cookbooks ?? []}
               recipeCounts={recipeCounts}
               onChanged={refreshKitchen}
             />
+            {/* Dentro de la lista y no al lado: una sola columna que fluye, que es lo único que
+                se comporta igual en el móvil y en el navegador. Filtrando no sale, porque ahí lo
+                que explica la pantalla vacía es el filtro y no la cocina. */}
+            {recipes.length === 0 && <EmptyKitchen />}
           </ScrollView>
         )}
 

@@ -46,13 +46,16 @@ export function EmptyState({ title, line, isCompact = false }: EmptyStateProps) 
 }
 
 const styles = StyleSheet.create({
+  // Sin `flex`: esto se pinta dentro de listas que ya fluyen, y un `flex: 1` dentro de un
+  // ScrollView se queda sin alto. Con la caja a cero y el contenido centrado, lo que no cabe se
+  // sale por arriba y por abajo, y la olla acaba encima de la fila de al lado. El alto lo manda
+  // el contenido y el aire lo dan los márgenes.
   container: {
-    flex: 1,
     alignItems: "center",
-    justifyContent: "center",
     gap: tokens.spacing.row * 1.5,
+    paddingVertical: tokens.spacing.block * 2,
   },
-  compact: { flex: 0, paddingVertical: tokens.spacing.block },
+  compact: { paddingVertical: tokens.spacing.block },
   pot: { borderRadius: tokens.radius.pill, alignItems: "center", justifyContent: "center" },
   dot: { position: "absolute", borderRadius: tokens.radius.pill },
   oliveDot: { width: 14, height: 14, top: 6, right: 2 },
