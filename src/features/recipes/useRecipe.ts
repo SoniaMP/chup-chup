@@ -1,18 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
 
-import type { Recipe } from "@/domain/recipes/recipe";
+import type { SavedRecipe } from "@/domain/recipes/savedRecipe";
 import { supabaseRecipeStore } from "./supabaseRecipeStore";
 
 type LoadedRecipe = {
-  recipe: Recipe | null;
+  recipe: SavedRecipe | null;
   isLoaded: boolean;
   /** Para quedarse con la versión recién guardada sin volver a leer del almacén. */
-  replace: (recipe: Recipe) => void;
+  replace: (recipe: SavedRecipe) => void;
 };
 
 /** Una receta guardada por su identificador. */
 export function useRecipe(id: string): LoadedRecipe {
-  const [loaded, setLoaded] = useState<{ recipe: Recipe | null; isLoaded: boolean }>({
+  const [loaded, setLoaded] = useState<{ recipe: SavedRecipe | null; isLoaded: boolean }>({
     recipe: null,
     isLoaded: false,
   });
@@ -33,7 +33,7 @@ export function useRecipe(id: string): LoadedRecipe {
     };
   }, [id]);
 
-  const replace = useCallback((recipe: Recipe) => {
+  const replace = useCallback((recipe: SavedRecipe) => {
     setLoaded({ recipe, isLoaded: true });
   }, []);
 

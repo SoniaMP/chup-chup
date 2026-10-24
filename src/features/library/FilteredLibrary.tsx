@@ -2,7 +2,7 @@ import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 import type { Cookbook } from "@/domain/cookbooks/cookbook";
-import type { Recipe } from "@/domain/recipes/recipe";
+import type { SavedRecipe } from "@/domain/recipes/savedRecipe";
 import { useDisplayName } from "@/features/auth/useDisplayName";
 import { RecipeActions } from "@/features/recipes/RecipeActions";
 import { tokens } from "@/theme/tokens";
@@ -12,7 +12,7 @@ import { RecipeRow } from "./RecipeRow";
 type FilteredLibraryProps = {
   cookbooks: Cookbook[];
   recipeCounts: Map<string, number>;
-  recipes: Recipe[];
+  recipes: SavedRecipe[];
   onOpenRecipe: (recipeId: string) => void;
   onAddToCookbook: (recipeId: string) => void;
   /** Para releer la cocina cuando una receta se borra o cambia de portada. */
@@ -38,7 +38,7 @@ export function FilteredLibrary({
   onChanged,
 }: FilteredLibraryProps) {
   const ownerName = useDisplayName();
-  const [chosen, setChosen] = useState<Recipe | null>(null);
+  const [chosen, setChosen] = useState<SavedRecipe | null>(null);
 
   return (
     <View style={styles.list}>

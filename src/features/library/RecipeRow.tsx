@@ -3,14 +3,14 @@ import type { ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { coverFor } from "@/domain/covers/coverFor";
-import type { Recipe } from "@/domain/recipes/recipe";
+import type { SavedRecipe } from "@/domain/recipes/savedRecipe";
 import { CoverThumbnail } from "@/features/covers/CoverThumbnail";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 
 const THUMBNAIL_SIZE = 64;
 
-const summaryOf = (recipe: Recipe): string => {
+const summaryOf = (recipe: SavedRecipe): string => {
   const parts = [`${String(recipe.ingredients.length)} ingredientes`];
   const total = (recipe.prepMin ?? 0) + (recipe.cookMin ?? 0);
   if (total > 0) parts.push(`${String(total)} min`);
@@ -19,7 +19,7 @@ const summaryOf = (recipe: Recipe): string => {
 };
 
 type RecipeRowProps = {
-  recipe: Recipe;
+  recipe: SavedRecipe;
   onPress: () => void;
   /** Las acciones de la receta, por los tres puntos y dejando el dedo encima. */
   onOpenActions?: () => void;

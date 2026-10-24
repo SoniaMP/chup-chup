@@ -19,7 +19,7 @@ abiertas. El qué y el por qué del producto siguen en [`SPEC.md`](SPEC.md); los
 | 7. Notas personales y modo cocina | Hecho |
 | 8. Fotos y retoque | **Por hacer.** Es lo siguiente que tocaba |
 | 9. Caché offline de lectura | Por hacer. Lo prestado tendrá que borrarse al perder el acceso: nace sabiéndolo |
-| 10. Sacar lo personal de `recipes` a `saved_recipes` | **Decidido y por hacer.** Es lo que deja la casa lista para recetas ajenas |
+| 10. Sacar lo personal de `recipes` a `saved_recipes` | **Hecho.** `recipes` es contenido; `saved_recipes` es «mi cocina». Nada de acceso ni revocación todavía |
 
 ## Lo último que se estaba haciendo
 
@@ -58,9 +58,9 @@ hay que recordar es esto:
 
 - **Borrar sigue siendo un `delete` de verdad**, y cuando haya recetas ajenas se notará en
   todas las cocinas que la tenían. Nada de `deleted_at`.
-- **Lo personal sale de `recipes`** —`notes`, `is_favorite`, `library_image`— a una tabla
-  `saved_recipes`, que pasa a ser la definición de «mi cocina». Se hace **en el MVP**, con una
-  sola usuaria, porque después cuesta una migración de verdad.
+- **Lo personal ya salió de `recipes`** —`notes`, `is_favorite`, `library_image`— a la tabla
+  `saved_recipes`, que es la definición de «mi cocina». Hecho el mismo día: con una sola
+  usuaria, el traslado fue un `insert … select`.
 - **La foto es contenido y viaja con la receta**; la portada que le pone cada cocinera es suya
   y manda sobre la de la dueña.
 - Apareció una **fase 3**: la app como pasarela de recetarios de pago entre un cocinero y quien

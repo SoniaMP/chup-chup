@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { draftFromRecipe } from "../../src/domain/recipes/draftFromRecipe";
-import { recipeSchema, type Recipe } from "../../src/domain/recipes/recipe";
+import type { Recipe } from "../../src/domain/recipes/recipe";
+import { savedRecipeSchema, type SavedRecipe } from "../../src/domain/recipes/savedRecipe";
 import { recipeWithChanges } from "../../src/domain/recipes/recipeWithChanges";
 import { validateRecipeDraft } from "../../src/domain/recipes/validateRecipeDraft";
 
-const recipe: Recipe = recipeSchema.parse({
+const recipe: SavedRecipe = savedRecipeSchema.parse({
   id: "11111111-1111-4111-8111-111111111111",
   ownerId: "22222222-2222-4222-8222-222222222222",
   title: "Tortilla de patatas",
@@ -19,6 +20,7 @@ const recipe: Recipe = recipeSchema.parse({
   isFavorite: true,
   createdAt: "2026-10-01T10:00:00.000Z",
   updatedAt: "2026-10-01T10:00:00.000Z",
+  savedAt: "2026-10-01T10:00:00.000Z",
 });
 
 const edited = (changes: Partial<ReturnType<typeof draftFromRecipe>>): Recipe => {
@@ -56,10 +58,14 @@ describe("recipeWithChanges", () => {
     expect(updated.title).toBe("Tortilla con cebolla");
   });
 
-  it("conserva la foto y si es favorita, que el formulario no toca", () => {
+  it("conserva la foto, que el formulario no toca", () => {
+    expect(edited({ title: "Otra cosa" }).photoOriginal).toBe("https://example.com/original.jpg");
+  });
+
+  it("deja fuera la nota y la estrella: no son de la receta, se guardan aparte", () => {
     const updated = edited({ title: "Otra cosa" });
-    expect(updated.photoOriginal).toBe("https://example.com/original.jpg");
-    expect(updated.isFavorite).toBe(true);
+    expect(updated).not.toHaveProperty("notes");
+    expect(updated).not.toHaveProperty("isFavorite");
   });
 
   it("marca la fecha de modificación", () => {
@@ -67,9 +73,7 @@ describe("recipeWithChanges", () => {
   });
 
   it("vaciar un campo lo borra de verdad, no se queda el valor anterior", () => {
-    const updated = edited({ servings: null, notes: "" });
-    expect(updated).not.toHaveProperty("servings");
-    expect(updated).not.toHaveProperty("notes");
+    expect(edited({ servings: null })).not.toHaveProperty("servings");
   });
 
   it("guarda los ingredientes y los pasos nuevos", () => {

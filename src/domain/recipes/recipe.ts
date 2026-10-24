@@ -1,17 +1,21 @@
 import { z } from "zod";
 import { recipeInputSchema } from "./recipeInput";
 
-/** Una receta ya guardada, con su identidad, su propietaria y sus fotos. */
+/**
+ * El contenido de una receta ya guardada: lo que es de quien la escribió.
+ *
+ * Aquí no hay nada personal. La nota, la estrella y la portada que le pone cada cocinera viven en
+ * `savedRecipe`, porque el día que una receta esté en la cocina de otra persona, su nota no puede
+ * pisar la de su dueña. Ver «Recetas ajenas» en `docs/SPEC.md`.
+ */
 export const recipeSchema = recipeInputSchema
+  .omit({ notes: true })
   .extend({
     id: z.uuid(),
     ownerId: z.uuid(),
     photoOriginal: z.url().optional(),
     photoEnhanced: z.url().optional(),
-    /** Imagen del catálogo, para cuando no hay foto propia. La foto propia manda siempre. */
-    libraryImage: z.string().trim().min(1).max(120).optional(),
     photoActive: z.enum(["original", "enhanced"]).default("original"),
-    isFavorite: z.boolean().default(false),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
   })

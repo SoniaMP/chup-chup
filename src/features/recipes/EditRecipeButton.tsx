@@ -2,11 +2,11 @@ import { useRouter } from "expo-router";
 
 import { IconButton } from "@/components/IconButton";
 import { draftFromRecipe } from "@/domain/recipes/draftFromRecipe";
-import type { Recipe } from "@/domain/recipes/recipe";
+import type { SavedRecipe } from "@/domain/recipes/savedRecipe";
 import { draftStore } from "@/features/drafts/draftStore";
 
 /** Abre la receta en el mismo formulario de la revisión, pero para cambiarla. */
-export function EditRecipeButton({ recipe }: { recipe: Recipe }) {
+export function EditRecipeButton({ recipe }: { recipe: SavedRecipe }) {
   const router = useRouter();
 
   const edit = async (): Promise<void> => {

@@ -1,10 +1,11 @@
-import { recipeSchema, type Recipe } from "./recipe";
+import { savedRecipeSchema, type SavedRecipe } from "./savedRecipe";
 
-/** Pone o quita la receta de favoritas. No toca nada más. */
-export function toggleRecipeFavorite(recipe: Recipe): Recipe {
-  return recipeSchema.parse({
-    ...recipe,
-    isFavorite: !recipe.isFavorite,
-    updatedAt: new Date().toISOString(),
-  });
+/**
+ * Pone o quita la receta de favoritas. No toca nada más.
+ *
+ * No marca fecha de modificación: la estrella es tuya, no de la receta, y una receta no cambia
+ * porque a alguien le guste.
+ */
+export function toggleRecipeFavorite(saved: SavedRecipe): SavedRecipe {
+  return savedRecipeSchema.parse({ ...saved, isFavorite: !saved.isFavorite });
 }

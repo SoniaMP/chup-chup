@@ -1,5 +1,5 @@
 import { positionBetween } from "@/domain/ordering/positionBetween";
-import { recipeFromRow } from "@/features/recipes/recipeFromRow";
+import { savedRecipeFromRow } from "@/features/recipes/savedRecipeFromRow";
 import { supabase } from "@/lib/supabase";
 import type { CookbookEntry } from "./cookbookEntry";
 
@@ -16,12 +16,23 @@ export const supabaseCookbookRecipeStore = {
   async listEntries(cookbookId: string): Promise<CookbookEntry[]> {
     const { data, error } = await supabase
       .from(TABLE)
-      .select("position, recipes (*)")
+      .select("position, recipes (*, saved_recipes (*))")
       .eq("cookbook_id", cookbookId)
       .order("position");
 
     if (error !== null) throw new Error(error.message);
-    return data.map((row) => ({ recipe: recipeFromRow(row.recipes), position: row.position }));
+
+    return data.map((row) => {
+      // Estar en un libro tuyo y estar en tu cocina son la misma cosa: si falta la fila de
+      // guardado, lo que hay es un fallo, y se dice.
+      const [saved] = row.recipes.saved_recipes;
+      if (saved === undefined) throw new Error(`La receta ${row.recipes.id} no está en tu cocina`);
+
+      return {
+        recipe: savedRecipeFromRow({ ...saved, recipes: row.recipes }),
+        position: row.position,
+      };
+    });
   },
 
   /** Qué receta está en qué libro, todo de una vez: la pantalla principal lo necesita entero. */

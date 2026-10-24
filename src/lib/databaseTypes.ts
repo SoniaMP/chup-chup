@@ -155,10 +155,7 @@ export type Database = {
           created_at: string
           id: string
           ingredients: Json
-          is_favorite: boolean
-          library_image: string | null
           locale: string
-          notes: string | null
           owner_id: string
           photo_active: string
           photo_enhanced: string | null
@@ -175,10 +172,7 @@ export type Database = {
           created_at?: string
           id?: string
           ingredients: Json
-          is_favorite?: boolean
-          library_image?: string | null
           locale: string
-          notes?: string | null
           owner_id?: string
           photo_active?: string
           photo_enhanced?: string | null
@@ -195,10 +189,7 @@ export type Database = {
           created_at?: string
           id?: string
           ingredients?: Json
-          is_favorite?: boolean
-          library_image?: string | null
           locale?: string
-          notes?: string | null
           owner_id?: string
           photo_active?: string
           photo_enhanced?: string | null
@@ -211,6 +202,41 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      saved_recipes: {
+        Row: {
+          is_favorite: boolean
+          library_image: string | null
+          notes: string | null
+          owner_id: string
+          recipe_id: string
+          saved_at: string
+        }
+        Insert: {
+          is_favorite?: boolean
+          library_image?: string | null
+          notes?: string | null
+          owner_id?: string
+          recipe_id: string
+          saved_at?: string
+        }
+        Update: {
+          is_favorite?: boolean
+          library_image?: string | null
+          notes?: string | null
+          owner_id?: string
+          recipe_id?: string
+          saved_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_recipes_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

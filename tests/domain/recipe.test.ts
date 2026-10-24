@@ -40,7 +40,11 @@ describe("recipeSchema", () => {
   it("acepta una receta guardada y pone los valores de serie", () => {
     const parsed = recipeSchema.parse(saved);
     expect(parsed.photoActive).toBe("original");
-    expect(parsed.isFavorite).toBe(false);
+  });
+
+  it("deja fuera la nota: el contenido no sabe de lo personal", () => {
+    const parsed = recipeSchema.parse({ ...saved, notes: "la próxima vez, menos sal" });
+    expect(parsed).not.toHaveProperty("notes");
   });
 
   it("rechaza un identificador que no es un UUID", () => {

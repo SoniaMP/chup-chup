@@ -1,16 +1,16 @@
 import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 
-import type { Recipe } from "@/domain/recipes/recipe";
+import type { SavedRecipe } from "@/domain/recipes/savedRecipe";
 import { supabaseRecipeStore } from "@/features/recipes/supabaseRecipeStore";
 
 type LoadedRecipes = {
-  recipes: Recipe[] | null;
+  recipes: SavedRecipe[] | null;
   /** Para releerlas sin salir de la pantalla, después de borrar una o cambiarle la portada. */
   reload: () => void;
 };
 
-const readRecipes = async (): Promise<Recipe[]> =>
+const readRecipes = async (): Promise<SavedRecipe[]> =>
   supabaseRecipeStore.list().catch((cause: unknown) => {
     console.warn("No se han podido leer las recetas", cause);
     return [];
@@ -18,7 +18,7 @@ const readRecipes = async (): Promise<Recipe[]> =>
 
 /** Las recetas guardadas, recargadas cada vez que se vuelve a la pantalla. */
 export function useRecipes(): LoadedRecipes {
-  const [recipes, setRecipes] = useState<Recipe[] | null>(null);
+  const [recipes, setRecipes] = useState<SavedRecipe[] | null>(null);
 
   useFocusEffect(
     useCallback(() => {

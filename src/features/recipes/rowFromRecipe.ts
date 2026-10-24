@@ -16,12 +16,9 @@ export function rowFromRecipe(recipe: Recipe): RecipeRow {
     ingredients: recipe.ingredients,
     steps: recipe.steps,
     raw_input: recipe.rawInput,
-    notes: recipe.notes ?? null,
     photo_original: recipe.photoOriginal ?? null,
     photo_enhanced: recipe.photoEnhanced ?? null,
-    library_image: recipe.libraryImage ?? null,
     photo_active: recipe.photoActive,
-    is_favorite: recipe.isFavorite,
     created_at: recipe.createdAt,
     updated_at: recipe.updatedAt,
   };

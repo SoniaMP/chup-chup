@@ -238,7 +238,7 @@ De ahí sale todo lo demás:
   conexión sigue en el móvil cuando le retiran el acceso. La caché tendrá que saber qué es
   prestado y borrarlo. Es trabajo de la fase 2, pero el paso 9 no puede diseñarse ignorándolo.
 
-### Lo que esto obliga a hacer en el MVP
+### Lo que esto obligó a hacer en el MVP (hecho)
 
 `recipes` mezcla hoy dos cosas: el contenido de la receta, que es de su dueña, y lo que cada
 cocinera ha hecho con ella, que es de cada cual. Con recetas ajenas eso no se sostiene —las notas
@@ -251,9 +251,13 @@ usuaria y la mudanza es gratis:
 | `photo_original`, `photo_enhanced`, `photo_active` | `is_favorite` |
 | `owner_id`: de quién es la receta | `library_image`: la portada que le pone cada cual |
 
-`saved_recipes(owner_id, recipe_id, notes?, is_favorite, library_image?, saved_at)` pasa a ser la
+`saved_recipes(owner_id, recipe_id, notes?, is_favorite, library_image?, saved_at)` es la
 definición de **«mi cocina»**: lo que tienes es lo que tienes guardado, seas o no su dueña. Hasta
 la fase 2, dueña y guardadora son siempre la misma persona.
+
+En el código, `Recipe` es el contenido y `SavedRecipe` es la receta con lo que cada cocinera ha
+puesto en ella, plana para que las pantallas no se enteren de que son dos tablas. Quién puede
+cambiar qué lo decide el repositorio: `update` toca el contenido y `savePersonal` lo personal.
 
 No se construye nada de suscripciones, acceso ni revocación. Solo se deja la casa en condiciones.
 
@@ -303,7 +307,7 @@ Existe un prototipo hecho en Lovable. Lovable genera React web (no React Native)
 7. Notas personales y modo cocina.
 8. Fotos y retoque.
 9. Caché offline de lectura, sabiendo ya que lo prestado se borra al perder el acceso.
-10. Sacar lo personal de `recipes` a `saved_recipes`, que pasa a ser «mi cocina».
+10. Sacar lo personal de `recipes` a `saved_recipes`, que pasa a ser «mi cocina». Hecho.
 
 ## Ideas por concretar
 

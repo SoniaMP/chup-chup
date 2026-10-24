@@ -1,4 +1,4 @@
-import type { Recipe } from "./recipe";
+import type { SavedRecipe } from "./savedRecipe";
 import type { RecipeDraft } from "./recipeDraft";
 
 /**
@@ -6,8 +6,11 @@ import type { RecipeDraft } from "./recipeDraft";
  * aquí es "sin rellenar" (`null` o cadena vacía).
  *
  * Sin suposiciones: son cosa de la IA al estructurar, y esto es una edición a mano.
+ *
+ * Recibe la receta guardada, no solo su contenido, porque el formulario también edita la nota
+ * personal, que ya no vive dentro de la receta.
  */
-export function draftFromRecipe(recipe: Recipe): RecipeDraft {
+export function draftFromRecipe(recipe: SavedRecipe): RecipeDraft {
   return {
     title: recipe.title,
     locale: recipe.locale,

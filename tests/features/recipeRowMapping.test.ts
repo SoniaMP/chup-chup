@@ -13,12 +13,9 @@ const row = {
   ingredients: [{ name: "patatas", quantity: 700, unit: "g" }],
   steps: [{ text: "Fríe las patatas con la cebolla." }],
   raw_input: "tortilla: huevos patatas cebolla",
-  notes: "la próxima vez, menos sal",
   photo_original: null,
   photo_enhanced: null,
-  library_image: null,
   photo_active: "original",
-  is_favorite: false,
   created_at: "2026-10-22T09:00:00+00:00",
   updated_at: "2026-10-22T09:30:00.123456+00:00",
 };
@@ -30,7 +27,6 @@ describe("recipeFromRow", () => {
     expect(recipe.prepMin).toBe(15);
     expect(recipe.cookMin).toBe(25);
     expect(recipe.rawInput).toBe(row.raw_input);
-    expect(recipe.isFavorite).toBe(false);
   });
 
   it("convierte las fechas con desplazamiento de Postgres a ISO con Z", () => {
@@ -40,9 +36,8 @@ describe("recipeFromRow", () => {
   });
 
   it("deja fuera las claves que vienen a null, en vez de ponerlas a null", () => {
-    const recipe = recipeFromRow({ ...row, servings: null, notes: null, prep_min: null });
+    const recipe = recipeFromRow({ ...row, servings: null, prep_min: null });
     expect(recipe).not.toHaveProperty("servings");
-    expect(recipe).not.toHaveProperty("notes");
     expect(recipe).not.toHaveProperty("prepMin");
   });
 
@@ -61,8 +56,6 @@ describe("rowFromRecipe", () => {
   });
 
   it("pone a null lo que la receta no tiene", () => {
-    const row2 = rowFromRecipe(recipeFromRow({ ...row, notes: null, cook_min: null }));
-    expect(row2.notes).toBeNull();
-    expect(row2.cook_min).toBeNull();
+    expect(rowFromRecipe(recipeFromRow({ ...row, cook_min: null })).cook_min).toBeNull();
   });
 });

@@ -1,10 +1,10 @@
 import { IconButton } from "@/components/IconButton";
-import type { Recipe } from "@/domain/recipes/recipe";
+import type { SavedRecipe } from "@/domain/recipes/savedRecipe";
 import { saveRecipeFavorite } from "./saveRecipeFavorite";
 
 type FavoriteButtonProps = {
-  recipe: Recipe;
-  onChange: (recipe: Recipe) => void;
+  recipe: SavedRecipe;
+  onChange: (recipe: SavedRecipe) => void;
 };
 
 /** El corazón de la receta: lleno y en terracota cuando es favorita. */

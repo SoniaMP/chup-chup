@@ -5,9 +5,12 @@ import type { RecipeInput } from "./recipeInput";
  * La receta guardada después de editarla.
  *
  * Todo lo que se edita viene del formulario, y lo que no se edita se conserva: identidad,
- * propietaria, fecha de creación, fotos y si es favorita. Se construye campo a campo a propósito:
- * con un `...spread` sobre la receta anterior, vaciar las raciones o los tiempos no las borraría,
- * se quedarían las de antes.
+ * propietaria, fecha de creación y fotos. Se construye campo a campo a propósito: con un
+ * `...spread` sobre la receta anterior, vaciar las raciones o los tiempos no las borraría, se
+ * quedarían las de antes.
+ *
+ * La nota del formulario se cae aquí, y es lo correcto: no es de la receta. Quien guarda es
+ * quien la lleva a `saved_recipes`.
  */
 export function recipeWithChanges(recipe: Recipe, input: RecipeInput): Recipe {
   const candidate: Record<string, unknown> = {
@@ -17,7 +20,6 @@ export function recipeWithChanges(recipe: Recipe, input: RecipeInput): Recipe {
     createdAt: recipe.createdAt,
     updatedAt: new Date().toISOString(),
     photoActive: recipe.photoActive,
-    isFavorite: recipe.isFavorite,
   };
 
   if (recipe.photoOriginal !== undefined) candidate.photoOriginal = recipe.photoOriginal;
