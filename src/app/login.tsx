@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { KeyboardAvoidingView, ScrollView, StyleSheet, Text } from "react-native";
+import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from "react-native";
 
+import { Logo } from "@/components/Logo";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { Screen } from "@/components/Screen";
 import { AuthField } from "@/features/auth/AuthField";
@@ -34,6 +35,9 @@ export default function LoginScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
+          <View style={styles.brand}>
+            <Logo size={96} />
+          </View>
           <Text style={[styles.title, { color: colors.foreground }]}>Chup Chup</Text>
           <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
             Tus recetas, siempre contigo.
@@ -65,6 +69,7 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
+  brand: { alignItems: "center", marginBottom: tokens.spacing.row },
   fill: { flex: 1 },
   content: { flexGrow: 1, justifyContent: "center", paddingBottom: tokens.spacing.block },
   title: {

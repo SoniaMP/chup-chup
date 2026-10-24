@@ -2,6 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
+import { Logo } from "@/components/Logo";
 import { signOut } from "@/features/auth/signOut";
 
 import { FavoritesFilter } from "./FavoritesFilter";
@@ -29,7 +30,10 @@ export function KitchenHeader({
   return (
     <View style={styles.container}>
       <View style={styles.topRow}>
-        <Text style={[styles.title, { color: colors.foreground }]}>Chup Chup</Text>
+        <View style={styles.brand}>
+          <Logo size={56} />
+          <Text style={[styles.title, { color: colors.foreground }]}>Chup Chup</Text>
+        </View>
         <View style={styles.actions}>
           <Pressable
             accessibilityRole="button"
@@ -87,7 +91,9 @@ export function KitchenHeader({
 const styles = StyleSheet.create({
   container: { gap: tokens.spacing.row * 2, paddingBottom: tokens.spacing.block },
   topRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  title: { fontFamily: tokens.fontFamily.display, fontSize: tokens.fontSize.screenTitle, letterSpacing: -0.4 },
+  brand: { flexDirection: "row", alignItems: "center", gap: tokens.spacing.row + 2 },
+  // El logo es la marca y el texto la acompaña: el título baja para que mande el dibujo.
+  title: { fontFamily: tokens.fontFamily.display, fontSize: 26, letterSpacing: -0.3 },
   actions: { flexDirection: "row", gap: tokens.spacing.row },
   roundButton: {
     width: tokens.touch.headerButton,
