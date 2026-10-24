@@ -1,0 +1,4 @@
+{
+  "comment": "De dónde sale cada imagen del catálogo. No lo usa la app: existe para poder justificar la procedencia cuando alguien pregunte. Una entrada por fichero del bucket library-images.",
+  "images": []
+}

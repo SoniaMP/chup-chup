@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "types:db": "supabase gen types typescript --linked > src/lib/databaseTypes.ts",
-    "record:fixtures": "tsx scripts/checkPrompt.ts"
+    "record:fixtures": "tsx scripts/checkPrompt.ts",
+    "covers": "tsx scripts/prepareCovers.ts"
   },
   "dependencies": {
     "@expo-google-fonts/figtree": "^0.4.1",
