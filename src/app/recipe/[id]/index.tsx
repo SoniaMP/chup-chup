@@ -6,6 +6,7 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { Screen } from "@/components/Screen";
 import { SecondaryButton } from "@/components/SecondaryButton";
 import { RecipePhoto } from "@/features/photos/RecipePhoto";
+import { ShareRecipeButton } from "@/features/sharing/ShareRecipeButton";
 import { EditRecipeButton } from "@/features/recipes/EditRecipeButton";
 import { FavoriteButton } from "@/features/recipes/FavoriteButton";
 import { RecipeFacts } from "@/features/recipes/RecipeFacts";
@@ -42,6 +43,7 @@ export default function RecipeScreen() {
           <BackButton />
           <View style={styles.headerActions}>
             <FavoriteButton recipe={recipe} onChange={replace} />
+            <ShareRecipeButton recipeId={recipe.id} title={recipe.title} />
             <EditRecipeButton recipe={recipe} />
           </View>
         </View>

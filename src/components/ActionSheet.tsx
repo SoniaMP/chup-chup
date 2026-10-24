@@ -17,14 +17,19 @@ type ActionSheetProps = {
   isOpen: boolean;
   onClose: () => void;
   actions: SheetAction[];
+  /** Una línea que explica el estado de lo que se va a tocar. Opcional: casi ningún menú la pone. */
+  title?: string;
 };
 
 /** El menú de acciones de algo: una lista corta en una hoja, no botones por las esquinas. */
-export function ActionSheet({ isOpen, onClose, actions }: ActionSheetProps) {
+export function ActionSheet({ isOpen, onClose, actions, title }: ActionSheetProps) {
   const colors = useColors();
 
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose}>
+      {title !== undefined && (
+        <Text style={[styles.title, { color: colors.mutedForeground }]}>{title}</Text>
+      )}
       {actions.map((action) => {
         const color = action.isDestructive === true ? colors.destructive : colors.foreground;
 
@@ -54,5 +59,11 @@ const styles = StyleSheet.create({
     borderRadius: tokens.radius.lg,
   },
   pressed: { opacity: 0.7 },
+  title: {
+    fontFamily: tokens.fontFamily.body,
+    fontSize: tokens.fontSize.label,
+    paddingHorizontal: tokens.spacing.row + 4,
+    paddingBottom: tokens.spacing.row,
+  },
   label: { fontFamily: tokens.fontFamily.bodyStrong, fontSize: tokens.fontSize.body },
 });

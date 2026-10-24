@@ -37,12 +37,14 @@ Principio rector: ninguna decisión del MVP obliga a migrar datos cuando llegue 
 - Editar y borrar recetas, con notas personales por receta ("la próxima vez, menos sal").
 - Libros tipo playlist, recetarios tipo carpeta y Favoritos.
 - Foto opcional por receta, añadida en cualquier momento. Sin retoque.
+- Compartir una receta por enlace: **visor HTML de solo lectura**, sin sesión y sin app.
 - Lectura offline de las recetas guardadas.
 
 **Fuera del MVP**
 
-- Compartir recetas o libros, y registro "La he hecho" con fecha y foto (fase 2). Cómo será
-  compartir una receta ya está descrito en su sección, para no cerrarle la puerta.
+- **Abrir una receta compartida dentro de la app** y guardarla en tu cocina (fase 2). En el MVP
+  el enlace lleva al visor y nada más. Compartir libros y el registro "La he hecho" también
+  son fase 2.
 - Recetarios de pago y suscripciones (fase 3). En el MVP no hay nada de eso, pero la regla de
   «Recetas ajenas» sí se respeta desde ahora, porque es la que decide la forma de las tablas.
 - Libro "Por probar" de serie y "Quiero hacerla" como funcionalidad propia (fase 2).
@@ -283,10 +285,14 @@ cambiar qué lo decide el repositorio: `update` toca el contenido y `savePersona
 
 No se construye nada de suscripciones, acceso ni revocación. Solo se deja la casa en condiciones.
 
-## Compartir una receta (fase 2)
+## Compartir una receta
 
-**No se construye en el MVP.** Está escrito para que las
-decisiones de la fase 1 no le cierren la puerta.
+**El visor entra en el MVP; abrir en la app se queda en la fase 2.** Decidido el 24 de octubre
+de 2026. El motivo es que son dos trabajos de tamaños muy distintos: el visor es una pieza
+suelta que no toca el modelo de permisos, y abrir en la app rompe la regla que hoy sostiene
+todo —cada fila es de una dueña y nadie más la ve—, así que arrastra tabla de accesos,
+políticas nuevas, firmas de foto por Edge Function, revocación y borrado de lo prestado en la
+copia local.
 
 La propietaria envía un enlace a una receta suya. Quien lo recibe cae en uno de dos sitios:
 
@@ -296,13 +302,15 @@ La propietaria envía un enlace a una receta suya. Quien lo recibe cae en uno de
 2. **No tiene la app.** El enlace abre un **visor HTML** en la web: la receta y nada más. Sin
    sesión, sin acciones, sin editar. No es la app en web, es una página de solo lectura.
 
-Será la primera pieza de la fase 2, y es lo que obliga a decidir en la fase 1 **qué pasa de
-verdad cuando se borra una receta**: ver el punto de «Ideas por concretar».
+El enlace es el mismo en los dos casos, así que construir el visor no estorba al otro camino:
+el día que la app intercepte el enlace, la página seguirá estando para quien no la tenga.
 
 Lo que hay que decidir antes de construirlo:
 
-- **Qué viaja y qué no.** Las notas personales son privadas y no deberían salir en el enlace; el
-  `raw_input` tampoco. Hay que decidirlo campo por campo, porque el visor es público.
+- **Qué viaja y qué no.** Las notas personales no salen, y el `raw_input` tampoco: el visor es
+  público. **La foto sí viaja** (decidido el 24 de octubre de 2026). Como el bucket es privado,
+  la página no puede llevar la ruta: la Edge Function firma la foto al servirla, y esa firma vive
+  un rato y se puede reenviar mientras dure.
 - **Quién puede abrir el enlace.** Enlace secreto que basta tener, o receta marcada como pública.
   Lo primero no necesita sesión en el receptor y lo segundo sí necesita una política de lectura
   anónima en Postgres.
@@ -310,8 +318,14 @@ Lo que hay que decidir antes de construirlo:
 - **Qué significa «guardar»**: una copia propia que ya se puede editar, o una referencia a la
   receta de la otra persona, que cambia cuando su dueña la cambia. Va con «quitar frente a
   borrar».
-- **Dónde vive el visor.** El enlace tiene que ser uno solo y decidir él a dónde va: abrir la app
-  si está instalada (enlaces universales) y caer en la web si no.
+- **Dónde vive el visor.** Hoy lo sirve la Edge Function `shared-recipe`, y eso tiene un tope
+  descubierto el 24 de octubre de 2026: **`*.supabase.co` no sirve HTML**. Su pasarela cambia el
+  `content-type` a `text/plain` y añade `content-security-policy: sandbox`, para que nadie monte
+  páginas de phishing en su dominio. Comprobado con una función de prueba. Así que la página
+  llega entera pero el navegador la enseña como texto. Para que se vea como página hace falta un
+  dominio que no sea de Supabase: el dominio propio de Supabase (de pago), o servirla desde donde
+  se despliegue la web de la app. Hasta entonces, el enlace funciona pero se lee mal.
+- **Enlaces universales**, para que el mismo enlace abra la app si está instalada: fase 2.
 - **Qué se ve en el visor** cuando la receta tiene foto, y si desde ahí se invita a instalar la app.
 
 ## Referencia visual
@@ -331,6 +345,8 @@ Existe un prototipo hecho en Lovable. Lovable genera React web (no React Native)
 9. Caché offline de lectura, sabiendo ya que lo prestado se borra al perder el acceso. Hecha,
    sin las fotos.
 10. Sacar lo personal de `recipes` a `saved_recipes`, que pasa a ser «mi cocina». Hecho.
+11. Compartir una receta por enlace, solo el visor HTML: testigo secreto por receta, Edge
+    Function que devuelve la página y botón de dejar de compartir.
 
 ## Ideas por concretar
 

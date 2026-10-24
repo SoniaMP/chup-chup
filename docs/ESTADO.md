@@ -21,6 +21,7 @@ abiertas. El qué y el por qué del producto siguen en [`SPEC.md`](SPEC.md); los
 | 8b. «Mejorar con IA» | **Fuera del MVP**, para una fase final. El esquema ya lo contempla, así que entrar después no cuesta nada |
 | 9. Caché offline de lectura | **Hecho.** Recetas, libros y pertenencias en el disco del móvil; las fotos fuera. Al cerrar sesión se borra |
 | 10. Sacar lo personal de `recipes` a `saved_recipes` | **Hecho.** `recipes` es contenido; `saved_recipes` es «mi cocina». Nada de acceso ni revocación todavía |
+| 11. Compartir: visor HTML | **Hecho.** Enlace con testigo que caduca a los 30 días, Edge Function pública que arma la página, y dejar de compartir. Falta dominio: Supabase no sirve HTML |
 
 ## Lo último que se estaba haciendo
 
@@ -67,6 +68,10 @@ decir que el MVP está hecho:
       icono se pinta a 48 px y Android le recorta todo menos el 66 % central, así que pide una
       sola forma maciza —el gorro solo—, mientras que el logotipo pide carácter. El prompt y el
       porqué están al final de [`library/PROMPTS.md`](../library/PROMPTS.md).
+- [ ] **Dar al visor un dominio que no sea de Supabase.** `*.supabase.co` no sirve HTML: la
+      pasarela lo convierte en `text/plain` para que nadie monte phishing ahí. El enlace de
+      compartir ya funciona, pero se ve como texto plano hasta que la página se sirva desde el
+      dominio propio de Supabase (de pago) o desde donde se despliegue la web de la app.
 - [ ] **Apuntar la *Site URL* a la app cuando se despliegue** (Authentication → URL
       Configuration). La confirmación de correo está **activada** y el circuito entero está
       probado: registrarse, recibir, confirmar y entrar funciona. Lo único pendiente es a dónde
@@ -82,8 +87,9 @@ fila de chips, categorizar recetas y el plan gratuito frente al PRO (~2 €). Ad
 
 - **El diseño de la pantalla principal** está parado a la espera de un diseñador. Por eso los
   recetarios del paso 5 no se han hecho: cambian esa pantalla.
-- **Compartir sigue siendo fase 2**, y la pasarela de recetarios de pago es una fase 3 nueva.
-  Nada de eso se construye ahora; está descrito en `SPEC.md` para no cerrarle la puerta.
+- **Compartir se parte en dos el 24 de octubre de 2026**: el **visor HTML entra en el MVP**
+  como paso 11, y **abrir la receta dentro de la app se queda en la fase 2**, porque eso sí
+  toca el modelo de permisos entero. La pasarela de recetarios de pago sigue siendo fase 3.
 
 ## Lo que se decidió el 24 de octubre de 2026
 

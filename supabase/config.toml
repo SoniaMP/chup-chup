@@ -386,6 +386,12 @@ deno_version = 2
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 
+# El visor de una receta compartida es una página pública: quien recibe el enlace no tiene
+# cuenta, así que no puede traer testigo de sesión. Lo que da derecho a verla es el testigo
+# del enlace, que la función comprueba antes de enseñar nada.
+[functions.shared-recipe]
+verify_jwt = false
+
 [analytics]
 enabled = true
 port = 54327

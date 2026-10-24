@@ -149,6 +149,38 @@ export type Database = {
           },
         ]
       }
+      recipe_shares: {
+        Row: {
+          created_at: string
+          expires_at: string
+          owner_id: string
+          recipe_id: string
+          token: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          owner_id?: string
+          recipe_id: string
+          token?: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          owner_id?: string
+          recipe_id?: string
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recipe_shares_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: true
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       recipes: {
         Row: {
           cook_min: number | null
@@ -248,6 +280,22 @@ export type Database = {
         Returns: boolean
       }
       release_ai_use: { Args: { p_owner: string }; Returns: undefined }
+      share_recipe: {
+        Args: { recipe: string }
+        Returns: {
+          created_at: string
+          expires_at: string
+          owner_id: string
+          recipe_id: string
+          token: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "recipe_shares"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       [_ in never]: never
