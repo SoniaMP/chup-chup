@@ -13,8 +13,9 @@ export const recipeSchema = recipeInputSchema
   .extend({
     id: z.uuid(),
     ownerId: z.uuid(),
-    photoOriginal: z.url().optional(),
-    photoEnhanced: z.url().optional(),
+    /** Rutas dentro del bucket, no URLs: las del bucket privado se firman y caducan. */
+    photoOriginal: z.string().trim().min(1).max(200).optional(),
+    photoEnhanced: z.string().trim().min(1).max(200).optional(),
     photoActive: z.enum(["original", "enhanced"]).default("original"),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),

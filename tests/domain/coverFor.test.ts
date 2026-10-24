@@ -12,25 +12,25 @@ describe("coverFor", () => {
   });
 
   it("prefers your own photo over the catalogue", () => {
-    const cover = coverFor({ libraryImage: "lemons-01", photoOriginal: "https://photos/mine.jpg" });
+    const cover = coverFor({ libraryImage: "lemons-01", photoOriginal: "owner/recipe/original.jpg" });
 
-    expect(cover).toEqual({ kind: "photo", url: "https://photos/mine.jpg" });
+    expect(cover).toEqual({ kind: "photo", path: "owner/recipe/original.jpg" });
   });
 
   it("uses the enhanced photo when that is the active one", () => {
     const cover = coverFor({
-      photoOriginal: "https://photos/mine.jpg",
-      photoEnhanced: "https://photos/better.jpg",
+      photoOriginal: "owner/recipe/original.jpg",
+      photoEnhanced: "owner/recipe/enhanced.jpg",
       photoActive: "enhanced",
     });
 
-    expect(cover).toEqual({ kind: "photo", url: "https://photos/better.jpg" });
+    expect(cover).toEqual({ kind: "photo", path: "owner/recipe/enhanced.jpg" });
   });
 
   it("falls back to the original when the enhanced one is not there yet", () => {
-    const cover = coverFor({ photoOriginal: "https://photos/mine.jpg", photoActive: "enhanced" });
+    const cover = coverFor({ photoOriginal: "owner/recipe/original.jpg", photoActive: "enhanced" });
 
-    expect(cover).toEqual({ kind: "photo", url: "https://photos/mine.jpg" });
+    expect(cover).toEqual({ kind: "photo", path: "owner/recipe/original.jpg" });
   });
 
   it("ignores an empty catalogue identifier", () => {

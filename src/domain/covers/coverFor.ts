@@ -1,6 +1,6 @@
-/** Qué imagen le toca a un libro o a una receta. */
+/** Qué imagen le toca a un libro o a una receta. La foto es una ruta del bucket, sin firmar. */
 export type Cover =
-  | { kind: "photo"; url: string }
+  | { kind: "photo"; path: string }
   | { kind: "library"; id: string }
   | { kind: "none" };
 
@@ -26,7 +26,7 @@ export function coverFor({
 }: CoverSource): Cover {
   const own = photoActive === "enhanced" ? (photoEnhanced ?? photoOriginal) : photoOriginal;
 
-  if (own !== undefined) return { kind: "photo", url: own };
+  if (own !== undefined) return { kind: "photo", path: own };
   if (libraryImage !== undefined && libraryImage !== "") return { kind: "library", id: libraryImage };
 
   return { kind: "none" };

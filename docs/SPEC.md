@@ -201,6 +201,14 @@ Recetario = carpeta. Libro = playlist. Receta = canción.
 - La foto es parte del contenido y viaja con la receta: quien tenga acceso la ve. Encima, cada
   cocinera puede ponerle su propia portada, que manda sobre la de la dueña.
 - Pendiente: elegir el servicio de retoque (procesado determinista tipo auto-enhance o modelo de edición con instrucciones estrictas).
+- **La foto se añade a una receta que ya existe**, no durante la revisión: antes de guardar no hay
+  carpeta donde subirla. Poder ponerla mientras se crea —un limbo donde la foto espera a que la
+  receta nazca— queda para una fase posterior.
+- En la base se guarda **la ruta del objeto**, no una URL: el bucket `recipe-photos` es privado y
+  sus URLs se firman y caducan. La firma se hace al pintar.
+- **Fase 2:** la política de lectura del bucket es solo para la dueña, así que quien tenga acceso a
+  una receta ajena no vería su foto. Cuando llegue compartir, las firmas tendrán que salir de una
+  Edge Function que compruebe el acceso.
 
 ## Offline
 
