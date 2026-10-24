@@ -1,3 +1,4 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { StyleSheet, Text, View, useColorScheme } from "react-native";
 
@@ -11,7 +12,7 @@ type EmptyStateProps = {
   isCompact?: boolean;
 };
 
-/** Lo que se pinta donde no hay nada todavía: la olla en degradado y dos líneas. */
+/** Lo que se pinta donde no hay nada todavía: una olla al chup chup y dos líneas. */
 export function EmptyState({ title, line, isCompact = false }: EmptyStateProps) {
   const colors = useColors();
   const gradient =
@@ -25,8 +26,14 @@ export function EmptyState({ title, line, isCompact = false }: EmptyStateProps) 
           colors={gradient}
           start={{ x: 0, y: 0 }}
           end={{ x: 0.8, y: 1 }}
-          style={{ width: size, height: size, borderRadius: tokens.radius.pill }}
-        />
+          style={[styles.pot, { width: size, height: size }]}
+        >
+          <MaterialCommunityIcons
+            name="pot-steam-outline"
+            size={size * 0.56}
+            color={colors.primary}
+          />
+        </LinearGradient>
         <View style={[styles.dot, styles.oliveDot, { backgroundColor: colors.olive }]} />
         <View style={[styles.dot, styles.saffronDot, { backgroundColor: colors.saffron }]} />
       </View>
@@ -46,6 +53,7 @@ const styles = StyleSheet.create({
     gap: tokens.spacing.row * 1.5,
   },
   compact: { flex: 0, paddingVertical: tokens.spacing.block },
+  pot: { borderRadius: tokens.radius.pill, alignItems: "center", justifyContent: "center" },
   dot: { position: "absolute", borderRadius: tokens.radius.pill },
   oliveDot: { width: 14, height: 14, top: 6, right: 2 },
   saffronDot: { width: 10, height: 10, bottom: 14, left: -2 },
