@@ -24,7 +24,7 @@ const messageFor = (error: AuthError): string => {
   return `No hemos podido entrar: ${error.message}`;
 };
 
-/** Entra con correo y contraseña. El registro llegará con la fase 2 (compartir). */
+/** Entra con correo y contraseña. Crear la cuenta es cosa de `signUp`. */
 export async function signIn(email: string, password: string): Promise<SignInResult> {
   const { error } = await supabase.auth.signInWithPassword({
     email: email.trim(),

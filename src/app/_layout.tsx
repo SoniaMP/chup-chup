@@ -48,6 +48,7 @@ export default function RootLayout() {
 
           <Stack.Protected guard={session === null} redirectTo="/">
             <Stack.Screen name="login" />
+            <Stack.Screen name="signup" />
           </Stack.Protected>
         </Stack>
       </SafeAreaProvider>

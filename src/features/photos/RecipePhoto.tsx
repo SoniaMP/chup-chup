@@ -12,7 +12,9 @@ import { removeRecipePhoto } from "./removeRecipePhoto";
 import { saveRecipePhoto } from "./saveRecipePhoto";
 import { useSignedPhotoUrl } from "./useSignedPhotoUrl";
 
-const HEIGHT = 220;
+/** Proporción de foto de comida, con tope para que en una ventana ancha no sea una franja. */
+const RATIO = 4 / 3;
+const MAX_HEIGHT = 320;
 
 type RecipePhotoProps = {
   recipe: SavedRecipe;
@@ -81,7 +83,14 @@ export function RecipePhoto({ recipe, onChange }: RecipePhotoProps) {
           pressed && styles.pressed,
         ]}
       >
-        {url !== null && <Image source={{ uri: url }} style={styles.photo} accessibilityIgnoresInvertColors />}
+        {url !== null && (
+          <Image
+            source={{ uri: url }}
+            resizeMode="cover"
+            style={styles.photo}
+            accessibilityIgnoresInvertColors
+          />
+        )}
 
         {isBusy && <ActivityIndicator color={colors.primary} />}
 
@@ -116,7 +125,8 @@ export function RecipePhoto({ recipe, onChange }: RecipePhotoProps) {
 const styles = StyleSheet.create({
   block: { gap: tokens.spacing.row, marginBottom: tokens.spacing.block },
   frame: {
-    height: HEIGHT,
+    aspectRatio: RATIO,
+    maxHeight: MAX_HEIGHT,
     borderRadius: tokens.radius.lg,
     borderWidth: 1,
     borderStyle: "dashed",

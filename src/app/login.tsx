@@ -1,5 +1,6 @@
+import { useRouter } from "expo-router";
 import { useState } from "react";
-import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Logo } from "@/components/Logo";
 import { PrimaryButton } from "@/components/PrimaryButton";
@@ -11,6 +12,7 @@ import { useColors } from "@/theme/useColors";
 
 export default function LoginScreen() {
   const colors = useColors();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isEntering, setIsEntering] = useState(false);
@@ -62,6 +64,18 @@ export default function LoginScreen() {
           {error !== null && (
             <Text style={[styles.error, { color: colors.destructive }]}>{error}</Text>
           )}
+
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => {
+              router.replace("/signup");
+            }}
+            style={styles.link}
+          >
+            <Text style={[styles.linkText, { color: colors.primary }]}>
+              ¿No tienes cuenta? Crear una
+            </Text>
+          </Pressable>
         </ScrollView>
       </KeyboardAvoidingView>
     </Screen>
@@ -89,4 +103,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: tokens.spacing.row + 4,
   },
+  link: { alignItems: "center", marginTop: tokens.spacing.block },
+  linkText: { fontFamily: tokens.fontFamily.bodyStrong, fontSize: tokens.fontSize.body },
 });

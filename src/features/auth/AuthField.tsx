@@ -9,14 +9,17 @@ type AuthFieldProps = {
   label: string;
   value: string;
   onChangeText: (value: string) => void;
-  mode: "email" | "password";
+  mode: "email" | "password" | "name";
+  /** Qué contraseña espera el navegador: la de entrar o una nueva. */
+  isNewPassword?: boolean;
 };
 
-/** Un campo del login, con su etiqueta y el borde que se enciende al escribir. */
-export function AuthField({ label, value, onChangeText, mode }: AuthFieldProps) {
+/** Un campo de entrar o registrarse, con su etiqueta y el borde que se enciende al escribir. */
+export function AuthField({ label, value, onChangeText, mode, isNewPassword = false }: AuthFieldProps) {
   const colors = useColors();
   const [isFocused, setIsFocused] = useState(false);
   const isPassword = mode === "password";
+  const isName = mode === "name";
 
   return (
     <View style={styles.field}>
@@ -30,11 +33,13 @@ export function AuthField({ label, value, onChangeText, mode }: AuthFieldProps) 
         onBlur={() => {
           setIsFocused(false);
         }}
-        autoCapitalize="none"
+        autoCapitalize={isName ? "words" : "none"}
         autoCorrect={false}
-        keyboardType={isPassword ? "default" : "email-address"}
+        keyboardType={isPassword || isName ? "default" : "email-address"}
         secureTextEntry={isPassword}
-        autoComplete={isPassword ? "current-password" : "email"}
+        autoComplete={
+          isName ? "name" : isPassword ? (isNewPassword ? "new-password" : "current-password") : "email"
+        }
         style={[
           styles.input,
           webFocusReset,
