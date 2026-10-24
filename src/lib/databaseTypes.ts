@@ -114,6 +114,7 @@ export type Database = {
       cookbooks: {
         Row: {
           collection_id: string | null
+          cover_photo: string | null
           id: string
           is_system: boolean
           library_image: string | null
@@ -123,6 +124,7 @@ export type Database = {
         }
         Insert: {
           collection_id?: string | null
+          cover_photo?: string | null
           id?: string
           is_system?: boolean
           library_image?: string | null
@@ -132,6 +134,7 @@ export type Database = {
         }
         Update: {
           collection_id?: string | null
+          cover_photo?: string | null
           id?: string
           is_system?: boolean
           library_image?: string | null

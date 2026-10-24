@@ -8,6 +8,7 @@ const row = {
   title: "Navidad",
   position: "n",
   library_image: null,
+  cover_photo: null,
   is_system: false,
 };
 
@@ -33,5 +34,26 @@ describe("cookbookFromRow", () => {
 
   it("rechaza un libro sin nombre", () => {
     expect(() => cookbookFromRow({ ...row, title: "   " })).toThrow();
+  });
+});
+
+describe("la portada de un libro", () => {
+  it("trae la del catálogo cuando es la que hay", () => {
+    expect(cookbookFromRow({ ...row, library_image: "cream-mortar.jpg" }).libraryImage).toBe(
+      "cream-mortar.jpg",
+    );
+  });
+
+  it("trae la foto propia cuando es la que hay", () => {
+    expect(cookbookFromRow({ ...row, cover_photo: "owner/book.jpg" }).coverPhoto).toBe(
+      "owner/book.jpg",
+    );
+  });
+
+  it("sin portada, no deja ninguna de las dos claves a null", () => {
+    const cookbook = cookbookFromRow(row);
+
+    expect(cookbook).not.toHaveProperty("libraryImage");
+    expect(cookbook).not.toHaveProperty("coverPhoto");
   });
 });

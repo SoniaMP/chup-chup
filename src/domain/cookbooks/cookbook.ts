@@ -14,6 +14,8 @@ export const cookbookSchema = z.object({
   position: z.string().min(1),
   /** Identificador de una imagen del catálogo del proyecto, cuando se ha elegido portada. */
   libraryImage: z.string().trim().min(1).max(120).optional(),
+  /** Ruta en el bucket de la foto puesta de portada. Nunca a la vez que `libraryImage`. */
+  coverPhoto: z.string().trim().min(1).max(200).optional(),
   isSystem: z.boolean().default(false),
 });
 

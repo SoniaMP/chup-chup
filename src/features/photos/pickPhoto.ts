@@ -14,7 +14,7 @@ const QUALITY = 0.8;
  * Devuelve `null` si se sale sin elegir, que no es un error. Si falta el permiso, sí lo es, y se
  * dice: una pantalla que no hace nada y no explica por qué es peor que un aviso.
  */
-export async function pickRecipePhoto(source: PhotoSource): Promise<string | null> {
+export async function pickPhoto(source: PhotoSource): Promise<string | null> {
   const permission =
     source === "camera"
       ? await ImagePicker.requestCameraPermissionsAsync()

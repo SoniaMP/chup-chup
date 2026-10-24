@@ -8,6 +8,8 @@ import {
 } from "@/domain/cookbooks/cookbookActions";
 import { CoverPicker } from "@/features/covers/CoverPicker";
 import { saveCookbookCover } from "@/features/covers/saveCookbookCover";
+import { saveCookbookCoverPhoto } from "@/features/covers/saveCookbookCoverPhoto";
+import { pickPhoto, type PhotoSource } from "@/features/photos/pickPhoto";
 import { ConfirmDeleteCookbook } from "./ConfirmDeleteCookbook";
 import { RenameCookbookDialog } from "./RenameCookbookDialog";
 
@@ -43,6 +45,7 @@ export function CookbookActions({
   onReorder,
 }: CookbookActionsProps) {
   const [open, setOpen] = useState<CookbookAction | null>(null);
+  const [coverError, setCoverError] = useState<string | null>(null);
 
   // Reordenar no abre nada: cierra el menú y deja la lista en modo arrastrar. Las otras dos sí
   // abren un diálogo, y entonces el menú no se "cierra": quien manda la hoja sigue montado,
@@ -71,7 +74,26 @@ export function CookbookActions({
 
   const close = (): void => {
     setOpen(null);
+    setCoverError(null);
     onClose();
+  };
+
+  // Salir del selector de fotos sin elegir no es elegir nada: el selector de portadas sigue
+  // abierto donde estaba. Y si algo falla —el permiso de la galería, sin ir más lejos— se dice
+  // ahí mismo en vez de cerrarlo todo y dejar a la usuaria sin saber qué ha pasado.
+  const keep = (work: Promise<Cookbook | null>): void => {
+    setCoverError(null);
+    void work
+      .then((updated) => {
+        if (updated === null) return;
+
+        close();
+        onRenamed(updated);
+      })
+      .catch((cause: unknown) => {
+        console.warn("No se ha podido poner la portada", cause);
+        setCoverError(cause instanceof Error ? cause.message : "No se ha podido poner la portada");
+      });
   };
 
   return (
@@ -94,16 +116,17 @@ export function CookbookActions({
       <CoverPicker
         isOpen={open === "cover"}
         chosenId={cookbook.libraryImage}
+        hasPhoto={cookbook.coverPhoto !== undefined}
+        {...(coverError === null ? {} : { error: coverError })}
         onChoose={(imageId) => {
-          void saveCookbookCover(cookbook.id, imageId)
-            .then((updated) => {
-              close();
-              onRenamed(updated);
-            })
-            .catch((cause: unknown) => {
-              console.warn("No se ha podido poner la portada", cause);
-              close();
-            });
+          keep(saveCookbookCover(cookbook, imageId));
+        }}
+        onChoosePhoto={(source: PhotoSource) => {
+          keep(
+            pickPhoto(source).then((base64) =>
+              base64 === null ? null : saveCookbookCoverPhoto(cookbook, base64),
+            ),
+          );
         }}
         onClose={close}
       />

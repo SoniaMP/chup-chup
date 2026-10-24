@@ -91,7 +91,7 @@ que solo enseña sus recetas.
 | --- | --- |
 | Cambiar nombre | Hecho. También vale para el libro por defecto: la app lo reconoce por `is_system`, no por el título |
 | Eliminar libro | Hecho. Nunca para el libro por defecto, y las recetas que solo estuvieran ahí pasan al libro por defecto antes de borrarlo |
-| Cambiar portada | Hecho. Se elige del catálogo del proyecto, y se puede quitar |
+| Cambiar portada | Hecho. Del catálogo del proyecto **o una foto tuya**, nunca las dos: elegir una vacía la otra y borra el fichero que deja de usarse |
 | Compartir el libro | Fase 2. Compartir **una receta** sí está hecho: paso 11 |
 | Información (hacerlo público o privado) | Fase 2 |
 | Fijar arriba / Dejar de fijar | Fase 2 |

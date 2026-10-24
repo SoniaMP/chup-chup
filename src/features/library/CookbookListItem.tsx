@@ -6,6 +6,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import type { Cookbook } from "@/domain/cookbooks/cookbook";
 import { coverFor } from "@/domain/covers/coverFor";
 import { CoverThumbnail } from "@/features/covers/CoverThumbnail";
+import { buckets } from "@/features/photos/buckets";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 
@@ -49,7 +50,11 @@ export function CookbookListItem({
 
   const body = (
     <>
-      <CoverThumbnail cover={coverFor(cookbook)} size={COVER_SIZE} />
+      <CoverThumbnail
+        cover={coverFor(cookbook)}
+        size={COVER_SIZE}
+        bucket={buckets.cookbookCovers}
+      />
 
       <View style={styles.text}>
         {/* Reordenando, el título va a una línea: todas las tarjetas miden lo mismo. */}

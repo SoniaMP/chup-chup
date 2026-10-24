@@ -36,4 +36,17 @@ describe("coverFor", () => {
   it("ignores an empty catalogue identifier", () => {
     expect(coverFor({ libraryImage: "" })).toEqual({ kind: "none" });
   });
+
+  it("usa la foto que la usuaria ha puesto de portada", () => {
+    expect(coverFor({ coverPhoto: "owner/book.jpg" })).toEqual({
+      kind: "photo",
+      path: "owner/book.jpg",
+    });
+  });
+
+  it("la portada propia de un libro gana a la del catálogo", () => {
+    const cover = coverFor({ libraryImage: "cream-pot.jpg", coverPhoto: "owner/book.jpg" });
+
+    expect(cover).toEqual({ kind: "photo", path: "owner/book.jpg" });
+  });
 });

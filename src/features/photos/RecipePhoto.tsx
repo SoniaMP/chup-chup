@@ -7,7 +7,7 @@ import { Notice } from "@/components/Notice";
 import type { SavedRecipe } from "@/domain/recipes/savedRecipe";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
-import { pickRecipePhoto, type PhotoSource } from "./pickRecipePhoto";
+import { pickPhoto, type PhotoSource } from "./pickPhoto";
 import { removeRecipePhoto } from "./removeRecipePhoto";
 import { saveRecipePhoto } from "./saveRecipePhoto";
 import { useSignedPhotoUrl } from "./useSignedPhotoUrl";
@@ -46,7 +46,7 @@ export function RecipePhoto({ recipe, onChange }: RecipePhotoProps) {
 
   const choosePhoto = (source: PhotoSource): void => {
     void run(async () => {
-      const base64 = await pickRecipePhoto(source);
+      const base64 = await pickPhoto(source);
       return base64 === null ? null : saveRecipePhoto(recipe, base64);
     });
   };

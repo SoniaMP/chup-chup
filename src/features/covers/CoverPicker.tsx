@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { BottomSheet } from "@/components/BottomSheet";
+import type { PhotoSource } from "@/features/photos/pickPhoto";
+import { OwnCoverButtons } from "./OwnCoverButtons";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 import { useLibraryImages } from "./useLibraryImages";
@@ -15,11 +17,25 @@ type CoverPickerProps = {
   /** La portada puesta ahora, para marcarla y para poder quitarla. */
   chosenId: string | undefined;
   onChoose: (imageId: string | null) => void;
+  /** Cuando se puede poner una foto propia. Sin esto, el selector solo ofrece el catálogo. */
+  onChoosePhoto?: ((source: PhotoSource) => void) | undefined;
+  /** Si ya hay una foto propia puesta, para poder quitarla aunque no haya nada marcado. */
+  hasPhoto?: boolean;
+  /** Lo que ha fallado al poner la portada, dicho aquí y no en una pantalla que ya no se ve. */
+  error?: string;
   onClose: () => void;
 };
 
 /** Las imágenes del proyecto, para ponerle cara a un libro o a una receta sin foto propia. */
-export function CoverPicker({ isOpen, chosenId, onChoose, onClose }: CoverPickerProps) {
+export function CoverPicker({
+  isOpen,
+  chosenId,
+  onChoose,
+  onChoosePhoto,
+  hasPhoto = false,
+  error,
+  onClose,
+}: CoverPickerProps) {
   const colors = useColors();
   const images = useLibraryImages();
   // La rejilla se mide sola: las portadas llenan el ancho que haya en vez de dejar un hueco a
@@ -33,6 +49,19 @@ export function CoverPicker({ isOpen, chosenId, onChoose, onClose }: CoverPicker
     <BottomSheet isOpen={isOpen} onClose={onClose}>
       <View style={styles.body}>
         <Text style={[styles.heading, { color: colors.foreground }]}>Elige una portada</Text>
+
+        {onChoosePhoto !== undefined && (
+          <>
+            <OwnCoverButtons onChoose={onChoosePhoto} />
+            <Text style={[styles.empty, { color: colors.mutedForeground }]}>
+              O una del catálogo. Solo cabe una: al elegir, se queda la última.
+            </Text>
+          </>
+        )}
+
+        {error !== undefined && (
+          <Text style={[styles.error, { color: colors.destructive }]}>{error}</Text>
+        )}
 
         {images !== null && images.length === 0 && (
           <Text style={[styles.empty, { color: colors.mutedForeground }]}>
@@ -68,7 +97,7 @@ export function CoverPicker({ isOpen, chosenId, onChoose, onClose }: CoverPicker
           ))}
         </ScrollView>
 
-        {chosenId !== undefined && (
+        {(chosenId !== undefined || hasPhoto) && (
           <Pressable
             accessibilityRole="button"
             onPress={() => {
@@ -87,7 +116,8 @@ export function CoverPicker({ isOpen, chosenId, onChoose, onClose }: CoverPicker
 const styles = StyleSheet.create({
   body: { gap: tokens.spacing.row + 4, paddingHorizontal: tokens.spacing.row + 4 },
   heading: { fontFamily: tokens.fontFamily.display, fontSize: tokens.fontSize.sectionHeading },
-  empty: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.body },
+  empty: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.label },
+  error: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.label },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: GAP, paddingBottom: 4 },
   option: {
     borderRadius: tokens.radius.card,

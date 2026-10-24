@@ -12,6 +12,7 @@ export function cookbookFromRow(row: CookbookRow): Cookbook {
     title: row.title,
     position: row.position,
     ...(row.library_image !== null && { libraryImage: row.library_image }),
+    ...(row.cover_photo !== null && { coverPhoto: row.cover_photo }),
     isSystem: row.is_system,
   });
 }

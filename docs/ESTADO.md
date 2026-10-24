@@ -32,6 +32,9 @@ libros y recetas, curadas por quien desarrolla.
   aplicados en el proyecto.
 - Selector de portada, tarjetas que pintan la portada elegida y acción «Cambiar portada» en los
   dos menús: hechos. La rejilla del selector se mide sola y llena el ancho que haya.
+- **La portada de un libro puede ser una foto propia**, de la cámara o de la galería, en el
+  bucket privado `cookbook-covers`. O del catálogo o tuya, nunca las dos: no hay regla de
+  precedencia que la usuaria no pueda ver. Las recetas no cambian, ahí la foto es contenido.
 - `npm run covers -- library/originals` deja las imágenes cuadradas y en dos tamaños; se suben
   con el CLI, una a una y a la raíz del bucket, como explica `library/README.md`.
 - **Las doce primeras están dentro**: dibujo a línea, dos colores, sobre cuatro fondos de la
