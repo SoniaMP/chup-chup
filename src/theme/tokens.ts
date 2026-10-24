@@ -24,5 +24,8 @@ export const tokens = {
   shadow: {
     soft: { shadowColor: "#6B3725", shadowOpacity: 0.25, shadowRadius: 15, shadowOffset: { width: 0, height: 10 }, elevation: 6 },
     glow: { shadowColor: "#CF542C", shadowOpacity: 0.55, shadowRadius: 14, shadowOffset: { width: 0, height: 12 }, elevation: 10 },
+    // El mismo halo, a la mitad: sobre el fondo oscuro, el de siempre no se lee como luz
+    // sino como una mancha naranja alrededor del botón.
+    glowDark: { shadowColor: "#CF542C", shadowOpacity: 0.28, shadowRadius: 18, shadowOffset: { width: 0, height: 10 }, elevation: 8 },
   },
 } as const;

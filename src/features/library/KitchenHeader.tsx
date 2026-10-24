@@ -6,6 +6,7 @@ import { Logo } from "@/components/Logo";
 import { signOut } from "@/features/auth/signOut";
 
 import { FavoritesFilter } from "./FavoritesFilter";
+import { NewCookbookChip } from "./NewCookbookChip";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 import { webFocusReset } from "@/theme/webFocusReset";
@@ -17,7 +18,7 @@ type KitchenHeaderProps = {
   onOnlyFavoritesChange: () => void;
 };
 
-/** Title, profile and + on one row, with the search field underneath. */
+/** El nombre y el avatar en una fila, con el buscador y el filtro debajo. */
 export function KitchenHeader({
   query,
   onQueryChange,
@@ -34,28 +35,16 @@ export function KitchenHeader({
           <Logo size={56} />
           <Text style={[styles.title, { color: colors.foreground }]}>Chup Chup</Text>
         </View>
-        <View style={styles.actions}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Cerrar sesión"
-            onPress={() => {
-              void signOut();
-            }}
-            style={[styles.roundButton, { backgroundColor: colors.secondary }]}
-          >
-            <Text style={[styles.initial, { color: colors.secondaryForeground }]}>S</Text>
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Nuevo libro"
-            onPress={() => {
-              router.push("/cookbook/new");
-            }}
-            style={[styles.roundButton, { backgroundColor: colors.muted }]}
-          >
-            <Text style={[styles.plus, { color: colors.foreground }]}>+</Text>
-          </Pressable>
-        </View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Cerrar sesión"
+          onPress={() => {
+            void signOut();
+          }}
+          style={[styles.roundButton, { backgroundColor: colors.secondary }]}
+        >
+          <Text style={[styles.initial, { color: colors.secondaryForeground }]}>S</Text>
+        </Pressable>
       </View>
       {/* La ✕ es nuestra: la del sistema (`clearButtonMode`) solo existe en iPhone. */}
       <View style={[styles.search, { backgroundColor: colors.muted }]}>
@@ -83,18 +72,25 @@ export function KitchenHeader({
           </Pressable>
         )}
       </View>
-      <FavoritesFilter isOn={isOnlyFavorites} onToggle={onOnlyFavoritesChange} />
+      <View style={styles.chips}>
+        <FavoritesFilter isOn={isOnlyFavorites} onToggle={onOnlyFavoritesChange} />
+        <NewCookbookChip
+          onPress={() => {
+            router.push("/cookbook/new");
+          }}
+        />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { gap: tokens.spacing.row * 2, paddingBottom: tokens.spacing.block },
+  chips: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   topRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   brand: { flexDirection: "row", alignItems: "center", gap: tokens.spacing.row + 2 },
   // El logo es la marca y el texto la acompaña: el título baja para que mande el dibujo.
   title: { fontFamily: tokens.fontFamily.display, fontSize: 26, letterSpacing: -0.3 },
-  actions: { flexDirection: "row", gap: tokens.spacing.row },
   roundButton: {
     width: tokens.touch.headerButton,
     height: tokens.touch.headerButton,
@@ -103,7 +99,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   initial: { fontFamily: tokens.fontFamily.bodyStrong, fontSize: tokens.fontSize.body },
-  plus: { fontFamily: tokens.fontFamily.body, fontSize: 24, lineHeight: 28 },
   search: {
     flexDirection: "row",
     alignItems: "center",
