@@ -39,6 +39,21 @@ Y el **logotipo**: `assets/logo.png` (el gorro con el tenedor y la cuchara) ya g
 splash, icono adaptativo de Android y favicon, conectados en `app.json`. Es provisional: el
 definitivo lo hará un diseñador, y cambiarlo será sustituir los PNG y volver a generar.
 
+## Antes de dar el MVP por cerrado
+
+Cosas que no son código y que, si no están, dejan la app a medias. Repasar esta lista antes de
+decir que el MVP está hecho:
+
+- [ ] **Subir las doce imágenes del catálogo** al bucket `library-images`. El selector de portada
+      está construido y hasta entonces sale vacío. El encargo, con los prompts y las medidas, está
+      en [`library/README.md`](../library/README.md).
+- [ ] **Logotipo definitivo**, con fondo transparente: el provisional lleva fondo crema y se
+      recorta como un cuadrado claro en modo oscuro.
+- [ ] **Mirar la confirmación de correo** en el panel de Supabase y, si está activada, que la URL
+      de redirección apunte a donde corre la app.
+- [ ] **Elegir el servicio de retoque** (paso 8b), o dejar «Mejorar con IA» fuera del MVP a
+      sabiendas.
+
 ## Decisiones abiertas
 
 En `SPEC.md`, sección «Ideas por concretar», están las seis con sus preguntas: buscar por los
