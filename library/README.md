@@ -64,9 +64,14 @@ Aquí quedan los motivos y las reglas. Los doce prompts ya escritos, uno por ima
 nombre de fichero de cada una, están en [`PROMPTS.md`](PROMPTS.md): es lo que se pega en el
 generador.
 
-**Doce imágenes para empezar: ocho para libros y cuatro de plato para recetas.** Doce
-llenan la rejilla del selector sin que haya que elegir entre cuarenta, y son pocas para repasarlas
-a mano una por una.
+**Doce motivos: ocho para libros y cuatro de plato para recetas**, cada uno en los cuatro fondos.
+Cuarenta y ocho en total, de las que las doce primeras ya están hechas.
+
+Eso contradice la idea original de "doce llenan la rejilla sin que haya que elegir entre cuarenta",
+y conviene saberlo: el selector pinta una rejilla plana sin filtro, así que con cuarenta y ocho hay
+que hacer scroll. Se eligió aun así para que cada cocinera pueda quedarse con el color que le
+guste. El nombre del fichero lleva el fondo delante (`olive-jars.jpg`) para que al menos salgan
+agrupadas por color.
 
 Requisitos que no se negocian, porque la app las pinta así:
 
@@ -85,15 +90,15 @@ Requisitos que no se negocian, porque la app las pinta así:
   del mismo color que la pantalla: parece un hueco en vez de una portada.
 - **Nada de caras, marcas, logotipos ni envases**, ni texto dentro de la imagen.
 
-### Las doce son dibujo a línea
+### Todas son dibujo a línea
 
 **Ni fotos ni texturas.** Se probaron las dos —un mármol fotográfico y un patrón de madera— y
 ninguna pertenecía a esta app: al lado del logotipo parecían de otro producto, y encogidas no eran
-más que una mancha. Las doce son un trazo de tinta continuo, dos colores y nada más.
+más que una mancha. Todas son un trazo de tinta continuo, dos colores y nada más.
 
-Lo que cambia entre ellas no es el estilo, es **sobre qué están dibujadas**: cuatro fondos de la
-paleta —crema, terracota, oliva y marrón—, tres imágenes de cada uno. Doce dibujos sobre crema
-serían, encogidos, doce cuadrados del color de la pantalla.
+Lo que cambia entre ellas no es el estilo, es **sobre qué están dibujadas**: cuatro fondos —crema,
+terracota, oliva y marrón—, repartidos por luminancia para que no haya dos que pesen igual en la
+rejilla. Todos los dibujos sobre crema serían, encogidos, cuadrados del color de la pantalla.
 
 ### Las ocho de libro: utensilios y despensa
 
@@ -111,9 +116,9 @@ catálogo.
 
 ### Y después
 
-1. Guarda los doce originales en `library/originals/`, con el **nombre que quieres que tengan de
-   identificador**: en inglés, sin tildes y con guiones (`drawn-pot.jpg`, `drawn-salad-bowl.jpg`).
-   Esa carpeta está en `.gitignore`.
+1. Guarda los originales en `library/originals/` con el nombre que les toca, que es
+   **`<fondo>-<motivo>.jpg`** (`cream-pot.jpg`, `olive-salad-bowl.jpg`): en inglés, sin tildes y
+   con guiones. Esa carpeta está en `.gitignore`.
 2. `npm run covers -- library/originals`
 3. Sube `library/ready/` al bucket, como dice arriba. **El bucket es la lista**: no hay que
    registrar nada en el código, aparecen solas en el selector, por orden de nombre de fichero.

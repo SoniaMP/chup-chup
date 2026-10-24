@@ -34,7 +34,8 @@ libros y recetas, curadas por quien desarrolla.
 - `npm run covers -- library/originals` deja las imágenes cuadradas y en dos tamaños; se suben
   con el CLI, una a una y a la raíz del bucket, como explica `library/README.md`.
 - **Las doce primeras están dentro**: dibujo a línea, dos colores, sobre cuatro fondos de la
-  paleta. Nadie ha visto todavía el selector con imágenes de verdad.
+  paleta, y el selector ya las pinta. Hizo falta una política de lectura sobre `storage.objects`:
+  el bucket era público y aun así la lista llegaba vacía.
 
 Y el **logotipo**: `assets/logo.png` (el gorro con el tenedor y la cuchara) ya genera icono,
 splash, icono adaptativo de Android y favicon, conectados en `app.json`. Es provisional: el
@@ -45,14 +46,23 @@ definitivo lo hará un diseñador, y cambiarlo será sustituir los PNG y volver 
 Cosas que no son código y que, si no están, dejan la app a medias. Repasar esta lista antes de
 decir que el MVP está hecho:
 
-- [x] **Subir las doce imágenes del catálogo** al bucket `library-images`. Hechas el 24 de
-      octubre de 2026 y subidas: veinticuatro ficheros en la raíz del bucket, doce en el
-      selector. Los originales están en `library/originals/` y los preparados en
-      `library/ready/`, ninguna de las dos carpetas en git. El estilo, los cuatro fondos y los
-      prompts exactos están en [`library/PROMPTS.md`](../library/PROMPTS.md).
-- [ ] **Quitarle el fondo crema al logotipo**, que en modo oscuro se recorta como un cuadrado
-      claro. El dibujo se queda: se intentó rehacerlo en el trazo del catálogo y salió sin
-      carácter. Es un recorte, no un rediseño.
+- [ ] **Terminar el catálogo: doce motivos en cuatro fondos, cuarenta y ocho imágenes.** Las
+      doce primeras se generaron y subieron el 24 de octubre de 2026 —veinticuatro ficheros en la
+      raíz del bucket, doce en el selector— pero con los nombres viejos (`drawn-<motivo>.jpg`).
+      Al ampliar el catálogo, el nombre pasó a ser **`<fondo>-<motivo>.jpg`** para que el selector
+      las agrupe por color, así que **esas veinticuatro hay que borrarlas del bucket y volver a
+      subirlas renombradas**, o quedarán duplicadas. Los originales renombrados están en
+      `library/originals/` y `npm run covers` los deja en `library/ready/`; ninguna de las dos
+      carpetas va en git. Los prompts de las cuarenta y ocho están en
+      [`library/PROMPTS.md`](../library/PROMPTS.md), con una marca en las doce ya hechas.
+- [ ] **Decidir si el selector aguanta cuarenta y ocho.** `CoverPicker` pinta una rejilla plana
+      sin filtro ni agrupación, y el encargo original hablaba de doce justamente por eso. El
+      nombre del fichero lleva el fondo delante para que al menos salgan por color; si se hace
+      pesado, hay que filtrar por color en el selector.
+- **El logotipo se queda como está, con su fondo crema.** Se probaron las dos alternativas el 24
+  de octubre de 2026 y las dos se descartaron: rehacerlo en el trazo del catálogo salió limpio y
+  sin carácter, y recortarle el fondo gustó menos que dejarlo. Que en modo oscuro se vea como un
+  cuadrado claro es un precio aceptado, no un pendiente.
 - [ ] **Icono propio, distinto del logotipo.** Son dos encargos con exigencias contrarias: el
       icono se pinta a 48 px y Android le recorta todo menos el 66 % central, así que pide una
       sola forma maciza —el gorro solo—, mientras que el logotipo pide carácter. El prompt y el
