@@ -30,8 +30,8 @@ libros y recetas, curadas por quien desarrolla.
 
 - Bucket público `library-images` y columna `library_image` en `cookbooks` y `recipes`: hechos y
   aplicados en el proyecto.
-- Selector de portada, tarjetas que pintan la portada elegida y acción «Crear portada» en los dos
-  menús: hechos.
+- Selector de portada, tarjetas que pintan la portada elegida y acción «Cambiar portada» en los
+  dos menús: hechos. La rejilla del selector se mide sola y llena el ancho que haya.
 - `npm run covers -- library/originals` deja las imágenes cuadradas y en dos tamaños; se suben
   con el CLI, una a una y a la raíz del bucket, como explica `library/README.md`.
 - **Las doce primeras están dentro**: dibujo a línea, dos colores, sobre cuatro fondos de la

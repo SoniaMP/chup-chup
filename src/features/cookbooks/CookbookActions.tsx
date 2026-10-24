@@ -23,7 +23,7 @@ type CookbookActionsProps = {
 
 const LABELS: Record<CookbookAction, Omit<SheetAction, "onPress">> = {
   rename: { label: "Cambiar nombre", icon: "edit" },
-  cover: { label: "Crear portada", icon: "image" },
+  cover: { label: "Cambiar portada", icon: "image" },
   reorder: { label: "Reordenar libros", icon: "swap-vert" },
   delete: { label: "Eliminar libro", icon: "delete-outline", isDestructive: true },
 };

@@ -1,9 +1,14 @@
+import { useState } from "react";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { BottomSheet } from "@/components/BottomSheet";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 import { useLibraryImages } from "./useLibraryImages";
+
+/** Lo más estrecho que puede quedar una portada antes de no distinguirse. */
+const NARROWEST = 104;
+const GAP = tokens.spacing.row;
 
 type CoverPickerProps = {
   isOpen: boolean;
@@ -17,6 +22,12 @@ type CoverPickerProps = {
 export function CoverPicker({ isOpen, chosenId, onChoose, onClose }: CoverPickerProps) {
   const colors = useColors();
   const images = useLibraryImages();
+  // La rejilla se mide sola: las portadas llenan el ancho que haya en vez de dejar un hueco a
+  // la derecha, que es lo que pasaba con un tamaño fijo.
+  const [width, setWidth] = useState(0);
+
+  const columns = Math.max(3, Math.floor((width + GAP) / (NARROWEST + GAP)));
+  const size = width === 0 ? NARROWEST : (width - GAP * (columns - 1)) / columns;
 
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose}>
@@ -29,7 +40,13 @@ export function CoverPicker({ isOpen, chosenId, onChoose, onClose }: CoverPicker
           </Text>
         )}
 
-        <ScrollView contentContainerStyle={styles.grid} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          contentContainerStyle={styles.grid}
+          showsVerticalScrollIndicator={false}
+          onLayout={(event) => {
+            setWidth(event.nativeEvent.layout.width);
+          }}
+        >
           {(images ?? []).map((image) => (
             <Pressable
               key={image.id}
@@ -41,6 +58,7 @@ export function CoverPicker({ isOpen, chosenId, onChoose, onClose }: CoverPicker
               }}
               style={({ pressed }) => [
                 styles.option,
+                { width: size },
                 image.id === chosenId && { borderColor: colors.primary },
                 pressed && styles.pressed,
               ]}
@@ -70,7 +88,7 @@ const styles = StyleSheet.create({
   body: { gap: tokens.spacing.row + 4, paddingHorizontal: tokens.spacing.row + 4 },
   heading: { fontFamily: tokens.fontFamily.display, fontSize: tokens.fontSize.sectionHeading },
   empty: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.body },
-  grid: { flexDirection: "row", flexWrap: "wrap", gap: tokens.spacing.row, paddingBottom: 4 },
+  grid: { flexDirection: "row", flexWrap: "wrap", gap: GAP, paddingBottom: 4 },
   option: {
     borderRadius: tokens.radius.card,
     borderWidth: 2,
@@ -78,7 +96,8 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   pressed: { opacity: 0.8 },
-  thumbnail: { width: 88, height: 88, borderRadius: tokens.radius.card },
+  // Cuadrada y del ancho que le toque: el recorte lo pone la propia imagen, que ya viene cuadrada.
+  thumbnail: { width: "100%", aspectRatio: 1, borderRadius: tokens.radius.card },
   remove: { alignSelf: "center", padding: tokens.spacing.row },
   removeLabel: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.label },
 });

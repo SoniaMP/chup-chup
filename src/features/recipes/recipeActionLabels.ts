@@ -9,7 +9,7 @@ import type { RecipeAction } from "@/domain/recipes/recipeActions";
  */
 export const recipeActionLabels: Record<RecipeAction, Omit<SheetAction, "onPress">> = {
   reorder: { label: "Reordenar recetas", icon: "swap-vert" },
-  cover: { label: "Crear portada", icon: "image" },
+  cover: { label: "Cambiar portada", icon: "image" },
   addToCookbook: { label: "Añadir a otro libro", icon: "library-add" },
   removeFromCookbook: { label: "Quitar de este libro", icon: "playlist-remove" },
   delete: { label: "Borrar receta", icon: "delete-outline", isDestructive: true },
