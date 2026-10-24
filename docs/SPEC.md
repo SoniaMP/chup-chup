@@ -36,7 +36,7 @@ Principio rector: ninguna decisión del MVP obliga a migrar datos cuando llegue 
 - Crear receta desde texto libre → IA estructura y sugiere → revisión editable → guardar.
 - Editar y borrar recetas, con notas personales por receta ("la próxima vez, menos sal").
 - Libros tipo playlist, recetarios tipo carpeta y Favoritos.
-- Foto opcional por receta, añadida en cualquier momento, con retoque "Mejorar con IA".
+- Foto opcional por receta, añadida en cualquier momento. Sin retoque.
 - Lectura offline de las recetas guardadas.
 
 **Fuera del MVP**
@@ -47,6 +47,8 @@ Principio rector: ninguna decisión del MVP obliga a migrar datos cuando llegue 
   «Recetas ajenas» sí se respeta desde ahora, porque es la que decide la forma de las tablas.
 - Libro "Por probar" de serie y "Quiero hacerla" como funcionalidad propia (fase 2).
 - Hacer un libro público o privado, y fijarlo arriba de la biblioteca (fase 2).
+- **Mejorar con IA**, el retoque de la foto. Fuera desde el 24 de octubre de 2026 y aparcado
+  para una fase final: ver «Fotos y retoque».
 - Entrada por voz propia (se usa el dictado del teclado).
 - Etiquetas sueltas, recetarios anidados.
 - Escritura offline y sincronización.
@@ -195,12 +197,18 @@ Recetario = carpeta. Libro = playlist. Receta = canción.
 
 - Una foto opcional por receta, añadida al crearla o en cualquier momento después (cámara o galería).
 - Se sube a Supabase Storage.
+- **«Mejorar con IA» queda fuera del MVP**, para una de las fases finales: decidido el 24 de
+  octubre de 2026. El modelo de datos ya lo contempla —`photo_original`, `photo_enhanced` y
+  `photo_active`—, así que añadirlo después no obliga a migrar nada. Lo de abajo describe
+  cómo será cuando se haga.
 - Tras subirla aparece el botón **Mejorar con IA**. Si no se pulsa, se queda la original.
 - El retoque solo ajusta luz, contraste, color y encuadre centrado. No regenera ni cambia el plato.
 - Se guardan las dos versiones y se puede volver a la original.
 - La foto es parte del contenido y viaja con la receta: quien tenga acceso la ve. Encima, cada
   cocinera puede ponerle su propia portada, que manda sobre la de la dueña.
-- Pendiente: elegir el servicio de retoque (procesado determinista tipo auto-enhance o modelo de edición con instrucciones estrictas).
+- Pendiente, cuando llegue su fase: elegir el servicio de retoque. Procesado determinista tipo
+  auto-enhance —barato y predecible, mejora poco una foto mala— o modelo de edición con
+  instrucciones estrictas, que queda mucho mejor pero se inventa comida que no cocinaste.
 - **La foto se añade a una receta que ya existe**, no durante la revisión: antes de guardar no hay
   carpeta donde subirla. Poder ponerla mientras se crea —un limbo donde la foto espera a que la
   receta nazca— queda para una fase posterior.

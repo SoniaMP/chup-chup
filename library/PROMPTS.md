@@ -726,6 +726,10 @@ Las formas de fallar que ya hemos visto, y lo que las arregla:
   color con palabras y di de qué se tiene que diferenciar (`not a dark brick red and not maroon`).
 - **Sale a lápiz o con rayado.** Insiste en `single continuous ink line`, `no hatching, no
   shading`, y añade `vector-like` si sigue saliendo peludo.
+- **Aparece el motivo de la imagen anterior.** El generador arrastra lo que acaba de dibujar si
+  sigues en la misma conversación: al pedir el rodillo salió con los limones de la tirada de
+  antes pegados en una esquina. Empieza conversación nueva para cada imagen, o añade al final
+  `ignore all previous images in this conversation; draw only what this prompt describes`.
 - **Salen más de dos colores.** Cualquier palabra que nombre un contorno o un realce acaba en tres
   tonos. Di `no second color` y `no fill`.
 - **Una forma sale pintada por dentro.** Pasó con el cuenco de guiso: un tropezón relleno de un

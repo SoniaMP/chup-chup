@@ -18,7 +18,7 @@ abiertas. El qué y el por qué del producto siguen en [`SPEC.md`](SPEC.md); los
 | 6. Búsqueda por título e ingrediente | Hecho, y además busca libros por su nombre. Las recetas de los resultados traen su menú: portada, añadir a un libro y borrar |
 | 7. Notas personales y modo cocina | Hecho |
 | 8a. Foto de la receta | **Hecho.** Cámara o galería, encogida, a un bucket privado que se lee con URLs firmadas |
-| 8b. «Mejorar con IA» | Por hacer. Falta elegir servicio de retoque: es una decisión, no código |
+| 8b. «Mejorar con IA» | **Fuera del MVP**, para una fase final. El esquema ya lo contempla, así que entrar después no cuesta nada |
 | 9. Caché offline de lectura | **Hecho.** Recetas, libros y pertenencias en el disco del móvil; las fotos fuera. Al cerrar sesión se borra |
 | 10. Sacar lo personal de `recipes` a `saved_recipes` | **Hecho.** `recipes` es contenido; `saved_recipes` es «mi cocina». Nada de acceso ni revocación todavía |
 
@@ -67,10 +67,12 @@ decir que el MVP está hecho:
       icono se pinta a 48 px y Android le recorta todo menos el 66 % central, así que pide una
       sola forma maciza —el gorro solo—, mientras que el logotipo pide carácter. El prompt y el
       porqué están al final de [`library/PROMPTS.md`](../library/PROMPTS.md).
-- [ ] **Mirar la confirmación de correo** en el panel de Supabase y, si está activada, que la URL
-      de redirección apunte a donde corre la app.
-- [ ] **Elegir el servicio de retoque** (paso 8b), o dejar «Mejorar con IA» fuera del MVP a
-      sabiendas.
+- [ ] **Apuntar la *Site URL* a la app cuando se despliegue** (Authentication → URL
+      Configuration). La confirmación de correo está **activada** y el circuito entero está
+      probado: registrarse, recibir, confirmar y entrar funciona. Lo único pendiente es a dónde
+      cae la usuaria *después* de confirmar, que hoy es la URL por defecto y es una página rota.
+      La cuenta se confirma igual, porque eso pasa al tocar el enlace. Si algún día tiene que
+      volver a un sitio concreto, es el parámetro `emailRedirectTo` en `signUp`.
 
 ## Decisiones abiertas
 
