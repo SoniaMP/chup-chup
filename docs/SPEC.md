@@ -6,6 +6,11 @@ Recetario personal en el móvil: escribes una receta deprisa y la IA la deja sie
 
 - **Fase 1 (MVP):** uso personal, una sola usuaria. Crear, organizar y consultar recetas.
 - **Fase 2:** compartir recetas y libros con otras usuarias. No se construye en el MVP, pero el modelo de datos ya lo admite.
+- **Fase 3:** pasarela entre cocineros y cocineras. Un cocinero publica un recetario, quien
+  quiera leerlo paga una suscripción, y la app cobra y reparte. El contenido nunca deja de ser
+  del cocinero: cuando retira el acceso, desaparece. Es otro negocio pegado a este, y su precio
+  no está en la parte técnica: facturar significa IVA del país de cada compradora, reembolsos,
+  reparto, identificar al cocinero para pagarle y responder de lo que publica.
 
 Principio rector: ninguna decisión del MVP obliga a migrar datos cuando llegue la fase 2.
 
@@ -38,6 +43,8 @@ Principio rector: ninguna decisión del MVP obliga a migrar datos cuando llegue 
 
 - Compartir recetas o libros, y registro "La he hecho" con fecha y foto (fase 2). Cómo será
   compartir una receta ya está descrito en su sección, para no cerrarle la puerta.
+- Recetarios de pago y suscripciones (fase 3). En el MVP no hay nada de eso, pero la regla de
+  «Recetas ajenas» sí se respeta desde ahora, porque es la que decide la forma de las tablas.
 - Libro "Por probar" de serie y "Quiero hacerla" como funcionalidad propia (fase 2).
 - Hacer un libro público o privado, y fijarlo arriba de la biblioteca (fase 2).
 - Entrada por voz propia (se usa el dictado del teclado).
@@ -148,7 +155,8 @@ Lo que protege la factura el día que esto sea público, por orden de importanci
 
 | Tabla | Campos | Notas |
 | --- | --- | --- |
-| `recipes` | `id`, `owner_id`, `title`, `locale`, `servings`, `prep_min`, `cook_min`, `ingredients` (jsonb), `steps` (jsonb), `raw_input`, `notes?`, `photo_original?`, `photo_enhanced?`, `photo_active`, `is_favorite`, `created_at`, `updated_at` | `photo_active`: `original` o `enhanced` |
+| `recipes` | `id`, `owner_id`, `title`, `locale`, `servings`, `prep_min`, `cook_min`, `ingredients` (jsonb), `steps` (jsonb), `raw_input`, `photo_original?`, `photo_enhanced?`, `photo_active`, `created_at`, `updated_at` | Solo contenido. `photo_active`: `original` o `enhanced`. `notes`, `is_favorite` y `library_image` salen de aquí: ver «Recetas ajenas» |
+| `saved_recipes` | `owner_id`, `recipe_id`, `notes?`, `is_favorite`, `library_image?`, `saved_at` | Lo que cada cocinera tiene en su cocina y lo que ha hecho con ello. Clave primaria `(owner_id, recipe_id)` |
 | `collections` (recetarios) | `id`, `owner_id`, `title`, `position` | Carpetas, sin anidar |
 | `cookbooks` (libros) | `id`, `owner_id`, `collection_id?`, `title`, `position`, `is_system` | Un libro en cero o un recetario. `is_system` queda reservado para libros de sistema (fase 2) |
 | `cookbook_recipes` | `cookbook_id`, `recipe_id`, `position` | Muchos a muchos con orden propio |
@@ -190,12 +198,64 @@ Recetario = carpeta. Libro = playlist. Receta = canción.
 - Tras subirla aparece el botón **Mejorar con IA**. Si no se pulsa, se queda la original.
 - El retoque solo ajusta luz, contraste, color y encuadre centrado. No regenera ni cambia el plato.
 - Se guardan las dos versiones y se puede volver a la original.
+- La foto es parte del contenido y viaja con la receta: quien tenga acceso la ve. Encima, cada
+  cocinera puede ponerle su propia portada, que manda sobre la de la dueña.
 - Pendiente: elegir el servicio de retoque (procesado determinista tipo auto-enhance o modelo de edición con instrucciones estrictas).
 
 ## Offline
 
 - Las recetas guardadas se leen sin conexión desde una caché local.
 - Crear, editar y la IA requieren red. Sin sincronización offline en el MVP.
+- Lo prestado se borra de la caché cuando se pierde el acceso: ver «Recetas ajenas».
+
+## Recetas ajenas: acceso, no propiedad
+
+La regla que gobierna todo lo que viene después, y la única:
+
+> **Una receta de otra persona es siempre acceso, nunca propiedad. Si su dueña la borra o retira
+> el acceso, desaparece de tu cocina. Lo único que te la deja para siempre es un gesto explícito
+> tuyo, «Hacerla mía», que crea una copia tuya, y solo está disponible si la dueña lo permite.**
+
+De ahí sale todo lo demás:
+
+- **Borrar es un borrado real.** `delete` de la fila, sin lápidas ni columnas `deleted_at` que
+  haya que filtrar para siempre. Y se nota en todas las cocinas que la tenían, que es justo lo que
+  un recetario de pago necesita: el cocinero cierra el grifo y se cierra de verdad.
+- **Quitar de mi cocina y borrar son dos acciones distintas.** Quitar lo ajeno es soltar el
+  acceso y no toca la receta de nadie. Borrar es destruir lo tuyo. El menú de la receta enseña una
+  u otra según de quién sea.
+- **Mientras el acceso vive, lo que ves es la receta de su dueña, al día.** Si cambia las
+  cantidades o los pasos, los ves. Eso es lo que hace útil seguir a un cocinero, y lo que una
+  copia no da.
+- **Lo que escribes tú es tuyo y sobrevive.** Tus notas, que la hayas marcado favorita y la
+  portada que le pusiste no se van cuando se va la receta: nunca fueron de ella.
+- **La foto de la receta viaja con la receta.** Si la dueña le puso foto, la ves y se descarga como
+  parte del contenido. Encima de eso, cada cocinera puede ponerle la suya: manda la tuya si la
+  tienes, y si no, la de la dueña.
+- **Contra una captura de pantalla no hay nada que hacer.** Lo que se vende es acceso, como en
+  cualquier suscripción, no imposibilidad de copiar. Conviene no prometer otra cosa.
+- **Choca con la caché offline (paso 9).** Una receta prestada que se guardó para leer sin
+  conexión sigue en el móvil cuando le retiran el acceso. La caché tendrá que saber qué es
+  prestado y borrarlo. Es trabajo de la fase 2, pero el paso 9 no puede diseñarse ignorándolo.
+
+### Lo que esto obliga a hacer en el MVP
+
+`recipes` mezcla hoy dos cosas: el contenido de la receta, que es de su dueña, y lo que cada
+cocinera ha hecho con ella, que es de cada cual. Con recetas ajenas eso no se sostiene —las notas
+de una pisarían las de otra—, así que lo personal sale a su tabla **ahora**, mientras hay una sola
+usuaria y la mudanza es gratis:
+
+| Se queda en `recipes` (contenido) | Se va a `saved_recipes` (de cada cocinera) |
+| --- | --- |
+| `title`, `locale`, `servings`, `prep_min`, `cook_min`, `ingredients`, `steps`, `raw_input` | `notes` |
+| `photo_original`, `photo_enhanced`, `photo_active` | `is_favorite` |
+| `owner_id`: de quién es la receta | `library_image`: la portada que le pone cada cual |
+
+`saved_recipes(owner_id, recipe_id, notes?, is_favorite, library_image?, saved_at)` pasa a ser la
+definición de **«mi cocina»**: lo que tienes es lo que tienes guardado, seas o no su dueña. Hasta
+la fase 2, dueña y guardadora son siempre la misma persona.
+
+No se construye nada de suscripciones, acceso ni revocación. Solo se deja la casa en condiciones.
 
 ## Compartir una receta (fase 2)
 
@@ -242,17 +302,13 @@ Existe un prototipo hecho en Lovable. Lovable genera React web (no React Native)
 6. Búsqueda en Mi cocina: por título e ingrediente.
 7. Notas personales y modo cocina.
 8. Fotos y retoque.
-9. Caché offline de lectura.
+9. Caché offline de lectura, sabiendo ya que lo prestado se borra al perder el acceso.
+10. Sacar lo personal de `recipes` a `saved_recipes`, que pasa a ser «mi cocina».
 
 ## Ideas por concretar
 
 Cosas acordadas que todavía no tienen forma. Antes de construirlas, una ronda de preguntas.
 
-- **Qué pasa cuando se borra una receta.** Hoy `remove` borra la fila y se acabó. La pregunta es
-  si eso debe seguir siendo así o si una receta borrada solo sale de la cocina de su dueña y sigue
-  existiendo en la base de datos. **Es una decisión de la fase 1**, no de cuando se comparta: el
-  día que una receta pueda estar en la cocina de otra persona, borrarla de verdad se la quita a
-  ella, y cambiar eso después es una migración. Pendiente de una ronda de preguntas (`/grill-me`).
 - **Buscar recetas por los ingredientes que tengo.** Escribes «pepino, tomate, sandía» y la app
   propone recetas que lleven al menos uno. Está por decidir: si vive en el buscador de siempre o
   en su propia pantalla; si ordena por cuántos ingredientes coinciden (y si enseña cuáles te
@@ -263,12 +319,6 @@ Cosas acordadas que todavía no tienen forma. Antes de construirlas, una ronda d
   texto: «¿qué tengo yo?» y «¿qué tienen los demás?». Está por decidir: si son dos pestañas,
   dos modos de la misma caja o dos pantallas; cuál manda por defecto; y qué se ve de una receta
   ajena antes de quedársela.
-- **Quitar una receta de mi cocina frente a borrarla.** En cuanto una receta pueda venir de otra
-  usuaria, «borrar» deja de ser una sola cosa: borrar lo que es mío es destruirlo, y quitar de mi
-  cocina algo de otra persona es soltarlo, porque sigue existiendo donde su dueña lo tenga. Son
-  dos acciones distintas con dos textos distintos, y el menú de la receta tendrá que elegir cuál
-  enseña según de quién sea. Va junto con lo anterior: hasta que no se decida cómo se busca y se
-  guarda lo ajeno, esto no se puede cerrar.
 - **Un buscador hacia el mundo, como Spotify.** Hoy la caja de la cocina filtra lo que ya es tuyo,
   y eso se queda así. Además haría falta una segunda superficie para buscar fuera: el catálogo de
   las demás, como la pestaña Buscar de Spotify frente a su biblioteca. Está por decidir: si es una

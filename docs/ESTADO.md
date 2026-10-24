@@ -18,7 +18,8 @@ abiertas. El qué y el por qué del producto siguen en [`SPEC.md`](SPEC.md); los
 | 6. Búsqueda por título e ingrediente | Hecho, y además busca libros por su nombre. Las recetas de los resultados traen su menú: portada, añadir a un libro y borrar |
 | 7. Notas personales y modo cocina | Hecho |
 | 8. Fotos y retoque | **Por hacer.** Es lo siguiente que tocaba |
-| 9. Caché offline de lectura | Por hacer |
+| 9. Caché offline de lectura | Por hacer. Lo prestado tendrá que borrarse al perder el acceso: nace sabiéndolo |
+| 10. Sacar lo personal de `recipes` a `saved_recipes` | **Decidido y por hacer.** Es lo que deja la casa lista para recetas ajenas |
 
 ## Lo último que se estaba haciendo
 
@@ -39,19 +40,31 @@ definitivo lo hará un diseñador, y cambiarlo será sustituir los PNG y volver 
 
 ## Decisiones abiertas
 
-En `SPEC.md`, sección «Ideas por concretar», están las seis con sus preguntas: qué pasa al
-borrar una receta, buscar por los ingredientes que tienes, la fila de chips, buscar fuera de tu
-cocina, categorizar recetas y el plan gratuito frente al PRO (~2 €). Además:
+En `SPEC.md`, sección «Ideas por concretar», están las seis con sus preguntas: buscar por los
+ingredientes que tienes, buscar dentro o fuera de tu cocina, el buscador hacia el mundo, la
+fila de chips, categorizar recetas y el plan gratuito frente al PRO (~2 €). Además:
 
 - **El diseño de la pantalla principal** está parado a la espera de un diseñador. Por eso los
   recetarios del paso 5 no se han hecho: cambian esa pantalla.
 - **Pantalla de registro**: dentro del MVP y sin hacer. Hoy la usuaria se crea a mano en el panel.
-- **Qué pasa al borrar una receta**: borrarla para siempre, o solo sacarla de la cocina de su
-  dueña dejando la fila en la base de datos. Es de la fase 1 y está sin decidir; toca una
-  ronda de `/grill-me`. El por qué, en «Ideas por concretar» de `SPEC.md`.
-- **Compartir sigue siendo fase 2.** Cómo será (enlace que abre la app, y visor HTML en la web
-  para quien no la tiene) está descrito en `SPEC.md` para no cerrarle la puerta, y no se
-  construye nada de eso ahora.
+- **Compartir sigue siendo fase 2**, y la pasarela de recetarios de pago es una fase 3 nueva.
+  Nada de eso se construye ahora; está descrito en `SPEC.md` para no cerrarle la puerta.
+
+## Lo que se decidió el 24 de octubre de 2026
+
+Una ronda de preguntas sobre el borrado acabó en otro sitio: **una receta de otra persona es
+acceso, nunca propiedad**. Está entera en la sección «Recetas ajenas» de `SPEC.md`, y lo que
+hay que recordar es esto:
+
+- **Borrar sigue siendo un `delete` de verdad**, y cuando haya recetas ajenas se notará en
+  todas las cocinas que la tenían. Nada de `deleted_at`.
+- **Lo personal sale de `recipes`** —`notes`, `is_favorite`, `library_image`— a una tabla
+  `saved_recipes`, que pasa a ser la definición de «mi cocina». Se hace **en el MVP**, con una
+  sola usuaria, porque después cuesta una migración de verdad.
+- **La foto es contenido y viaja con la receta**; la portada que le pone cada cocinera es suya
+  y manda sobre la de la dueña.
+- Apareció una **fase 3**: la app como pasarela de recetarios de pago entre un cocinero y quien
+  se suscribe. Cobrar trae IVA, reembolsos y reparto: el precio no está en lo técnico.
 
 ## Lo que se aprende por las malas
 
