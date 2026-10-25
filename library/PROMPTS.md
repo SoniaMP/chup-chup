@@ -46,9 +46,11 @@ tinta crema le saca 102 puntos de luminancia, contra 131 en el oliva y 155 en el
 los tres prompts de marrón, y solo esos, piden **línea gruesa** en vez de media. A tamaño completo
 se notan un pelo más rotundos; encogidos es justo lo que les hace falta.
 
-El marrón es además el fondo que menos se repite: el mismo prompt dio `#C89F7A` una vez y
-`#B38353` la siguiente, 27 puntos de luminancia de diferencia. La buena es la segunda, y es la
-referencia con la que hay que comparar las otras dos. Si sale la clara, se repite.
+El marrón es además el fondo que menos se repite: el mismo prompt ha dado `#C89F7A` y `#B38353`,
+27 puntos de luminancia de diferencia. La buena es la oscura, y es la referencia con la que hay
+que comparar las demás. Cuando sale la clara, lo que la corrige es apretar la descripción del
+color: `the colour of milky coffee, clearly darker than beige or sand, not pale`, y meter
+`pale background, beige, sand, washed out` en los negativos.
 
 
 
@@ -726,6 +728,11 @@ Las formas de fallar que ya hemos visto, y lo que las arregla:
   color con palabras y di de qué se tiene que diferenciar (`not a dark brick red and not maroon`).
 - **Sale a lápiz o con rayado.** Insiste en `single continuous ink line`, `no hatching, no
   shading`, y añade `vector-like` si sigue saliendo peludo.
+- **El fondo sale con grano de papel.** En vez de color plano dibuja una cartulina kraft con sus
+  motas, y de paso el color se va hacia el del papel. Se nota midiendo: la desviación del rojo en
+  una esquina vacía pasa de 0,2–0,3 a más de 1. Añade `perfectly flat solid background colour, no
+  paper grain, no texture, no speckles` y mete `paper texture, kraft paper, grain, speckles,
+  noise` en los negativos.
 - **Aparece el motivo de la imagen anterior.** El generador arrastra lo que acaba de dibujar si
   sigues en la misma conversación: al pedir el rodillo salió con los limones de la tirada de
   antes pegados en una esquina. Empieza conversación nueva para cada imagen, o añade al final
