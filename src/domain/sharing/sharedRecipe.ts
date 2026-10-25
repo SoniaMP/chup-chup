@@ -10,6 +10,8 @@ import type { Step } from "../recipes/step.ts";
  */
 export type SharedRecipe = {
   title: string;
+  /** El idioma en que se escribió, para que la página lo declare y no mienta. */
+  locale: string;
   /** Con qué nombre se firma. `null` cuando no hay forma de saberlo. */
   author: string | null;
   servings: number | undefined;
@@ -23,6 +25,7 @@ export type SharedRecipe = {
 
 type Content = {
   title: string;
+  locale: string;
   servings?: number | undefined;
   prepMin?: number | undefined;
   cookMin?: number | undefined;
@@ -38,6 +41,7 @@ export function sharedRecipeFrom(
 ): SharedRecipe {
   return {
     title: content.title,
+    locale: content.locale,
     author,
     servings: content.servings,
     prepMin: content.prepMin,

@@ -7,6 +7,7 @@ import { sharedUntil } from "../../src/domain/sharing/sharedUntil";
 
 const content = {
   title: "Tortilla de patatas",
+  locale: "es-ES",
   servings: 4,
   prepMin: 15,
   cookMin: undefined,
@@ -35,6 +36,10 @@ describe("sharedRecipeFrom", () => {
 
   it("aguanta no saber de quién es", () => {
     expect(sharedRecipeFrom(content, null, undefined).author).toBeNull();
+  });
+
+  it("se lleva el idioma, que es lo que declara la página", () => {
+    expect(sharedRecipeFrom(content, null, undefined).locale).toBe("es-ES");
   });
 });
 

@@ -69,7 +69,9 @@ Deno.serve(async (request: Request): Promise<Response> => {
 
   const { data: recipe } = await admin
     .from("recipes")
-    .select("title, servings, prep_min, cook_min, ingredients, steps, photo_original, photo_enhanced, photo_active")
+    .select(
+      "title, locale, servings, prep_min, cook_min, ingredients, steps, photo_original, photo_enhanced, photo_active",
+    )
     .eq("id", share.recipe_id)
     .maybeSingle();
 
@@ -81,6 +83,7 @@ Deno.serve(async (request: Request): Promise<Response> => {
   const shared = sharedRecipeFrom(
     {
       title: recipe.title,
+      locale: recipe.locale,
       servings: recipe.servings ?? undefined,
       prepMin: recipe.prep_min ?? undefined,
       cookMin: recipe.cook_min ?? undefined,

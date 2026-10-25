@@ -5,6 +5,7 @@ import type { SharedRecipe } from "../../src/domain/sharing/sharedRecipe";
 
 const base: SharedRecipe = {
   title: "Tortilla de patatas",
+  locale: "es-ES",
   author: "Sonia",
   servings: 4,
   prepMin: 15,
@@ -84,5 +85,35 @@ describe("recipeViewerHtml", () => {
     const sources = [...html.matchAll(/(?:src|href)="([^"]*)"/g)].map((match) => match[1]);
 
     expect(sources).toEqual(["https://supabase/foto.jpg"]);
+  });
+  it("declara el idioma de la receta, no el nuestro", () => {
+    expect(recipeViewerHtml({ ...base, locale: "en" })).toContain('<html lang="en">');
+    expect(recipeViewerHtml(base)).toContain('<html lang="es-ES">');
+  });
+
+  it("se queda en español si la receta no trae idioma", () => {
+    expect(recipeViewerHtml({ ...base, locale: "  " })).toContain('<html lang="es">');
+  });
+
+  it("lleva la tarjeta para cuando se pega el enlace", () => {
+    const html = recipeViewerHtml(base);
+
+    expect(html).toContain('<meta property="og:title" content="Tortilla de patatas">');
+    expect(html).toContain("Receta de Sonia · 4 raciones");
+    expect(html).toContain('<meta property="og:locale" content="es_ES">');
+    expect(html).toContain('<meta name="twitter:card" content="summary">');
+  });
+
+  it("pone la foto en la tarjeta cuando la hay, y la anuncia grande", () => {
+    const html = recipeViewerHtml({ ...base, photoUrl: "https://firmada/foto.jpg?token=x" });
+
+    expect(html).toContain('<meta property="og:image" content="https://firmada/foto.jpg?token=x">');
+    expect(html).toContain('<meta name="twitter:card" content="summary_large_image">');
+  });
+
+  it("dice algo en la tarjeta aunque la receta no tenga ni firma ni tiempos", () => {
+    const bare = { ...base, author: null, servings: undefined, prepMin: undefined, cookMin: undefined };
+
+    expect(recipeViewerHtml(bare)).toContain("Una receta compartida desde Chup Chup.");
   });
 });

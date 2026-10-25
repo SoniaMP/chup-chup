@@ -63,6 +63,41 @@ const photoOf = (recipe: SharedRecipe): string =>
 const authorOf = (recipe: SharedRecipe): string =>
   recipe.author === null ? "" : `<p class="author">Receta de ${escapeHtml(recipe.author)}</p>`;
 
+/** El idioma de la receta, o español si viniera vacío: una página sin `lang` no la lee nadie bien. */
+const langOf = (recipe: SharedRecipe): string =>
+  recipe.locale.trim() === "" ? "es" : recipe.locale.trim();
+
+/** La línea que se lee en la vista previa de WhatsApp, debajo del título. */
+const descriptionOf = (recipe: SharedRecipe): string => {
+  const author = recipe.author === null ? [] : [`Receta de ${recipe.author}`];
+  const line = [...author, ...factsOf(recipe)].join(" · ");
+
+  return line === "" ? "Una receta compartida desde Chup Chup." : line;
+};
+
+/**
+ * Lo que hace que el enlace se vea como una tarjeta al pegarlo, en vez de como una línea de texto.
+ *
+ * No lleva `og:url`: detrás de nginx la función no sabe desde qué dirección la están sirviendo, y
+ * adivinarla a partir de una cabecera que cualquiera puede poner es peor que no decirlo. La imagen
+ * es la foto firmada, así que la tarjeta se arma mientras la firma viva; después, el enlace sigue
+ * funcionando pero se queda sin foto.
+ */
+const socialTags = (recipe: SharedRecipe, title: string): string => {
+  const photo =
+    recipe.photoUrl === undefined
+      ? ""
+      : `<meta property="og:image" content="${escapeHtml(recipe.photoUrl)}">`;
+
+  return `<meta property="og:type" content="article">
+<meta property="og:site_name" content="Chup Chup">
+<meta property="og:locale" content="${escapeHtml(langOf(recipe).replace("-", "_"))}">
+<meta property="og:title" content="${title}">
+<meta property="og:description" content="${escapeHtml(descriptionOf(recipe))}">
+${photo}
+<meta name="twitter:card" content="${recipe.photoUrl === undefined ? "summary" : "summary_large_image"}">`;
+};
+
 /**
  * La receta compartida, como página de solo lectura.
  *
@@ -81,12 +116,13 @@ export function recipeViewerHtml(recipe: SharedRecipe): string {
   const steps = recipe.steps.map((step) => `<li>${escapeHtml(step.text)}</li>`);
 
   return `<!doctype html>
-<html lang="es">
+<html lang="${escapeHtml(langOf(recipe))}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
 <title>${title}</title>
+${socialTags(recipe, title)}
 <style>${STYLE}</style>
 </head>
 <body>
