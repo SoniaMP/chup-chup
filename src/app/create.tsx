@@ -1,4 +1,4 @@
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
@@ -19,6 +19,10 @@ const PLACEHOLDER =
 export default function CreateRecipeScreen() {
   const colors = useColors();
   const router = useRouter();
+  // El libro del que se viene, cuando se ha entrado desde dentro de uno. Viaja hasta la revisión,
+  // que es donde se decide dónde cae la receta.
+  const params = useLocalSearchParams<{ cookbookId?: string }>();
+  const cookbookId = params.cookbookId ?? "";
   const [text, setText] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [isCooking, setIsCooking] = useState(false);
@@ -34,7 +38,7 @@ export default function CreateRecipeScreen() {
         return;
       }
       const draftId = await draftStore.create(draftFromStructuredRecipe(result.value, text));
-      router.push({ pathname: "/review", params: { draftId } });
+      router.push({ pathname: "/review", params: { draftId, cookbookId } });
     } finally {
       setIsCooking(false);
     }

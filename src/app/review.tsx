@@ -25,7 +25,7 @@ import { webFocusReset } from "@/theme/webFocusReset";
 export default function ReviewDraftScreen() {
   const colors = useColors();
   const router = useRouter();
-  const params = useLocalSearchParams<{ draftId: string; recipeId?: string }>();
+  const params = useLocalSearchParams<{ draftId: string; recipeId?: string; cookbookId?: string }>();
   const draftId = params.draftId ?? "";
   // Con `recipeId` la pantalla es el editor de una receta que ya existe; sin él, el paso 2 de la
   // creación. El formulario es el mismo, solo cambian el rótulo y a dónde va lo guardado.
@@ -34,7 +34,10 @@ export default function ReviewDraftScreen() {
   const { draft, isDirty, update } = useDraftEditor(draftId);
   const [error, setError] = useState<string | null>(null);
   const [isDiscarding, setIsDiscarding] = useState(false);
-  const [cookbookId, setCookbookId] = useState<string | null>(null);
+  // Llegando desde dentro de un libro, la receta cae en ese libro salvo que se cambie abajo:
+  // quien pulsa `+` dentro de «Cenas rápidas» está diciendo dónde quiere la receta.
+  const cameFrom = params.cookbookId ?? "";
+  const [cookbookId, setCookbookId] = useState<string | null>(cameFrom === "" ? null : cameFrom);
 
   const leaveEditing = (): void => {
     void draftStore.remove(draftId);

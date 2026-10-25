@@ -7,6 +7,7 @@ import { IconButton } from "@/components/IconButton";
 import { Screen } from "@/components/Screen";
 import { CookbookActions } from "@/features/cookbooks/CookbookActions";
 import { CookbookRecipeList } from "@/features/cookbooks/CookbookRecipeList";
+import { CreateButton } from "@/features/recipes/CreateButton";
 import { useCookbook } from "@/features/cookbooks/useCookbook";
 import { useCookbookRecipes } from "@/features/cookbooks/useCookbookRecipes";
 import { tokens } from "@/theme/tokens";
@@ -33,42 +34,51 @@ export default function CookbookScreen() {
   }
 
   return (
-    <Screen>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
-          <BackButton />
-          {/* Las acciones del libro se piden aquí, que es donde se buscan: dentro del libro. */}
-          <IconButton
-            name="more-vert"
-            label={`Acciones del libro ${cookbook.title}`}
-            onPress={() => {
-              setIsMenuOpen(true);
-            }}
-          />
-        </View>
+    <View style={[styles.root, { backgroundColor: colors.background }]}>
+      <Screen>
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+          <View style={styles.header}>
+            <BackButton />
+            {/* Las acciones del libro se piden aquí, que es donde se buscan: dentro del libro. */}
+            <IconButton
+              name="more-vert"
+              label={`Acciones del libro ${cookbook.title}`}
+              onPress={() => {
+                setIsMenuOpen(true);
+              }}
+            />
+          </View>
 
-        <Text style={[styles.label, { color: colors.primary }]}>LIBRO</Text>
-        <Text style={[styles.title, { color: colors.foreground }]}>{cookbook.title}</Text>
+          <Text style={[styles.label, { color: colors.primary }]}>LIBRO</Text>
+          <Text style={[styles.title, { color: colors.foreground }]}>{cookbook.title}</Text>
 
-        {entries !== null && (
-          <CookbookRecipeList
-            cookbookId={cookbookId}
-            entries={entries}
-            canDeleteCookbook={!cookbook.isSystem}
-            onOpenRecipe={(recipeId) => {
-              router.push({ pathname: "/recipe/[id]", params: { id: recipeId } });
-            }}
-            onAddToCookbook={(recipeId) => {
-              router.push({ pathname: "/recipe/[id]/books", params: { id: recipeId } });
-            }}
-            onCookbookDeleted={() => {
-              router.replace("/");
-            }}
-            onReload={reload}
-          />
-        )}
-
-      </ScrollView>
+          {entries !== null && (
+            <CookbookRecipeList
+              cookbookId={cookbookId}
+              entries={entries}
+              canDeleteCookbook={!cookbook.isSystem}
+              onOpenRecipe={(recipeId) => {
+                router.push({ pathname: "/recipe/[id]", params: { id: recipeId } });
+              }}
+              onAddToCookbook={(recipeId) => {
+                router.push({ pathname: "/recipe/[id]/books", params: { id: recipeId } });
+              }}
+              onCookbookDeleted={() => {
+                router.replace("/");
+              }}
+              onReload={reload}
+            />
+          )}
+        </ScrollView>
+      </Screen>
+      {/* Sin hoja y derecho a la receta: estando dentro de un libro, nadie va a crear otro libro.
+          Y se lleva el libro puesto, para que la receta acabe donde se pidió. */}
+      <CreateButton
+        label="Crear receta"
+        onPress={() => {
+          router.push({ pathname: "/create", params: { cookbookId } });
+        }}
+      />
       <CookbookActions
         cookbook={cookbook}
         isOpen={isMenuOpen}
@@ -84,12 +94,14 @@ export default function CookbookScreen() {
           router.replace("/");
         }}
       />
-    </Screen>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  content: { paddingBottom: tokens.spacing.block * 2 },
+  root: { flex: 1 },
+  // Deja sitio al botón flotante: sin esto, la última receta se queda debajo.
+  content: { paddingBottom: tokens.touch.createButton * 2 },
   header: {
     flexDirection: "row",
     alignItems: "center",
