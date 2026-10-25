@@ -82,6 +82,11 @@ decir que el MVP está hecho:
       cae la usuaria *después* de confirmar, que hoy es la URL por defecto y es una página rota.
       La cuenta se confirma igual, porque eso pasa al tocar el enlace. Si algún día tiene que
       volver a un sitio concreto, es el parámetro `emailRedirectTo` en `signUp`.
+- [ ] **La hoja no se cierra arrastrando, aunque el gesto está puesto.** `BottomSheet` lleva un
+      `Pan` sobre la pestaña desde el 25 de octubre de 2026 y en el móvil no responde; se cierra
+      tocando fuera, que sí funciona. Sin diagnosticar: lo primero que hay que mirar es si los
+      gestos llegan dentro del `Modal` —hay un `GestureHandlerRootView` propio ahí dentro justo
+      para eso— y si la pestaña es un objetivo demasiado pequeño para agarrarla.
 - [ ] **Contar en la ficha de la tienda el modo cocina, la lectura sin conexión y que no hay red
       social.** Las tres ya funcionan y hoy no se cuentan en ningún sitio; las dos primeras no las
       tiene la competencia más parecida. Sale del estudio de mercado ([`MERCADO.md`](MERCADO.md)).
