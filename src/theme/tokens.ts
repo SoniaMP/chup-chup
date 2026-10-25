@@ -1,6 +1,6 @@
 /** Shape, spacing, type scale and motion from docs/DESIGN.md. */
 export const tokens = {
-  radius: { card: 4, sm: 12, md: 14, lg: 16, xl: 20, xxl: 24, xxxl: 30, pill: 999 },
+  radius: { card: 4, sheet: 8, sm: 12, md: 14, lg: 16, xl: 20, xxl: 24, xxxl: 30, pill: 999 },
   spacing: { gutter: 20, row: 8, block: 24 },
   touch: { headerButton: 44, primaryButton: 56, cookStepButton: 80, createButton: 64 },
   fontFamily: {

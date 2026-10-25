@@ -123,8 +123,9 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(44, 26, 20, 0.45)",
   },
   panel: {
-    borderTopLeftRadius: tokens.radius.xxxl,
-    borderTopRightRadius: tokens.radius.xxxl,
+    // Un filo propio, el doble que el de una tarjeta: la hoja es lo que enmarca todo lo demás.
+    borderTopLeftRadius: tokens.radius.sheet,
+    borderTopRightRadius: tokens.radius.sheet,
     paddingTop: tokens.spacing.row + 4,
     paddingHorizontal: tokens.spacing.row,
   },

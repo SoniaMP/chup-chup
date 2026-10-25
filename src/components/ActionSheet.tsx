@@ -50,13 +50,13 @@ export function ActionSheet({ isOpen, onClose, actions, title }: ActionSheetProp
 }
 
 const styles = StyleSheet.create({
+  // Sin filo redondeado: la fila no es una tarjeta dentro de la hoja, es una línea de un menú.
   action: {
     flexDirection: "row",
     alignItems: "center",
     gap: tokens.spacing.row + 6,
     paddingVertical: tokens.spacing.row + 6,
     paddingHorizontal: tokens.spacing.row + 4,
-    borderRadius: tokens.radius.lg,
   },
   pressed: { opacity: 0.7 },
   title: {
