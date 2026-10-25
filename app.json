@@ -7,7 +7,8 @@
     "scheme": "chupchup",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "es.chupchup.app"
     },
     "plugins": [
       "expo-router",
@@ -30,6 +31,7 @@
       "backgroundColor": "#F6EFE4"
     },
     "android": {
+      "package": "es.chupchup.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#F6EFE4"
