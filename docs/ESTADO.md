@@ -72,10 +72,11 @@ decir que el MVP está hecho:
       icono se pinta a 48 px y Android le recorta todo menos el 66 % central, así que pide una
       sola forma maciza —el gorro solo—, mientras que el logotipo pide carácter. El prompt y el
       porqué están al final de [`library/PROMPTS.md`](../library/PROMPTS.md).
-- [ ] **Dar al visor un dominio que no sea de Supabase.** `*.supabase.co` no sirve HTML: la
-      pasarela lo convierte en `text/plain` para que nadie monte phishing ahí. El enlace de
-      compartir ya funciona, pero se ve como texto plano hasta que la página se sirva desde el
-      dominio propio de Supabase (de pago) o desde donde se despliegue la web de la app.
+- [x] **Dar al visor un dominio que no sea de Supabase. Hecho el 25 de octubre de 2026.** Se
+      sirve en `https://chup-chup.es/r/<testigo>`, que nginx pasa por detrás a la Edge Function
+      tirando sus dos cabeceras (`content-type: text/plain` y `content-security-policy: sandbox`,
+      que son las que hacían que el enlace se viera como código). Comprobado desde fuera: devuelve
+      `text/html`. Ni una línea del código de la función tuvo que cambiar.
 - [ ] **Apuntar la *Site URL* a la app cuando se despliegue** (Authentication → URL
       Configuration). La confirmación de correo está **activada** y el circuito entero está
       probado: registrarse, recibir, confirmar y entrar funciona. Lo único pendiente es a dónde
@@ -95,35 +96,37 @@ decir que el MVP está hecho:
 
 ## El despliegue, que es lo siguiente
 
-Hablado el 25 de octubre de 2026. Lo que hay en la mano: el dominio **`soniadev.es`** y un **VPS
-listo**. Lo que se quiere: **la web y la app de Android**, las dos.
+Hablado el 25 de octubre de 2026. Lo que hay en la mano: el dominio **`chup-chup.es`**, comprado
+ese mismo día, y un **VPS listo**. Lo que se quiere: **la web y la app de Android**, las dos.
 
 El orden importa, porque la web desbloquea cosas que hoy están a medias:
 
-1. **La web primero.** Export estático de Expo, nginx en el VPS y certificado de Let's Encrypt.
-   Con `https` de verdad se arreglan solos tres pendientes: la hoja de compartir del móvil, el
-   portapapeles del enlace (hoy no copia porque la página va por IP y sin cifrar) y la *Site URL*
-   de la confirmación de correo.
-2. **El visor, colgado del mismo dominio.** La idea es `/r/<testigo>` en nginx, que llama por
-   detrás a la Edge Function y **tira sus cabeceras** (`content-type: text/plain` y
-   `content-security-policy: sandbox`, que es lo que hace que el enlace se vea como código).
-   Así el visor se arregla sin tocar una línea del código.
+1. **El servidor, hecho el 25 de octubre de 2026.** `chup-chup.es` y `www` apuntan a
+   `82.165.216.242`; nginx sirve `/var/www/chup-chup.es` y Let's Encrypt da el certificado, con
+   redirección de `http` a `https` y renovación automática probada. El sitio vive en
+   `/etc/nginx/sites-available/chup-chup.es`.
+   **Falta subir la web**: ahí hay todavía una página de prueba. Es `npx expo export --platform
+   web` y un `rsync` de `dist/`. Con `https` de verdad se arreglan solos tres pendientes: la hoja
+   de compartir del móvil, el portapapeles del enlace y la *Site URL* de la confirmación.
+2. **El visor, hecho el mismo día.** `/r/<testigo>` en nginx, con las cabeceras de Supabase
+   tiradas. Ver el punto de arriba.
 3. **Android después**, con EAS. Lo que marca el calendario no es el código: una cuenta de
    desarrollador personal nueva necesita **doce probadores durante catorce días** antes de poder
    publicar. Eso se empieza pronto o se espera dos semanas al final.
 
-### Lo que hay que decidir antes de la primera compilación
+### Lo que ya está decidido
 
-- **Qué dominio.** O `chupchup.soniadev.es` ahora, o comprar `chupchup.es` y lanzar ya ahí.
-  Mudarse después es **barato** mientras `soniadev.es` siga siendo suyo: una redirección
-  permanente en el subdominio viejo mantiene vivos los enlaces ya repartidos, que es lo único
-  que está fuera de nuestro control. En Supabase es cambiar la *Site URL* y la lista de
-  redirecciones; en el código, una variable de entorno.
-- **El identificador del paquete de Android, que no se puede cambiar nunca.** Una vez publicada
-  en Play, cambiarlo es publicar otra app y dejar sin actualizaciones a quien tenga la primera.
-  No se ve en pantalla (el nombre visible sí se cambia cuando se quiera), pero sale en la URL de
-  la ficha. **Hay que elegirlo pensando en dónde quiere acabar la marca**, no en dónde vive hoy
-  la web: `es.chupchup.app` aunque de momento la web cuelgue de `soniadev.es`.
+- **El dominio es `chup-chup.es`**, comprado el 25 de octubre de 2026. La web cuelga de la raíz y
+  el visor de `/r/<testigo>`. Se acabó la duda de si colgar de `soniadev.es`: no hay que mudarse
+  después ni mantener redirecciones vivas.
+- **El identificador del paquete de Android es `es.chupchup.app`**, y **no se puede cambiar
+  nunca**: una vez publicada en Play, cambiarlo es publicar otra app y dejar sin actualizaciones a
+  quien tenga la primera. No se ve en pantalla —el nombre visible sí se cambia cuando se quiera—,
+  pero sale en la URL de la ficha. **Va sin guion a propósito y no es un descuido**: un
+  identificador de paquete no admite guiones, así que `es.chup-chup` no es válido y el dominio no
+  se puede copiar tal cual. Falta ponerlo en `app.json`, que hoy no tiene `android.package`.
+
+### Lo que hay que decidir antes de la primera compilación
 - **La base del enlace del visor tiene que ser configuración desde el primer día**
   (`EXPO_PUBLIC_…`), no una constante. Hoy `src/features/sharing/shareLink.ts` la arma con
   `EXPO_PUBLIC_SUPABASE_URL`; al desplegar hay que sacarla a su propia variable para que mudarse
