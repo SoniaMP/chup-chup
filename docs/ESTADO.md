@@ -105,9 +105,19 @@ El orden importa, porque la web desbloquea cosas que hoy están a medias:
    `82.165.216.242`; nginx sirve `/var/www/chup-chup.es` y Let's Encrypt da el certificado, con
    redirección de `http` a `https` y renovación automática probada. El sitio vive en
    `/etc/nginx/sites-available/chup-chup.es`.
-   **Falta subir la web**: ahí hay todavía una página de prueba. Es `npx expo export --platform
-   web` y un `rsync` de `dist/`. Con `https` de verdad se arreglan solos tres pendientes: la hoja
-   de compartir del móvil, el portapapeles del enlace y la *Site URL* de la confirmación.
+   **La web está arriba y funciona**, probada en el navegador. Desplegar es esto, desde el
+   portátil:
+
+   ```
+   npm run build:web
+   rsync -az --delete dist/ deploy@82.165.216.242:/var/www/chup-chup.es/
+   ```
+
+   `build:web` y no `expo export` a secas: `expo export` escribe `<html lang="en">` en la portada
+   y no hay forma de cambiarlo desde la configuración (`app/+html.tsx` solo vale si la salida web
+   es `static`, y la nuestra es `single`), así que `scripts/exportWeb.ts` lo corrige después de
+   compilar. Y con `https` de verdad quedan arreglados la hoja de compartir del móvil y el
+   portapapeles del enlace, que fallaban por ir sin cifrar.
 2. **El visor, hecho el mismo día.** `/r/<testigo>` en nginx, con las cabeceras de Supabase
    tiradas. Ver el punto de arriba.
 3. **Android después**, con EAS. Lo que marca el calendario no es el código: una cuenta de
