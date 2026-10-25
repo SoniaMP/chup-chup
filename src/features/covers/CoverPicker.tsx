@@ -67,7 +67,7 @@ export function CoverPicker({
           <>
             <OwnCoverButtons onChoose={onChoosePhoto} />
             <Text style={[styles.empty, { color: colors.mutedForeground }]}>
-              O una del catálogo. Solo cabe una: al elegir, se queda la última.
+              ¿No sabes qué foto poner? Elige una del catálogo y se pondrá como portada.
             </Text>
           </>
         )}
@@ -119,7 +119,9 @@ export function CoverPicker({
             }}
             style={({ pressed }) => [styles.remove, pressed && styles.pressed]}
           >
-            <Text style={[styles.removeLabel, { color: colors.destructive }]}>Quitar la portada</Text>
+            <Text style={[styles.removeLabel, { color: colors.destructive }]}>
+              Quitar la portada
+            </Text>
           </Pressable>
         )}
       </View>
