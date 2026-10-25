@@ -127,7 +127,8 @@ const styles = StyleSheet.create({
   frame: {
     aspectRatio: RATIO,
     maxHeight: MAX_HEIGHT,
-    borderRadius: tokens.radius.lg,
+    // El mismo filo que las portadas de la biblioteca: todo lo que enmarca una imagen va igual.
+    borderRadius: tokens.radius.card,
     borderWidth: 1,
     borderStyle: "dashed",
     alignItems: "center",
