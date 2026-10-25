@@ -43,8 +43,10 @@ Principio rector: ninguna decisión del MVP obliga a migrar datos cuando llegue 
 **Fuera del MVP**
 
 - **Abrir una receta compartida dentro de la app** y guardarla en tu cocina (fase 2). En el MVP
-  el enlace lleva al visor y nada más. Compartir libros y el registro "La he hecho" también
-  son fase 2.
+  el enlace lleva al visor y nada más. Compartir libros sigue siendo fase 2. **El registro «La he hecho»
+  sale de la fase 2** el 25 de octubre de 2026 y pasa a ser el paso 16 del plan, en su versión
+  sobria —fecha y nota, sin rachas ni estadísticas—, porque es lo único que da un motivo para
+  volver a abrir la app.
 - Recetarios de pago y suscripciones (fase 3). En el MVP no hay nada de eso, pero la regla de
   «Recetas ajenas» sí se respeta desde ahora, porque es la que decide la forma de las tablas.
 - Libro "Por probar" de serie y "Quiero hacerla" como funcionalidad propia (fase 2).
@@ -55,12 +57,23 @@ Principio rector: ninguna decisión del MVP obliga a migrar datos cuando llegue 
 - Etiquetas sueltas, recetarios anidados.
 - Escritura offline y sincronización.
 - Varias fotos por receta o fotos por paso.
-- Límites de uso y planes de pago. Cuando lleguen, el retoque de foto con IA es el primer
-  candidato a quedarse en el plan PRO, por ser lo único con un coste por uso apreciable.
+- Límites de uso y planes de pago. El retoque de foto con IA **dejó de ser el candidato al plan
+  PRO el 25 de octubre de 2026**: nadie en este mercado cobra por mejorar una foto, se cobra por
+  planificar, por la lista de la compra, por nutrición y por acceso (ver [`MERCADO.md`](MERCADO.md)).
   **Estructurar la receta con IA no se va al plan PRO en ningún caso**: es lo que hace útil la
   app, y sin ello la versión gratuita no permite ni crear una receta. Si hay que limitar el
   plan gratuito, se limita el volumen (cuántas recetas se guardan o se crean al mes), no el
   acceso a estructurar.
+- **Nada de red social, y es una decisión, no una carencia.** Rachas, objetivos semanales, «me
+  gusta», comentarios, perfil público de cocinera y feed de amistades quedan fuera para siempre:
+  son otra app, y «aquí nadie ve lo que cocinas» solo se puede prometer si no existen. Cerrado el
+  25 de octubre de 2026 con el estudio de mercado.
+- **Comunidad abierta tipo plaza pública.** Cookpad ya tiene seis millones de recetas en español.
+  La fase 2 es un círculo pequeño —tu familia, tus amistades—, no un catálogo.
+- **Nutrición y calorías.** Otro producto: necesita una base de datos de alimentos y mete la app en
+  terreno de salud.
+- **Lista de la compra.** Fuera del MVP pero no enterrada: es la razón número uno para abrir una app
+  de recetas a diario y la mejor candidata al plan PRO cuando llegue.
 
 ## Navegación
 
@@ -347,26 +360,64 @@ Existe un prototipo hecho en Lovable. Lovable genera React web (no React Native)
 10. Sacar lo personal de `recipes` a `saved_recipes`, que pasa a ser «mi cocina». Hecho.
 11. Compartir una receta por enlace, solo el visor HTML: testigo secreto por receta, Edge
     Function que devuelve la página y botón de dejar de compartir.
+12. Etiquetas `og:` en el visor, para que el enlace se vea como una tarjeta al pegarlo. Va con el
+    dominio, que es cuando el enlace empieza a repartirse.
+13. Importar una receta desde una URL: traer el HTML, limpiarlo y pasarlo por el prompt que ya
+    existe.
+14. Escalar raciones, en la receta y en el modo cocina.
+15. Foto de una página de libro o de una receta escrita a mano → receta, con la misma tubería que
+    el texto libre. **La gracia no es leer la foto, que eso ya lo hace ReciMe, sino interpretarla**:
+    normalizar «un vaso de los de agua» y declarar lo que se ha supuesto, igual que con el texto.
+16. «La he hecho»: fecha y nota por cada vez que se cocina. Sin rachas ni estadísticas.
+
+Los cinco últimos salen del estudio de mercado del 25 de octubre de 2026
+([`MERCADO.md`](MERCADO.md)). Del 12 al 14 son baratos y se notan al segundo día de uso; el 15 y el
+16 son los dos que cambian lo que la app es.
 
 ## Ideas por concretar
 
 Cosas acordadas que todavía no tienen forma. Antes de construirlas, una ronda de preguntas.
 
-- **Buscar recetas por los ingredientes que tengo.** Escribes «pepino, tomate, sandía» y la app
-  propone recetas que lleven al menos uno. Está por decidir: si vive en el buscador de siempre o
+- **Buscar recetas por los ingredientes que tengo. Se hace: decidido el 25 de octubre de 2026.**
+  Escribes «pepino, tomate, sandía» y la app propone recetas que lleven al menos uno. Lo que falta
+  es la forma, y hay que estudiarla antes de tocar código, porque cambia la pantalla principal.
+  Está por decidir: si vive en el buscador de siempre o
   en su propia pantalla; si ordena por cuántos ingredientes coinciden (y si enseña cuáles te
   faltan); si busca solo por el nombre exacto del ingrediente o entiende que «tomate cherry» es
   tomate; y si eso último necesita la IA o basta con buscar en la base de datos.
-- **Buscar en mi cocina o buscar fuera.** Hoy solo hay una búsqueda, porque solo hay recetas
-  propias. Cuando se compartan (fase 2) habrá dos preguntas distintas con la misma caja de
-  texto: «¿qué tengo yo?» y «¿qué tienen los demás?». Está por decidir: si son dos pestañas,
-  dos modos de la misma caja o dos pantallas; cuál manda por defecto; y qué se ve de una receta
-  ajena antes de quedársela.
-- **Un buscador hacia el mundo, como Spotify.** Hoy la caja de la cocina filtra lo que ya es tuyo,
-  y eso se queda así. Además haría falta una segunda superficie para buscar fuera: el catálogo de
-  las demás, como la pestaña Buscar de Spotify frente a su biblioteca. Está por decidir: si es una
-  pantalla propia o un chip más de la fila; qué se enseña (recetas, libros, cocineras); y cómo se
-  trae algo a tu cocina. Va con los dos puntos de arriba y con la fila de chips.
+- **Buscar recetas de otras personas cuando sean públicas. Se hace, en la fase 2:** decidido el 25
+  de octubre de 2026. Una segunda superficie para buscar fuera de tu cocina, como la pestaña Buscar
+  de Spotify frente a su biblioteca, pero **solo sobre lo que su dueña haya marcado como público**:
+  va de la mano de «hacer un libro público o privado», que ya era fase 2. La fase 3 además lo
+  necesita, porque un recetario de pago que no se puede encontrar no se vende. Lo que **no** se
+  hace es ser una comunidad —feed, perfiles, likes—: ese sitio es de Cookpad y no es nuestro
+  mercado (ver [`MERCADO.md`](MERCADO.md)). Está por decidir: si es una pantalla propia o un chip
+  más de la fila; qué se enseña (recetas, libros, cocineras); cómo se trae algo a tu cocina; y qué
+  significa «público» exactamente, que es una política de lectura en Postgres y no solo una casilla.
+  Va con el punto siguiente y con la fila de chips.
+- **Buscar en mi cocina o buscar lo que me han compartido.** Sigue abierta, y no es lo mismo que el
+  punto anterior: aquí no se busca en el mundo, se busca en tu círculo. Hoy solo hay una búsqueda
+  porque solo hay recetas propias; cuando lleguen las compartidas (fase 2) y los recetarios que
+  sigues (fase 3) habrá dos preguntas distintas con la misma caja de texto: «¿qué tengo yo?» y
+  «¿qué me han dado?». Está por decidir: si son dos pestañas, dos modos de la misma caja o dos
+  pantallas; cuál manda por defecto; y qué se ve de una receta ajena antes de quedársela.
+- **Las raciones como columna vertebral: modo cocina, raciones elegidas y lista de la compra.**
+  Acordado el 25 de octubre de 2026, y **todo esto puede ser fase 2** menos el escalado, que ya es
+  el paso 14. Son tres cosas encadenadas, y la fuerza está en la cadena, no en cada pieza:
+  1. **En el modo cocina se elige para cuántos comensales.** Si la receta está pensada para dos y
+     hoy sois cuatro, las cantidades se recalculan ahí mismo, con las manos en la masa y sin salir
+     de la pantalla. Esto es el paso 14 y es donde más se nota.
+  2. **Y se elige *antes*, para la receta que vas a hacer.** No solo mientras cocinas: decides «esta
+     la haré para seis» cuando la estás planeando, y la receta ya te habla en esas cantidades.
+  3. **Con eso, la lista de la compra deja de ser una función añadida y pasa a ser la consecuencia
+     natural**: si la app sabe para cuántos vas a cocinar, sabe qué hay que comprar. Por eso sube de
+     peso respecto a lo que decía el estudio de mercado.
+  Lo que nos da fuerza aquí es técnico y ya lo tenemos: `quantity` numérico y unidades normalizadas
+  por la IA. Es lo que hace que escalar sea exacto y que sumar ingredientes repetidos funcione, que
+  es justo donde falla ReciMe (ver [`MERCADO.md`](MERCADO.md)). Está por decidir: si las raciones
+  elegidas se guardan en la receta o son de cada vez; si la lista de la compra es de una receta, de
+  varias o de una semana; si vive en su pantalla o cuelga del libro; y qué pasa con los
+  ingredientes que no se pueden partir (un huevo, una lata).
 - **Fila de chips para acotar la cocina.** «Favoritas · Libros · Recetas» como chips que acotan el
   tipo, mientras el texto filtra dentro, igual que la biblioteca de Spotify. Hoy Favoritas es un
   chip suelto con su propia lógica; ahí pasaría a ser uno más de la fila. Es la base del buscador
@@ -379,10 +430,12 @@ Cosas acordadas que todavía no tienen forma. Antes de construirlas, una ronda d
   si vive en un campo `categories` de la propia receta o en su tabla; si la IA las propone al
   estructurar (paso 3) y la usuaria solo confirma; y si acaban siendo chips de filtro en la
   cocina, que es donde se volverían útiles de verdad.
-- **Plan gratuito y plan PRO.** La idea: estructurar tu texto libre entra en el plan gratuito
-  (con tope de volumen, nunca de acceso) y lo caro de verdad —la foto con IA— vive en un PRO de
-  unos 2 € al mes, lo justo para cubrir el uso. Está por decidir: qué más entra en PRO; cuántas
-  recetas al día da el plan gratuito; si el tope es diario o mensual; qué pasa cuando se agota
+- **Plan gratuito y plan PRO.** Estructurar tu texto libre entra en el plan gratuito, con tope de
+  volumen y nunca de acceso. Lo que cambió el 25 de octubre de 2026: **la foto con IA ya no es el
+  contenido del PRO**, porque en este mercado nadie cobra por eso. Y la referencia de precio contra
+  la que nos van a comparar es el pago único de 4,99 $ de Paprika, no una suscripción. Está por
+  decidir: qué contiene entonces el PRO de unos 2 € —de momento volumen, y la lista de la compra
+  cuando exista—; cuántas recetas al día da el plan gratuito; si el tope es diario o mensual; qué pasa cuando se agota
   (esperar a mañana o pagar); y cómo se cobra, que es tanto una decisión de producto como de
   papeles. Lo técnico ya está preparado: el límite por cocinera y día existe y se cuenta donde
   no se puede tocar.

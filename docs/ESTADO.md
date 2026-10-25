@@ -4,7 +4,8 @@
 
 Este documento es el traspaso entre sesiones: qué funciona, qué falta y qué decisiones están
 abiertas. El qué y el por qué del producto siguen en [`SPEC.md`](SPEC.md); los comandos, en el
-[`README.md`](../README.md) de la raíz.
+[`README.md`](../README.md) de la raíz; quién compite y en qué nos distinguimos, en
+[`MERCADO.md`](MERCADO.md).
 
 ## El plan de trabajo, a día de hoy
 
@@ -50,19 +51,19 @@ definitivo lo hará un diseñador, y cambiarlo será sustituir los PNG y volver 
 Cosas que no son código y que, si no están, dejan la app a medias. Repasar esta lista antes de
 decir que el MVP está hecho:
 
-- [ ] **Terminar el catálogo: doce motivos en cuatro fondos, cuarenta y ocho imágenes.** Las
-      doce primeras se generaron y subieron el 24 de octubre de 2026 —veinticuatro ficheros en la
-      raíz del bucket, doce en el selector— pero con los nombres viejos (`drawn-<motivo>.jpg`).
-      Al ampliar el catálogo, el nombre pasó a ser **`<fondo>-<motivo>.jpg`** para que el selector
-      las agrupe por color, así que **esas veinticuatro hay que borrarlas del bucket y volver a
-      subirlas renombradas**, o quedarán duplicadas. Los originales renombrados están en
-      `library/originals/` y `npm run covers` los deja en `library/ready/`; ninguna de las dos
-      carpetas va en git. Los prompts de las cuarenta y ocho están en
-      [`library/PROMPTS.md`](../library/PROMPTS.md), con una marca en las doce ya hechas.
-- [ ] **Decidir si el selector aguanta cuarenta y ocho.** `CoverPicker` pinta una rejilla plana
-      sin filtro ni agrupación, y el encargo original hablaba de doce justamente por eso. El
-      nombre del fichero lleva el fondo delante para que al menos salgan por color; si se hace
-      pesado, hay que filtrar por color en el selector.
+- [x] **Catálogo de portadas: hecho el 25 de octubre de 2026.** Cuarenta y ocho imágenes —doce
+      motivos en cuatro fondos, crema, terracota, oliva y marrón— generadas, revisadas una a una
+      y subidas al bucket `library-images`: noventa y seis ficheros, comprobado que cada portada
+      tiene su `-small` y que no queda ninguna con el nombre viejo. Los originales están en
+      `library/originals/` y los preparados en `library/ready/`, ninguna de las dos en git. Los
+      prompts exactos y los ocho fallos que salieron por el camino, con su arreglo, están en
+      [`library/PROMPTS.md`](../library/PROMPTS.md); el origen de cada imagen, en
+      `library/manifest.json`.
+- [ ] **Mirar el selector con las cuarenta y ocho dentro.** Ya se puede ver en la app, que es
+      la única forma de decidirlo. `CoverPicker` pinta una rejilla plana sin filtro, y el encargo
+      original hablaba de doce justamente por eso; a cambio, la rejilla se mide sola y el nombre
+      del fichero lleva el fondo delante, así que salen agrupadas por color. Si se hace pesado
+      recorrerlas, el siguiente paso es filtrar por color.
 - **El logotipo se queda como está, con su fondo crema.** Se probaron las dos alternativas el 24
   de octubre de 2026 y las dos se descartaron: rehacerlo en el trazo del catálogo salió limpio y
   sin carácter, y recortarle el fondo gustó menos que dejarlo. Que en modo oscuro se vea como un
@@ -81,6 +82,11 @@ decir que el MVP está hecho:
       cae la usuaria *después* de confirmar, que hoy es la URL por defecto y es una página rota.
       La cuenta se confirma igual, porque eso pasa al tocar el enlace. Si algún día tiene que
       volver a un sitio concreto, es el parámetro `emailRedirectTo` en `signUp`.
+- [ ] **Contar en la ficha de la tienda el modo cocina, la lectura sin conexión y que no hay red
+      social.** Las tres ya funcionan y hoy no se cuentan en ningún sitio; las dos primeras no las
+      tiene la competencia más parecida. Sale del estudio de mercado ([`MERCADO.md`](MERCADO.md)).
+- [ ] **Mi cocina recién instalada con algo dentro.** Dos o tres recetas de ejemplo con portada del
+      catálogo: es la única primera impresión que hay, y hoy está vacía.
 
 ## El despliegue, que es lo siguiente
 
@@ -118,14 +124,17 @@ El orden importa, porque la web desbloquea cosas que hoy están a medias:
   `EXPO_PUBLIC_SUPABASE_URL`; al desplegar hay que sacarla a su propia variable para que mudarse
   sea tocar el `.env`.
 
-Propuesto y no decidido: **etiquetas `og:` en el visor**, para que al pegar el enlace en WhatsApp
-salga la tarjeta con la foto y el título en vez de una línea de texto.
+**Decidido el 25 de octubre de 2026: etiquetas `og:` en el visor**, para que al pegar el enlace en
+WhatsApp salga la tarjeta con la foto y el título en vez de una línea de texto. Se hacen al colgar
+el visor del dominio, que es cuando el enlace empieza a repartirse: es el paso 12 del plan.
 
 ## Decisiones abiertas
 
-En `SPEC.md`, sección «Ideas por concretar», están las seis con sus preguntas: buscar por los
-ingredientes que tienes, buscar dentro o fuera de tu cocina, el buscador hacia el mundo, la
-fila de chips, categorizar recetas y el plan gratuito frente al PRO (~2 €). Además:
+En `SPEC.md`, sección «Ideas por concretar», siguen las seis con sus preguntas. Dos cambiaron de
+estado el 25 de octubre de 2026 con el estudio de mercado: **buscar por los ingredientes que
+tienes** pasa a «se hace», con la forma por estudiar, y **buscar recetas de otras personas** pasa a
+«se hace en la fase 2», pero solo sobre lo que su dueña haya marcado como público. Lo que sí se
+cerró en no es **ser una comunidad**: feed, perfiles y likes. Además:
 
 - **El diseño de la pantalla principal** está parado a la espera de un diseñador. Por eso los
   recetarios del paso 5 no se han hecho: cambian esa pantalla.
