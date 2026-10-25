@@ -86,6 +86,9 @@ el principio para no tener que repintar nada después.
 
 - **Radio** base 16: `sm 12 · md 14 · lg 16 · xl 20 · 2xl 24 · 3xl 30`. Botones principales y chips
   son píldoras (radio completo).
+- `[cambio]` **Radio `card` 4**, el de las filas de la biblioteca y el de todo lo que enmarca una
+  imagen: portadas, miniaturas y logotipo. Empezó en 8 y bajó a 4 el 25 de octubre de 2026, para
+  que la esquina se note menos y la foto mande más.
 - **Margen lateral de pantalla:** 20. Separación entre elementos de lista: 4–8; entre bloques: 20–28.
 - **Alturas de toque:** 44 los botones redondos de cabecera, 56 los botones principales, 80 los
   botones gigantes del modo cocina.

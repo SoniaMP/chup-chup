@@ -90,7 +90,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: tokens.spacing.row + 4,
-    padding: tokens.spacing.row + 4,
+    // Pegada al contenido: lo que llena la fila es la portada y el texto, no el aire de alrededor.
+    padding: tokens.spacing.row,
     borderRadius: tokens.radius.card,
     // El mismo filo y el mismo relleno que la tarjeta del libro: todo lo que es una tarjeta se
     // dibuja igual, y la lista no salta al pasar de libros a recetas.

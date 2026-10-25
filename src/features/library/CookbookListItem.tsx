@@ -120,7 +120,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: tokens.spacing.row + 4,
-    padding: tokens.spacing.row + 4,
+    // El mismo relleno que la fila de una receta: la lista no salta al pasar de libros a recetas.
+    padding: tokens.spacing.row,
     borderRadius: tokens.radius.card,
     // Sin sombra: la pantalla la recorta contra su propio margen. Un filo basta para separar
     // la tarjeta del fondo, que son dos cremas muy parecidas.
