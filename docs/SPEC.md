@@ -77,9 +77,10 @@ Principio rector: ninguna decisión del MVP obliga a migrar datos cuando llegue 
 
 ## Navegación
 
-**El MVP no tiene barra inferior.** Mi cocina ocupa la pantalla y **Nueva receta** es un botón
-flotante abajo a la derecha, con su nombre escrito y no un `+` pelado. Con solo dos elementos, y siendo uno de ellos una acción y no un destino, una
-barra de dos huecos se vería descompensada.
+**El MVP no tiene barra inferior.** Mi cocina ocupa la pantalla y crear es un **`+` redondo**
+flotante abajo a la derecha. Al tocarlo sube una hoja con las dos cosas que se pueden crear,
+**Nueva receta** y **Nuevo libro**, cada una con su nombre. Con solo dos elementos, y siendo uno de
+ellos una acción y no un destino, una barra de dos huecos se vería descompensada.
 
 - **Mi cocina:** la biblioteca, al estilo de "Tu biblioteca" de Spotify. Arriba, la lista fija de Favoritos; debajo, los recetarios desplegables con sus libros y los libros sueltos. Filtros (Recetarios / Libros / Recetas).
 - **Crear:** texto libre → estructurar con IA → revisión.
@@ -111,18 +112,23 @@ que solo enseña sus recetas.
 
 Crear libros y recetarios:
 
-- Chip **+ Nuevo libro** a la derecha de la fila de chips de Mi cocina. En la cabecera y no en
-  la lista, porque la lista se va hacia arriba en cuanto hay libros; a la derecha y separado de
-  los chips que filtran, porque esa fila acabará siendo «Favoritas · Recetarios · Libros ·
-  Recetas» y los filtros crecen por la izquierda. Sin relleno y con filo de puntos: en esa fila
-  conviven un chip que filtra y otro que crea, y tienen que distinguirse a la vista.
-  **Es provisional, y de las que se van solas:** en la fase 2, la barra inferior trae un
-  destino **Crear**, y ahí es donde acaban yendo las dos creaciones, la de libro y la de
-  receta. Vive en la cabecera mientras dure el MVP.
-- **En la cabecera no hay `+`.** Hubo uno y no se entendía: en la misma pantalla había dos `+`
-  iguales y sin nombre, uno que hacía libros y otro que hacía recetas. Crear un libro es una
-  acción rara, así que se pide donde están los libros, con su nombre puesto; crear una receta
-  es la acción diaria y se queda a un solo toque en el botón flotante.
+- **Una sola puerta, y dentro las dos cosas con su nombre.** Decidido el 25 de octubre de 2026,
+  mirando cómo lo resuelve ReciMe. El flotante **Crear** abre una hoja con **Nueva receta** arriba,
+  que es la acción diaria y por eso va primera y con más peso, y **Nuevo libro** debajo, que se
+  hace cuatro veces al año.
+- **Se acepta el toque de más en la acción diaria.** Crear una receta pasa de un toque a dos. Se
+  paga a gusto: la fricción es mínima y a cambio **no hay dos sitios** y la pantalla principal
+  queda limpia, que es lo que importa en la pantalla que más se mira.
+- **Fuera el chip `+ Nuevo libro` de la fila de chips.** Era provisional y estaba en mal sitio: esa
+  fila acabará siendo «Favoritas · Recetarios · Libros · Recetas» y los filtros crecen por la
+  izquierda, así que un chip que crea acabaría estorbando a los que filtran. Ahora la fila es solo
+  de filtros.
+- **El flotante vuelve a ser un `+` sin texto**, decidido el 25 de octubre de 2026, y esta vez sí
+  se entiende. Lo que falló en su día no era el signo: era que hubiera **dos `+` iguales** en la
+  misma pantalla, uno que hacía libros y otro que hacía recetas. Con una sola puerta no hay con qué
+  confundirlo, y lo que crea lo dice la hoja con todas las letras. Su nombre accesible es «Crear»,
+  que es como se llamará el destino de la barra inferior en la fase 2: cuando llegue, la hoja se
+  convierte en esa pestaña y no hay nada que reaprender.
 - **+ Nuevo libro** arriba del todo en la hoja "Añadir a libro" de una receta: crea el libro y añade la receta en un solo paso.
 
 Pantallas: Mi cocina, detalle de libro, detalle de receta (con modo cocina), crear receta (entrada + revisión), foto y retoque, perfil y ajustes.

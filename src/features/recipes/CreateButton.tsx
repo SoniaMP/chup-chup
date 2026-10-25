@@ -1,18 +1,23 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { Pressable, StyleSheet, Text, useColorScheme } from "react-native";
+import { Pressable, StyleSheet, useColorScheme } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 
 /**
- * El botón de crear una receta: flotante, porque el MVP no tiene barra inferior.
+ * El botón de crear: flotante, porque el MVP no tiene barra inferior.
  *
- * Lleva su nombre escrito y no solo un `+`. Un `+` pelado no dice qué crea, y en esta pantalla
- * hubo dos a la vez —uno hacía libros y el otro recetas— que es justo lo que confundía.
+ * Es la única puerta para crear, y lo que se crea se elige en la hoja que abre: por eso es un `+`
+ * redondo y sin texto. Lo que no se entendía no era el signo, era que hubiera dos iguales en la
+ * misma pantalla, uno que hacía libros y otro que hacía recetas. Con una sola puerta, el `+` no se
+ * puede confundir con nada, y lo que crea lo dice la hoja con todas las letras.
+ *
+ * Su nombre accesible sigue siendo «Crear», que es como se llamará el destino de la barra inferior
+ * en la fase 2.
  */
-export function CreateRecipeButton({ onPress }: { onPress: () => void }) {
+export function CreateButton({ onPress }: { onPress: () => void }) {
   const colors = useColors();
   const insets = useSafeAreaInsets();
   const glow = useColorScheme() === "dark" ? tokens.shadow.glowDark : tokens.shadow.glow;
@@ -20,7 +25,7 @@ export function CreateRecipeButton({ onPress }: { onPress: () => void }) {
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel="Crear receta"
+      accessibilityLabel="Crear"
       onPress={onPress}
       style={({ pressed }) => [
         styles.button,
@@ -34,8 +39,7 @@ export function CreateRecipeButton({ onPress }: { onPress: () => void }) {
         end={{ x: 1, y: 1 }}
         style={styles.fill}
       >
-        <MaterialIcons name="add" size={26} color={colors.primaryForeground} />
-        <Text style={[styles.label, { color: colors.primaryForeground }]}>Nueva receta</Text>
+        <MaterialIcons name="add" size={30} color={colors.primaryForeground} />
       </LinearGradient>
     </Pressable>
   );
@@ -45,16 +49,14 @@ const styles = StyleSheet.create({
   button: {
     position: "absolute",
     right: tokens.spacing.gutter,
+    width: tokens.touch.createButton,
     height: tokens.touch.createButton,
     borderRadius: tokens.radius.pill,
   },
   fill: {
     flex: 1,
-    flexDirection: "row",
     alignItems: "center",
-    gap: tokens.spacing.row,
-    paddingHorizontal: tokens.spacing.gutter,
+    justifyContent: "center",
     borderRadius: tokens.radius.pill,
   },
-  label: { fontFamily: tokens.fontFamily.bodyStrong, fontSize: tokens.fontSize.body },
 });

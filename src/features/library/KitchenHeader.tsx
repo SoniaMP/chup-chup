@@ -1,12 +1,10 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 import { Logo } from "@/components/Logo";
 import { signOut } from "@/features/auth/signOut";
 
 import { FavoritesFilter } from "./FavoritesFilter";
-import { NewCookbookChip } from "./NewCookbookChip";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 import { webFocusReset } from "@/theme/webFocusReset";
@@ -26,7 +24,6 @@ export function KitchenHeader({
   onOnlyFavoritesChange,
 }: KitchenHeaderProps) {
   const colors = useColors();
-  const router = useRouter();
 
   return (
     <View style={styles.container}>
@@ -72,13 +69,10 @@ export function KitchenHeader({
           </Pressable>
         )}
       </View>
+      {/* Solo filtros: crear un libro se pide en la hoja del botón Crear. Esta fila acabará
+          siendo «Favoritas · Recetarios · Libros · Recetas», y los filtros crecen por la izquierda. */}
       <View style={styles.chips}>
         <FavoritesFilter isOn={isOnlyFavorites} onToggle={onOnlyFavoritesChange} />
-        <NewCookbookChip
-          onPress={() => {
-            router.push("/cookbook/new");
-          }}
-        />
       </View>
     </View>
   );

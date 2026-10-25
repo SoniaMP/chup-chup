@@ -3,7 +3,7 @@ import { EmptyState } from "@/components/EmptyState";
 /**
  * Lo que enseña la pantalla principal antes de la primera receta.
  *
- * Va dentro de la lista, debajo de «Nuevo libro», y en versión compacta. No se centra ni se pega
+ * Va dentro de la lista, debajo de los libros, y en versión compacta. No se centra ni se pega
  * al fondo: en el navegador del móvil la ventana es más corta de lo que dice, y lo que se coloca
  * contra el borde de abajo acaba cortado y debajo del botón flotante.
  */

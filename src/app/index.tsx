@@ -2,6 +2,7 @@ import { useRouter } from "expo-router";
 import { useCallback, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
+import { ActionSheet } from "@/components/ActionSheet";
 import { Screen } from "@/components/Screen";
 import { cookbookMatchesQuery } from "@/domain/cookbooks/cookbookMatchesQuery";
 import { recipeMatchesQuery } from "@/domain/recipes/recipeMatchesQuery";
@@ -14,7 +15,7 @@ import { FilteredLibrary } from "@/features/library/FilteredLibrary";
 import { NoSearchResults } from "@/features/library/NoSearchResults";
 import { useRecipes } from "@/features/library/useRecipes";
 import { StaleNotice } from "@/features/offline/StaleNotice";
-import { CreateRecipeButton } from "@/features/recipes/CreateRecipeButton";
+import { CreateButton } from "@/features/recipes/CreateButton";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 
@@ -26,6 +27,8 @@ export default function KitchenScreen() {
   const { membership, isStale: isMembershipStale, reload: reloadMembership } = useCookbookMembership();
   const [query, setQuery] = useState("");
   const [isOnlyFavorites, setIsOnlyFavorites] = useState(false);
+  // Una sola puerta para crear: la hoja dice qué se crea, en vez de dos botones por la pantalla.
+  const [isCreating, setIsCreating] = useState(false);
 
   // Borrar una receta o un libro cambia las tres cosas: qué recetas hay, qué libros hay y qué
   // receta está dónde. Se releen juntas y así ninguna pantalla se queda enseñando lo que ya no está.
@@ -75,8 +78,8 @@ export default function KitchenScreen() {
           }}
         />
         <StaleNotice isStale={isRecipesStale || isCookbooksStale || isMembershipStale} />
-        {/* La lista sale aunque la cocina esté vacía: dentro vive «+ Nuevo libro», y una usuaria
-            recién registrada no tiene ni recetas ni libros todavía. */}
+        {/* La lista sale aunque la cocina esté vacía: dentro está el libro por defecto, que una
+            usuaria recién registrada ya tiene aunque no tenga ni una receta. */}
         {isBrowsing && recipes !== null && (
           <ScrollView contentContainerStyle={styles.list} showsVerticalScrollIndicator={false}>
             <CookbookList
@@ -111,10 +114,35 @@ export default function KitchenScreen() {
           </ScrollView>
         )}
       </Screen>
-      <CreateRecipeButton
+      <CreateButton
         onPress={() => {
-          router.push("/create");
+          setIsCreating(true);
         }}
+      />
+      {/* La receta primero y con el verbo por delante: es lo que se hace a diario. */}
+      <ActionSheet
+        isOpen={isCreating}
+        onClose={() => {
+          setIsCreating(false);
+        }}
+        actions={[
+          {
+            label: "Nueva receta",
+            icon: "edit",
+            onPress: () => {
+              setIsCreating(false);
+              router.push("/create");
+            },
+          },
+          {
+            label: "Nuevo libro",
+            icon: "menu-book",
+            onPress: () => {
+              setIsCreating(false);
+              router.push("/cookbook/new");
+            },
+          },
+        ]}
       />
     </View>
   );
