@@ -1,29 +1,16 @@
 import { useState } from "react";
-import {
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { BottomSheet } from "@/components/BottomSheet";
+import { CoverColorFilter } from "./CoverColorFilter";
+import { CoverGrid } from "./CoverGrid";
+import type { CoverBackground } from "./coverBackgrounds";
+import { coversOnBackground } from "./coversOnBackground";
 import type { PhotoSource } from "@/features/photos/pickPhoto";
 import { OwnCoverButtons } from "./OwnCoverButtons";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 import { useLibraryImages } from "./useLibraryImages";
-
-/** Cuatro por fila: con cuarenta y ocho en el catálogo, más grandes obligan a bajar demasiado. */
-const COLUMNS = 4;
-/** El tamaño que se pinta mientras no se ha medido el ancho, para que no parpadee vacía. */
-const UNMEASURED = 80;
-/** Lo más alta que puede ser la rejilla. Sin tope, la hoja crece más que la pantalla y lo de
- * abajo queda fuera, que es lo que pasaba al llegar a cuarenta y ocho portadas. */
-const TALLEST = 0.45;
-const GAP = tokens.spacing.row;
 
 type CoverPickerProps = {
   isOpen: boolean;
@@ -51,12 +38,8 @@ export function CoverPicker({
 }: CoverPickerProps) {
   const colors = useColors();
   const images = useLibraryImages();
-  const { height: screenHeight } = useWindowDimensions();
-  // La rejilla se mide sola: las portadas llenan el ancho que haya en vez de dejar un hueco a
-  // la derecha, que es lo que pasaba con un tamaño fijo.
-  const [width, setWidth] = useState(0);
-
-  const size = width === 0 ? UNMEASURED : (width - GAP * (COLUMNS - 1)) / COLUMNS;
+  // Con cuarenta y ocho portadas, elegir color deja doce: las que caben de un vistazo.
+  const [background, setBackground] = useState<CoverBackground | null>(null);
 
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose}>
@@ -76,40 +59,21 @@ export function CoverPicker({
           <Text style={[styles.error, { color: colors.destructive }]}>{error}</Text>
         )}
 
+        {images !== null && images.length > 0 && (
+          <CoverColorFilter chosen={background} onChoose={setBackground} />
+        )}
+
         {images !== null && images.length === 0 && (
           <Text style={[styles.empty, { color: colors.mutedForeground }]}>
             Todavía no hay imágenes en el catálogo.
           </Text>
         )}
 
-        <ScrollView
-          style={{ maxHeight: screenHeight * TALLEST }}
-          contentContainerStyle={styles.grid}
-          showsVerticalScrollIndicator={false}
-          onLayout={(event) => {
-            setWidth(event.nativeEvent.layout.width);
-          }}
-        >
-          {(images ?? []).map((image) => (
-            <Pressable
-              key={image.id}
-              accessibilityRole="button"
-              accessibilityLabel={`Portada ${image.id}`}
-              accessibilityState={{ selected: image.id === chosenId }}
-              onPress={() => {
-                onChoose(image.id);
-              }}
-              style={({ pressed }) => [
-                styles.option,
-                { width: size },
-                image.id === chosenId && { borderColor: colors.primary },
-                pressed && styles.pressed,
-              ]}
-            >
-              <Image source={{ uri: image.smallUrl }} style={styles.thumbnail} />
-            </Pressable>
-          ))}
-        </ScrollView>
+        <CoverGrid
+          images={coversOnBackground(images ?? [], background)}
+          chosenId={chosenId}
+          onChoose={onChoose}
+        />
 
         {(chosenId !== undefined || hasPhoto) && (
           <Pressable
@@ -134,16 +98,7 @@ const styles = StyleSheet.create({
   heading: { fontFamily: tokens.fontFamily.display, fontSize: tokens.fontSize.sectionHeading },
   empty: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.label },
   error: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.label },
-  grid: { flexDirection: "row", flexWrap: "wrap", gap: GAP, paddingBottom: 4 },
-  option: {
-    borderRadius: tokens.radius.card,
-    borderWidth: 2,
-    borderColor: "transparent",
-    padding: 2,
-  },
   pressed: { opacity: 0.8 },
-  // Cuadrada y del ancho que le toque: el recorte lo pone la propia imagen, que ya viene cuadrada.
-  thumbnail: { width: "100%", aspectRatio: 1, borderRadius: tokens.radius.card },
   remove: { alignSelf: "center", padding: tokens.spacing.row },
   removeLabel: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.label },
 });
