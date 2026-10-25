@@ -135,8 +135,9 @@ el visor del dominio, que es cuando el enlace empieza a repartirse: es el paso 1
 
 ## Decisiones abiertas
 
-En `SPEC.md`, sección «Ideas por concretar», siguen las seis con sus preguntas. Dos cambiaron de
-estado el 25 de octubre de 2026 con el estudio de mercado: **buscar por los ingredientes que
+En `SPEC.md`, sección «Ideas por concretar», está la lista con sus preguntas, y ahí se le ha
+sumado **meterle mucha caña al modo cocina**. Dos cambiaron de estado el 25 de octubre de 2026 con
+el estudio de mercado: **buscar por los ingredientes que
 tienes** pasa a «se hace», con la forma por estudiar, y **buscar recetas de otras personas** pasa a
 «se hace en la fase 2», pero solo sobre lo que su dueña haya marcado como público. Lo que sí se
 cerró en no es **ser una comunidad**: feed, perfiles y likes. Además:

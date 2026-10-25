@@ -407,6 +407,16 @@ Cosas acordadas que todavía no tienen forma. Antes de construirlas, una ronda d
   sigues (fase 3) habrá dos preguntas distintas con la misma caja de texto: «¿qué tengo yo?» y
   «¿qué me han dado?». Está por decidir: si son dos pestañas, dos modos de la misma caja o dos
   pantallas; cuál manda por defecto; y qué se ve de una receta ajena antes de quedársela.
+- **Modo cocina: hay que meterle mucha caña.** Acordado el 25 de octubre de 2026. Hoy existe y
+  funciona, pero es lo mínimo, y es la pieza donde más tenemos que ganar. El porqué está en
+  [`MERCADO.md`](MERCADO.md): es el único momento en el que la app está en la mano con las manos
+  sucias, y es justo lo que las apps de capturar recetas no cuidan —Fava no tiene modo cocina, y
+  el paso a paso de ReciMe solo mantiene la pantalla encendida—. Lo que ya está decidido que entra
+  es elegir comensales y reescalar, que es el paso 14 y el punto siguiente. Lo demás **no está
+  decidido**, solo apuntado como candidato: temporizadores que salgan de los propios pasos, ir
+  tachando ingredientes a medida que se usan, volver y encontrar la receta por donde se dejó, y
+  leerla en voz alta. Antes de construir nada, una ronda de preguntas: qué pasa de verdad en una
+  cocina, y cuál de esas cosas se echa en falta a la primera.
 - **Las raciones como columna vertebral: modo cocina, raciones elegidas y lista de la compra.**
   Acordado el 25 de octubre de 2026, y **todo esto puede ser fase 2** menos el escalado, que ya es
   el paso 14. Son tres cosas encadenadas, y la fuerza está en la cadena, no en cada pieza:
