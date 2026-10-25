@@ -1,5 +1,6 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { Modal, Pressable, StyleSheet, View } from "react-native";
+import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, {
   Easing,
   runOnJS,
@@ -16,6 +17,10 @@ const ENTERS_IN = 240;
 const LEAVES_IN = 180;
 /** Lo que se desplaza mientras no se ha medido: más que cualquier hoja, para que empiece fuera. */
 const UNMEASURED = 600;
+/** Cuánto hay que bajarla, de su propia altura, para que se cierre al soltar. */
+const CLOSES_AT = 0.3;
+/** O un manotazo hacia abajo, aunque no haya recorrido tanto, en puntos por segundo. */
+const FLICK = 800;
 
 type BottomSheetProps = {
   isOpen: boolean;
@@ -31,8 +36,12 @@ type BottomSheetProps = {
  * aquí: el `Modal` se queda quieto y la hoja entra y sale sola, y para que la salida se vea el
  * `Modal` sigue montado hasta que termina.
  *
- * Se cierra tocando fuera, como en cualquier hoja del móvil, y deja libre la franja de abajo
- * del teléfono para que el último botón no quede debajo de la barra del sistema.
+ * Se cierra tocando fuera o **arrastrando la pestaña hacia abajo**, como en cualquier hoja del
+ * móvil, y deja libre la franja de abajo del teléfono para que el último botón no quede debajo de
+ * la barra del sistema.
+ *
+ * La pestaña, y no la hoja entera, porque dentro puede haber una lista que se desplaza —el
+ * selector de portadas— y los dos gestos se pelearían por el mismo dedo.
  */
 export function BottomSheet({ isOpen, onClose, children }: BottomSheetProps) {
   const colors = useColors();
@@ -56,9 +65,25 @@ export function BottomSheet({ isOpen, onClose, children }: BottomSheetProps) {
 
   const slide = useAnimatedStyle(() => ({ transform: [{ translateY: away.value * height }] }));
 
+  const drag = Gesture.Pan()
+    .onUpdate((event) => {
+      // Solo hacia abajo: tirar hacia arriba no estira la hoja.
+      away.value = Math.max(0, event.translationY / height);
+    })
+    .onEnd((event) => {
+      if (event.translationY > height * CLOSES_AT || event.velocityY > FLICK) {
+        // Cerrar de verdad lo hace el efecto de arriba, que la termina de bajar desde donde esté.
+        runOnJS(onClose)();
+        return;
+      }
+
+      away.value = withTiming(0, { duration: ENTERS_IN, easing: Easing.out(Easing.cubic) });
+    });
+
   return (
     <Modal visible={isMounted} transparent animationType="none" onRequestClose={onClose}>
-      <View style={styles.root}>
+      {/* Los gestos no llegan dentro de un Modal si no cuelgan de su propia raíz. */}
+      <GestureHandlerRootView style={styles.root}>
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Cerrar"
@@ -75,10 +100,14 @@ export function BottomSheet({ isOpen, onClose, children }: BottomSheetProps) {
             { backgroundColor: colors.card, paddingBottom: insets.bottom + tokens.spacing.gutter },
           ]}
         >
-          <View style={[styles.grip, { backgroundColor: colors.border }]} />
+          <GestureDetector gesture={drag}>
+            <View style={styles.gripArea}>
+              <View style={[styles.grip, { backgroundColor: colors.border }]} />
+            </View>
+          </GestureDetector>
           {children}
         </Animated.View>
-      </View>
+      </GestureHandlerRootView>
     </Modal>
   );
 }
@@ -99,11 +128,12 @@ const styles = StyleSheet.create({
     paddingTop: tokens.spacing.row + 4,
     paddingHorizontal: tokens.spacing.row,
   },
-  grip: {
-    width: 44,
-    height: 4,
-    borderRadius: tokens.radius.pill,
-    alignSelf: "center",
-    marginBottom: tokens.spacing.row + 4,
+  /** Ancha y con aire alrededor: es lo que hay que agarrar para bajarla. */
+  gripArea: {
+    alignItems: "center",
+    paddingVertical: tokens.spacing.row,
+    marginTop: -tokens.spacing.row,
+    marginBottom: tokens.spacing.row - 4,
   },
+  grip: { width: 44, height: 4, borderRadius: tokens.radius.pill },
 });
