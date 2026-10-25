@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 
 import { BottomSheet } from "@/components/BottomSheet";
 import type { PhotoSource } from "@/features/photos/pickPhoto";
@@ -8,8 +16,13 @@ import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 import { useLibraryImages } from "./useLibraryImages";
 
-/** Lo más estrecho que puede quedar una portada antes de no distinguirse. */
-const NARROWEST = 104;
+/** Cuatro por fila: con cuarenta y ocho en el catálogo, más grandes obligan a bajar demasiado. */
+const COLUMNS = 4;
+/** El tamaño que se pinta mientras no se ha medido el ancho, para que no parpadee vacía. */
+const UNMEASURED = 80;
+/** Lo más alta que puede ser la rejilla. Sin tope, la hoja crece más que la pantalla y lo de
+ * abajo queda fuera, que es lo que pasaba al llegar a cuarenta y ocho portadas. */
+const TALLEST = 0.45;
 const GAP = tokens.spacing.row;
 
 type CoverPickerProps = {
@@ -38,12 +51,12 @@ export function CoverPicker({
 }: CoverPickerProps) {
   const colors = useColors();
   const images = useLibraryImages();
+  const { height: screenHeight } = useWindowDimensions();
   // La rejilla se mide sola: las portadas llenan el ancho que haya en vez de dejar un hueco a
   // la derecha, que es lo que pasaba con un tamaño fijo.
   const [width, setWidth] = useState(0);
 
-  const columns = Math.max(3, Math.floor((width + GAP) / (NARROWEST + GAP)));
-  const size = width === 0 ? NARROWEST : (width - GAP * (columns - 1)) / columns;
+  const size = width === 0 ? UNMEASURED : (width - GAP * (COLUMNS - 1)) / COLUMNS;
 
   return (
     <BottomSheet isOpen={isOpen} onClose={onClose}>
@@ -70,6 +83,7 @@ export function CoverPicker({
         )}
 
         <ScrollView
+          style={{ maxHeight: screenHeight * TALLEST }}
           contentContainerStyle={styles.grid}
           showsVerticalScrollIndicator={false}
           onLayout={(event) => {
