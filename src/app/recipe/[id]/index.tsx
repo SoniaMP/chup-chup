@@ -1,14 +1,18 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { BackButton } from "@/components/BackButton";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { Screen } from "@/components/Screen";
 import { SecondaryButton } from "@/components/SecondaryButton";
+import { scaledIngredients } from "@/domain/cooking/scaledIngredients";
+import { ServingsPicker } from "@/features/cooking/ServingsPicker";
 import { RecipePhoto } from "@/features/photos/RecipePhoto";
 import { ShareRecipeButton } from "@/features/sharing/ShareRecipeButton";
 import { EditRecipeButton } from "@/features/recipes/EditRecipeButton";
 import { FavoriteButton } from "@/features/recipes/FavoriteButton";
+import { MissingServings } from "@/features/recipes/MissingServings";
 import { RecipeFacts } from "@/features/recipes/RecipeFacts";
 import { RecipeIngredients } from "@/features/recipes/RecipeIngredients";
 import { RecipeNotes } from "@/features/recipes/RecipeNotes";
@@ -24,6 +28,7 @@ export default function RecipeScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ id: string }>();
   const { recipe, isLoaded, replace } = useRecipe(params.id ?? "");
+  const [chosenServings, setChosenServings] = useState<number | null>(null);
 
   if (recipe === null) {
     return (
@@ -35,6 +40,8 @@ export default function RecipeScreen() {
       </Screen>
     );
   }
+
+  const servings = chosenServings ?? recipe.servings;
 
   return (
     <Screen>
@@ -57,7 +64,13 @@ export default function RecipeScreen() {
             <PrimaryButton
               label="Modo cocina"
               onPress={() => {
-                router.push({ pathname: "/recipe/[id]/cook", params: { id: recipe.id } });
+                router.push({
+                  pathname: "/recipe/[id]/cook",
+                  params: {
+                    id: recipe.id,
+                    servings: servings === undefined ? "" : String(servings),
+                  },
+                });
               }}
             />
           )}
@@ -70,7 +83,16 @@ export default function RecipeScreen() {
         </View>
 
         <SectionHeading>Ingredientes</SectionHeading>
-        <RecipeIngredients ingredients={recipe.ingredients} />
+        <View style={styles.servings}>
+          {servings === undefined ? (
+            <MissingServings recipe={recipe} />
+          ) : (
+            <ServingsPicker servings={servings} onChange={setChosenServings} />
+          )}
+        </View>
+        <RecipeIngredients
+          ingredients={scaledIngredients(recipe.ingredients, recipe.servings, servings ?? 1)}
+        />
 
         <SectionHeading>Pasos</SectionHeading>
         <RecipeSteps steps={recipe.steps} />
@@ -96,7 +118,11 @@ const styles = StyleSheet.create({
     marginBottom: tokens.spacing.block,
   },
   headerActions: { flexDirection: "row", gap: tokens.spacing.row },
-  message: { fontFamily: tokens.fontFamily.body, fontSize: tokens.fontSize.body, marginTop: tokens.spacing.block },
+  message: {
+    fontFamily: tokens.fontFamily.body,
+    fontSize: tokens.fontSize.body,
+    marginTop: tokens.spacing.block,
+  },
   title: {
     fontFamily: tokens.fontFamily.display,
     fontSize: tokens.fontSize.screenTitle,
@@ -104,4 +130,5 @@ const styles = StyleSheet.create({
     marginBottom: tokens.spacing.gutter,
   },
   actions: { marginTop: tokens.spacing.block, gap: tokens.spacing.row },
+  servings: { marginBottom: tokens.spacing.row + 4 },
 });

@@ -1,25 +1,17 @@
-import { useRouter } from "expo-router";
-
 import { IconButton } from "@/components/IconButton";
-import { draftFromRecipe } from "@/domain/recipes/draftFromRecipe";
 import type { SavedRecipe } from "@/domain/recipes/savedRecipe";
-import { draftStore } from "@/features/drafts/draftStore";
+import { useOpenRecipeEditor } from "./useOpenRecipeEditor";
 
-/** Abre la receta en el mismo formulario de la revisión, pero para cambiarla. */
+/** El lápiz de la cabecera de una receta. */
 export function EditRecipeButton({ recipe }: { recipe: SavedRecipe }) {
-  const router = useRouter();
-
-  const edit = async (): Promise<void> => {
-    const draftId = await draftStore.create(draftFromRecipe(recipe));
-    router.push({ pathname: "/review", params: { draftId, recipeId: recipe.id } });
-  };
+  const openEditor = useOpenRecipeEditor();
 
   return (
     <IconButton
       name="edit"
       label="Editar la receta"
       onPress={() => {
-        void edit();
+        void openEditor(recipe);
       }}
     />
   );
