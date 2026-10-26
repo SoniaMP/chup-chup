@@ -71,19 +71,22 @@ Principio rector: ninguna decisión del MVP obliga a migrar datos cuando llegue 
 - **Comunidad abierta tipo plaza pública.** Cookpad ya tiene seis millones de recetas en español.
   La fase 2 es un círculo pequeño —tu familia, tus amistades—, no un catálogo.
 - **Nutrición y calorías.** Otro producto: necesita una base de datos de alimentos y mete la app en
-  terreno de salud.
+  terreno de salud. Cuando llegue, mucho más adelante, irá en el plan PRO.
 - **Lista de la compra.** Fuera del MVP pero no enterrada: es la razón número uno para abrir una app
   de recetas a diario y la mejor candidata al plan PRO cuando llegue.
 
 ## Navegación
 
 **El MVP no tiene barra inferior.** Mi cocina ocupa la pantalla y crear es un **`+` redondo**
-flotante abajo a la derecha. Al tocarlo sube una hoja con las dos cosas que se pueden crear,
-**Nueva receta** y **Nuevo libro**, cada una con su nombre. Con solo dos elementos, y siendo uno de
+flotante abajo a la derecha. Al tocarlo sube una hoja con lo que se puede crear: **Apunta una
+receta**, **Pega una receta** y, tras un separador, **Nuevo libro** (ver «Crear libros y
+recetarios»). Con solo dos elementos, y siendo uno de
 ellos una acción y no un destino, una barra de dos huecos se vería descompensada.
 
 - **Mi cocina:** la biblioteca, al estilo de "Tu biblioteca" de Spotify. Arriba, la lista fija de Favoritos; debajo, los recetarios desplegables con sus libros y los libros sueltos. Filtros (Recetarios / Libros / Recetas).
-- **Crear:** texto libre → estructurar con IA → revisión.
+- **Crear:** dos caminos que acaban en la misma revisión. *Apunta una receta*: texto libre →
+  estructurar con IA → revisión. *Pega una receta*: texto ya escrito → parser propio, sin IA →
+  revisión. Ver «Pegar una receta, sin IA».
 
 Decisiones:
 
@@ -113,9 +116,22 @@ que solo enseña sus recetas.
 Crear libros y recetarios:
 
 - **Una sola puerta, y dentro las dos cosas con su nombre.** Decidido el 25 de octubre de 2026,
-  mirando cómo lo resuelve ReciMe. El flotante **Crear** abre una hoja con **Nueva receta** arriba,
-  que es la acción diaria y por eso va primera y con más peso, y **Nuevo libro** debajo, que se
-  hace cuatro veces al año.
+  mirando cómo lo resuelve ReciMe. El flotante **Crear** abre una hoja con las recetas arriba,
+  que son la acción diaria y por eso van primeras, y **Nuevo libro** debajo, que se hace cuatro
+  veces al año.
+- **Las recetas se nombran por lo que traes, no por cómo se procesan.** Decidido el 26 de octubre
+  de 2026. La hoja queda así, cada fila con una línea de explicación debajo:
+  - **Apunta una receta** — «Escríbela a tu manera y la ordenamos».
+  - **Pega una receta** — «Copiada de una web, un mensaje o tus notas».
+  - *separador*
+  - **Nuevo libro**.
+
+  **La palabra IA no sale en la hoja.** Quien la ve elige la IA aunque su receta ya esté bien
+  escrita, y el camino fiel se queda sin usar. La pantalla de *Apunta una receta* sí dice, en
+  pequeño, que el texto lo ordena una IA: por honestidad y porque lo pide el formulario de datos
+  de Google Play. Cuando lleguen **Desde un enlace** (paso 13) y **Desde una foto** (paso 15)
+  entran en la misma lista con el mismo criterio. Dentro de un libro la hoja es la misma sin
+  *Nuevo libro*. Pide una `description` opcional en las filas de `ActionSheet`.
 - **Se acepta el toque de más en la acción diaria.** Crear una receta pasa de un toque a dos. Se
   paga a gusto: la fricción es mínima y a cambio **no hay dos sitios** y la pantalla principal
   queda limpia, que es lo que importa en la pantalla que más se mira.
@@ -156,6 +172,42 @@ Reglas para la IA:
   y no se guarda con la receta.
 - No cambia el plato: no añade ni quita ingredientes principales.
 - Nunca genera ni modifica las notas personales.
+
+## Pegar una receta, sin IA
+
+Decidido el 26 de octubre de 2026. El camino existe por **fidelidad**, no por dinero: hay recetas
+que ya vienen escritas —de un blog, de un mensaje, de las notas del móvil— y ahí la IA no es mejor,
+es peor, porque toca lo que no debe. Tendría sentido aunque la IA fuera gratis e infinita.
+
+1. **Un cuadro para la receta entera y el título en su propio campo**, que es lo único que no se
+   puede deducir con fiabilidad. Encima del cuadro, el consejo de importación: «Funciona mejor si
+   cada ingrediente y cada paso van en su línea. Si puedes, escribe "Ingredientes" y "Pasos"
+   encima de cada parte».
+2. **El corte entre ingredientes y pasos** sale de los encabezados («Ingredientes», «Preparación»,
+   «Elaboración», «Pasos», «Modo de hacerlo»…). Sin encabezados, de la forma de cada línea: corta
+   o con número delante, ingrediente; frase larga, paso.
+3. **Cada ingrediente se separa solo con lo que está escrito, sin convertir ni inventar nada.**
+   Lee enteros, decimales con coma, fracciones (`1/2`, `½`) y una lista cerrada de unidades en
+   español (g, kg, ml, l, cucharada, cucharadita, taza, vaso, diente, pizca, lata, sobre…),
+   quitando el «de» de detrás. Un rango (`2-3 huevos`) se queda en cantidad 2 y nota «2-3». Lo
+   demás («un chorrito de aceite», «sal al gusto») va entero al nombre y sin cantidad: no escala,
+   y se acepta, porque tampoco venía la cantidad.
+4. **El parser devuelve un borrador, no una receta válida**, igual que `draftFromStructuredRecipe`
+   con la respuesta de la IA. El borrador ya admite listas vacías y la validación estricta entra
+   al guardar, así que un fallo nunca es un callejón: la revisión se abre con lo que haya.
+5. **Avisa de lo que no ha encontrado, nunca de lo que ha supuesto**, en el mismo sitio que los
+   `assumptions` de la IA: «No he encontrado los pasos», «Hay 4 ingredientes sin cantidad».
+6. **Se guarda el texto pegado en `raw_input`**, como en el otro camino.
+
+**El puente a la IA.** Desde la revisión de una receta pegada se puede pedir que la IA la pase a
+limpio, con estas condiciones:
+
+- Solo de pegada a IA. Al revés no hace falta.
+- Solo aparece si el parser ha dejado avisos, y va junto a ellos: «Hay 4 ingredientes sin
+  cantidad. ¿Quieres que la IA la pase a limpio?». Si ha salido limpia, no está.
+- Manda `raw_input` a la misma `structure-recipe`. No hay función ni prompt nuevos.
+- Si ya se ha tocado el borrador, avisa de que se pierden los cambios. Si no, no pregunta.
+- Cuenta para el tope diario como cualquier otra estructuración.
 
 ### Límites de la Edge Function
 
@@ -375,6 +427,8 @@ Existe un prototipo hecho en Lovable. Lovable genera React web (no React Native)
     el texto libre. **La gracia no es leer la foto, que eso ya lo hace ReciMe, sino interpretarla**:
     normalizar «un vaso de los de agua» y declarar lo que se ha supuesto, igual que con el texto.
 16. «La he hecho»: fecha y nota por cada vez que se cocina. Sin rachas ni estadísticas.
+17. Pegar una receta sin IA, con la hoja nueva y el puente a la IA (ver «Pegar una receta, sin
+    IA»). Decidido el 26 de octubre de 2026; el orden respecto al resto está por decidir.
 
 Los cinco últimos salen del estudio de mercado del 25 de octubre de 2026
 ([`MERCADO.md`](MERCADO.md)). Del 12 al 14 son baratos y se notan al segundo día de uso; el 15 y el
@@ -446,12 +500,22 @@ Cosas acordadas que todavía no tienen forma. Antes de construirlas, una ronda d
   si vive en un campo `categories` de la propia receta o en su tabla; si la IA las propone al
   estructurar (paso 3) y la usuaria solo confirma; y si acaban siendo chips de filtro en la
   cocina, que es donde se volverían útiles de verdad.
-- **Plan gratuito y plan PRO.** Estructurar tu texto libre entra en el plan gratuito, con tope de
-  volumen y nunca de acceso. Lo que cambió el 25 de octubre de 2026: **la foto con IA ya no es el
-  contenido del PRO**, porque en este mercado nadie cobra por eso. Y la referencia de precio contra
-  la que nos van a comparar es el pago único de 4,99 $ de Paprika, no una suscripción. Está por
-  decidir: qué contiene entonces el PRO de unos 2 € —de momento volumen, y la lista de la compra
-  cuando exista—; cuántas recetas al día da el plan gratuito; si el tope es diario o mensual; qué pasa cuando se agota
-  (esperar a mañana o pagar); y cómo se cobra, que es tanto una decisión de producto como de
-  papeles. Lo técnico ya está preparado: el límite por cocinera y día existe y se cuenta donde
-  no se puede tocar.
+- **Plan gratuito y plan PRO.** Decidido el 26 de octubre de 2026, con números:
+  - **La IA de texto es gratis y sin créditos.** Estructurar una receta cuesta unos 0,25 céntimos
+    contando el rescate a Sonnet (Haiku 5.5 a 0,10 $/0,50 $ por millón de tokens); un recetario
+    de 200 recetas, medio dólar. El único freno es el tope diario que ya existe
+    (`AI_DAILY_LIMIT`, 30), y al agotarse no se cobra: «Hoy ya has pasado a limpio 30 recetas.
+    Mañana más», con *Pega una receta* como salida.
+  - **La regla: lo que cuesta más cuanta más gente lo usa, lo paga quien más lo usa.** Lo que crece
+    con los usuarios son las fotos guardadas y leer imágenes, no la IA de texto.
+  - **El PRO, unos 2 €/mes o 18 €/año, lleva leer y guardar imágenes y el plan semanal**: pasar a
+    limpio fotos de recetas (libros, libretas, recortes; paso 15), fotos de platos sin límite (el
+    gratuito, unas 50), retoque de foto y generar el plan semanal. **El cálculo calórico** también
+    irá en el PRO, mucho más adelante: es mucho más complejo (ver «Fuera del MVP»).
+  - **Escalar raciones y compartir se quedan en el gratuito**: son cálculo local y básicos.
+  - **Cuentas aproximadas:** con 1.000 usuarios activos la app cuesta unos 45 $/mes (Supabase Pro,
+    VPS e IA) y la cubren unas 27 suscripciones (2,7 %) quitando el 15 % de Google; con 10.000,
+    unos 170 $ y un 1 %. El coste fijo se reparte, así que crecer lo pone más fácil.
+  - **Red de seguridad, sin código:** un tope de gasto mensual en la consola de Anthropic.
+
+  Queda por decidir cómo se cobra, que es tanto producto como papeles.
