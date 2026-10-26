@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createClient } from "@supabase/supabase-js";
+import { Platform } from "react-native";
 import "react-native-url-polyfill/auto";
 
 import type { Database } from "./databaseTypes";
@@ -23,7 +24,8 @@ export const supabase = createClient<Database>(url, publishableKey, {
     storage: AsyncStorage,
     persistSession: true,
     autoRefreshToken: true,
-    // El inicio de sesión es con correo y contraseña: no hay sesión que leer de la url.
-    detectSessionInUrl: false,
+    // En la web, entrar con Google vuelve con la sesión en la url y hay que leerla de ahí. En el
+    // móvil no hay url de la que leer nada.
+    detectSessionInUrl: Platform.OS === "web",
   },
 });

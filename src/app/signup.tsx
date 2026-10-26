@@ -7,6 +7,7 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { Screen } from "@/components/Screen";
 import { signUpIssue } from "@/domain/users/signUpIssue";
 import { AuthField } from "@/features/auth/AuthField";
+import { GoogleSignIn } from "@/features/auth/GoogleSignIn";
 import { signUp } from "@/features/auth/signUp";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
@@ -73,7 +74,14 @@ export default function SignUpScreen() {
                 Para tener tus recetas en cualquier cocina.
               </Text>
 
-              <AuthField label="NOMBRE (OPCIONAL)" value={name} onChangeText={setName} mode="name" />
+              <GoogleSignIn />
+
+              <AuthField
+                label="NOMBRE (OPCIONAL)"
+                value={name}
+                onChangeText={setName}
+                mode="name"
+              />
               <AuthField label="CORREO" value={email} onChangeText={setEmail} mode="email" />
               <AuthField
                 label="CONTRASEÑA"

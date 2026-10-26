@@ -6,6 +6,7 @@ import { Logo } from "@/components/Logo";
 import { PrimaryButton } from "@/components/PrimaryButton";
 import { Screen } from "@/components/Screen";
 import { AuthField } from "@/features/auth/AuthField";
+import { GoogleSignIn } from "@/features/auth/GoogleSignIn";
 import { signIn } from "@/features/auth/signIn";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
@@ -44,6 +45,8 @@ export default function LoginScreen() {
           <Text style={[styles.subtitle, { color: colors.mutedForeground }]}>
             Tus recetas, siempre contigo.
           </Text>
+
+          <GoogleSignIn />
 
           <AuthField label="CORREO" value={email} onChangeText={setEmail} mode="email" />
           <AuthField
