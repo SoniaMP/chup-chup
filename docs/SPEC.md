@@ -226,6 +226,75 @@ Lo que protege la factura el día que esto sea público, por orden de importanci
 | --- | --- | --- |
 | `ai_usage` | `owner_id`, `day`, `used` | Sin políticas RLS a propósito: solo la Edge Function escribe aquí |
 
+## Modo cocina
+
+Decidido el 26 de octubre de 2026 en una ronda de preguntas. El punto de partida: el paso decía
+«Sofríe la cebolla» y no decía cuánta, y para saberlo había que tapar el paso con la lista de
+ingredientes. El paso de pago de ReciMe es eso mismo, un paso a paso con un botón de ingredientes;
+lo que nos separa es que **el paso diga sus cantidades y que la cocina hable**.
+
+**Cada paso enseña los ingredientes que usa, con su cantidad**, debajo del texto y en letra que
+se lee de lejos. **Los pone la app al pintar, no la IA**: busca en el texto del paso cada palabra
+con sentido del nombre del ingrediente (sin artículos ni «de»), sin tildes ni mayúsculas y
+quitando el plural de los dos lados. Así funciona en todas las recetas, también en las ya
+guardadas y en las pegadas, que no pasan por la IA. Ante la duda se enseña: un ingrediente de más
+molesta menos que el que falta. Lo que no resuelve, y se acepta: «la masa» o «la mezcla» no
+nombran nada (y ahí no hay nada que medir), y «la mitad del azúcar» enseña el azúcar entero. Si
+se queda corto, el paso gana `ingredients` desde la IA y esto queda de respaldo.
+
+**La pantalla**, de arriba abajo: Salir y Pantalla encendida; la barra de progreso; «Paso 2 de 6»,
+«Para 4» e Ingredientes; el paso en grande; sus cantidades; el temporizador del paso; y encima de
+los botones, en pequeño, **el siguiente paso con sus cantidades** («DESPUÉS · Corta el chorizo en
+rodajas · 150 g chorizo»), para ir preparándolo mientras se sofríe. Abajo, en una sola fila,
+**← · ▶ · Siguiente**.
+
+**La voz, en dos tiempos.**
+
+- **Ahora: te lee la receta** con la voz del sistema (`expo-speech`), sin internet ni micrófono.
+  El play **se queda leyendo**: lee el paso actual y, a partir de ahí, cada paso nuevo al llegar a
+  él, hasta que se pulse pausa. Lee el paso y después sus cantidades («Necesitas: una cebolla
+  grande, dos zanahorias…»), nunca la vista previa. En el idioma de la receta (`locale`), con las
+  cantidades como se dicen («media», «gramos», «uno y medio»). Al salir se calla, y cada vez que
+  se entra empieza apagado.
+- **Después: le das órdenes**, con un vocabulario cerrado: *siguiente, anterior, repite,
+  ingredientes* y *cuánto/cuánta + ingrediente*. Se activa con un botón al entrar, no escucha
+  siempre. Pide micrófono (el permiso que se quitó el 26 de octubre, y que Play pide justificar)
+  y reconocimiento nativo. Si resulta muy complicado, con la lectura basta.
+- **Más adelante, para el PRO: preguntarle lo que sea** («¿puedo cambiar la nata?»). Tiene coste
+  por uso.
+
+**Temporizadores.**
+
+- **Todo paso tiene uno.** Si el texto trae un tiempo («20 minutos», «40 min», «1 hora», «hora y
+  media»), sale destacado con ese tiempo; si no, discreto y en 5 minutos. «Un par de minutos» o
+  «hasta que esté dorado» no cuentan: eso es interpretar.
+- **Se ajusta con −1 / +1 minuto**, antes de arrancar y mientras corre. No hay pantalla de ajustes.
+- **Se arranca con un toque, nunca solo**, y puede haber varios a la vez, en una franja arriba
+  («Lentejas · 32:10»). Al acabar, suena y la voz lo dice. Salir con uno en marcha pide confirmar.
+- **En la web**, para probar ya: la cuenta atrás en pantalla, que se sostiene porque el modo
+  cocina mantiene la pantalla encendida. No suena con el móvil bloqueado ni en otra app, y lo dice.
+- **En Android, y es una función de Android**: tiene que avisar con el móvil bloqueado, con una
+  notificación local programada. El permiso se pide la primera vez que se toca un temporizador.
+  **Riesgo por comprobar:** desde Android 12 los avisos programados se pueden retrasar minutos
+  para ahorrar batería si no hay permiso de alarmas exactas, y Play solo lo da sin más a las apps
+  de reloj. Puede hacer falta una notificación fija con la cuenta atrás, como el reloj de Android.
+
+**Raciones (el paso 14).**
+
+- Se eligen en la ficha de la receta con **«Para 4 − +»**, encima de los ingredientes, entran
+  contigo en el modo cocina y allí se cambian sin salir.
+- **No se guardan**: cada vez se empieza en las raciones de la receta. Guardar «la hago para
+  seis» es planificar, y eso es el plan semanal del PRO.
+- **Sin raciones en la receta no hay selector**: sale «Esta receta no dice para cuántas personas
+  es», con un botón para decirlo que edita la receta.
+- **Redondeo:** lo que se cuenta, a la media unidad más cercana y nunca por debajo de media
+  («1½ cebollas»); lo que no se parte (huevo, lata, sobre…), a la unidad; cucharadas,
+  cucharaditas, tazas y vasos, a la media; gramos y mililitros, al entero hasta 20, de 5 en 5
+  hasta 100 y de 10 en 10 por encima. Sin cantidad, como estaba. La voz dice lo redondeado.
+
+**Fuera, por ahora:** tachar ingredientes (con las cantidades en cada paso casi no hace falta),
+volver por donde se dejó y guardar las raciones elegidas.
+
 ## Modelo de datos
 
 | Tabla | Campos | Notas |
@@ -422,13 +491,16 @@ Existe un prototipo hecho en Lovable. Lovable genera React web (no React Native)
     dominio, que es cuando el enlace empieza a repartirse.
 13. Importar una receta desde una URL: traer el HTML, limpiarlo y pasarlo por el prompt que ya
     existe.
-14. Escalar raciones, en la receta y en el modo cocina.
+14. Escalar raciones, en la receta y en el modo cocina, con el redondeo de «Modo cocina».
 15. Foto de una página de libro o de una receta escrita a mano → receta, con la misma tubería que
     el texto libre. **La gracia no es leer la foto, que eso ya lo hace ReciMe, sino interpretarla**:
     normalizar «un vaso de los de agua» y declarar lo que se ha supuesto, igual que con el texto.
 16. «La he hecho»: fecha y nota por cada vez que se cocina. Sin rachas ni estadísticas.
 17. Pegar una receta sin IA, con la hoja nueva y el puente a la IA (ver «Pegar una receta, sin
     IA»). Decidido el 26 de octubre de 2026; el orden respecto al resto está por decidir.
+18. Modo cocina con potencia (ver «Modo cocina»): cantidades en cada paso, vista previa del
+    siguiente, lectura en voz alta y temporizadores en pantalla. Después, los avisos de Android
+    con el móvil bloqueado y las órdenes por voz.
 
 Los cinco últimos salen del estudio de mercado del 25 de octubre de 2026
 ([`MERCADO.md`](MERCADO.md)). Del 12 al 14 son baratos y se notan al segundo día de uso; el 15 y el
@@ -461,16 +533,8 @@ Cosas acordadas que todavía no tienen forma. Antes de construirlas, una ronda d
   sigues (fase 3) habrá dos preguntas distintas con la misma caja de texto: «¿qué tengo yo?» y
   «¿qué me han dado?». Está por decidir: si son dos pestañas, dos modos de la misma caja o dos
   pantallas; cuál manda por defecto; y qué se ve de una receta ajena antes de quedársela.
-- **Modo cocina: hay que meterle mucha caña.** Acordado el 25 de octubre de 2026. Hoy existe y
-  funciona, pero es lo mínimo, y es la pieza donde más tenemos que ganar. El porqué está en
-  [`MERCADO.md`](MERCADO.md): es el único momento en el que la app está en la mano con las manos
-  sucias, y es justo lo que las apps de capturar recetas no cuidan —Fava no tiene modo cocina, y
-  el paso a paso de ReciMe solo mantiene la pantalla encendida—. Lo que ya está decidido que entra
-  es elegir comensales y reescalar, que es el paso 14 y el punto siguiente. Lo demás **no está
-  decidido**, solo apuntado como candidato: temporizadores que salgan de los propios pasos, ir
-  tachando ingredientes a medida que se usan, volver y encontrar la receta por donde se dejó, y
-  leerla en voz alta. Antes de construir nada, una ronda de preguntas: qué pasa de verdad en una
-  cocina, y cuál de esas cosas se echa en falta a la primera.
+- **Modo cocina: hay que meterle mucha caña.** Acordado el 25 de octubre de 2026 y **concretado
+  el 26**: ver la sección «Modo cocina».
 - **Las raciones como columna vertebral: modo cocina, raciones elegidas y lista de la compra.**
   Acordado el 25 de octubre de 2026, y **todo esto puede ser fase 2** menos el escalado, que ya es
   el paso 14. Son tres cosas encadenadas, y la fuerza está en la cadena, no en cada pieza:
@@ -484,10 +548,10 @@ Cosas acordadas que todavía no tienen forma. Antes de construirlas, una ronda d
      peso respecto a lo que decía el estudio de mercado.
   Lo que nos da fuerza aquí es técnico y ya lo tenemos: `quantity` numérico y unidades normalizadas
   por la IA. Es lo que hace que escalar sea exacto y que sumar ingredientes repetidos funcione, que
-  es justo donde falla ReciMe (ver [`MERCADO.md`](MERCADO.md)). Está por decidir: si las raciones
-  elegidas se guardan en la receta o son de cada vez; si la lista de la compra es de una receta, de
-  varias o de una semana; si vive en su pantalla o cuelga del libro; y qué pasa con los
-  ingredientes que no se pueden partir (un huevo, una lata).
+  es justo donde falla ReciMe (ver [`MERCADO.md`](MERCADO.md)). Las raciones elegidas son de cada
+  vez y lo que no se parte se redondea a la unidad, decidido el 26 de octubre de 2026 (ver «Modo
+  cocina»). Está por decidir: si la lista de la compra es de una receta, de
+  varias o de una semana; y si vive en su pantalla o cuelga del libro.
 - **Fila de chips para acotar la cocina.** «Favoritas · Libros · Recetas» como chips que acotan el
   tipo, mientras el texto filtra dentro, igual que la biblioteca de Spotify. Hoy Favoritas es un
   chip suelto con su propia lógica; ahí pasaría a ser uno más de la fila. Es la base del buscador
