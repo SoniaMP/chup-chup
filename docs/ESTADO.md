@@ -1,6 +1,6 @@
 # Dónde estamos
 
-Última actualización: 25 de octubre de 2026.
+Última actualización: 26 de octubre de 2026.
 
 Este documento es el traspaso entre sesiones: qué funciona, qué falta y qué decisiones están
 abiertas. El qué y el por qué del producto siguen en [`SPEC.md`](SPEC.md); los comandos, en el
@@ -120,9 +120,59 @@ El orden importa, porque la web desbloquea cosas que hoy están a medias:
    portapapeles del enlace, que fallaban por ir sin cifrar.
 2. **El visor, hecho el mismo día.** `/r/<testigo>` en nginx, con las cabeceras de Supabase
    tiradas. Ver el punto de arriba.
-3. **Android después**, con EAS. Lo que marca el calendario no es el código: una cuenta de
-   desarrollador personal nueva necesita **doce probadores durante catorce días** antes de poder
-   publicar. Eso se empieza pronto o se espera dos semanas al final.
+3. **Android, empezado el 26 de octubre de 2026 y aparcado.** EAS está montado: sesión `sonhja`,
+   proyecto en la organización `sonhjas-team` (el `projectId` está en `app.json`), `eas.json` con
+   los perfiles `development`, `preview` (APK) y `production` (AAB), cada uno con su entorno, y
+   `expo-dev-client` instalado. La primera *development build* compiló e instaló, pero no se
+   llegó a usar. **Para retomarla:** una development build sola no hace nada, carga el código
+   del portátil, así que necesita `npx expo start --dev-client` en marcha y el móvil en la misma
+   wifi. Quitado de paso el permiso de micrófono que metía `expo-image-picker`
+   (`microphonePermission: false`), que Play habría pedido justificar.
+   Lo que marca el calendario no es el código: una cuenta de desarrollador personal nueva
+   necesita **doce probadores durante catorce días** antes de poder publicar. Eso se empieza
+   pronto o se espera dos semanas al final.
+
+## Entrar con Google, a medias
+
+Decidido el 26 de octubre de 2026: la gente tiene que poder entrar con Google, y se hace **nativo
+en el móvil y con redirección en la web** (opción A). En el móvil sale el selector de cuentas
+del sistema, que es un toque; por el navegador Google enseñaría «Continuar a `xxxx.supabase.co`»,
+y quitar eso cuesta unos 10 $/mes.
+
+**El código de la web está escrito y sin commit**: `GoogleSignIn` (el botón y el «o con tu
+correo», en entrar y en crear cuenta), `signInWithGoogle`, `oauthReturnUrl` con sus pruebas, y
+`detectSessionInUrl` activado solo en la web. En el móvil el botón no se pinta. **No se ha
+probado contra Google**, y **no hay que subir la web hasta que esté configurado**: el botón
+saldría y daría error.
+
+**Bloqueado por:** la cuota de proyectos de Google Cloud de la cuenta está llena. Se ha pedido
+ampliarla el 26 de octubre de 2026. En cuanto llegue:
+
+1. **Google Cloud Console:** proyecto «Chup Chup»; pantalla de consentimiento de OAuth de tipo
+   *Externo*, con el nombre «Chup Chup» y un correo de asistencia; y un ID de cliente de OAuth de
+   tipo *Aplicación web*, con orígenes `https://chup-chup.es` y `http://localhost:8081` y como
+   URI de redirección la *Callback URL* que da Supabase (`https://<proyecto>.supabase.co/auth/v1/callback`).
+2. **Supabase, Authentication → Providers → Google:** activarlo con el ID y el secreto del
+   cliente web.
+3. **Supabase, Authentication → URL Configuration:** *Site URL* `https://chup-chup.es`; en
+   *Redirect URLs*, `https://chup-chup.es` y `http://localhost:8081`, **sin barra al final**,
+   que es exactamente adonde vuelve la app.
+4. Probar en local con `npx expo start --web`, hacer commit y desplegar.
+
+**Después, para el móvil:** `@react-native-google-signin/google-signin`, que entrega un token a
+`supabase.auth.signInWithIdToken`. Pide un segundo cliente OAuth de tipo *Android* con el paquete
+`es.chupchup.app` y la huella SHA-1 de la firma (`npx eas-cli credentials -p android`), y otro más
+cuando Play firme la app con su propia clave. Solo funciona en una development build, no en
+Expo Go.
+
+**Antes de publicar:** la «G» del botón es de un solo color y las normas de marca de Google piden
+la de cuatro colores, que necesita `react-native-svg`. Y la política de privacidad tiene que decir
+que con Google se recibe el nombre y el correo. **Para iOS, más adelante:** si se ofrece entrar con
+Google, Apple obliga a ofrecer también «Iniciar sesión con Apple».
+
+Una cuenta creada con correo y otra con Google del mismo correo se unen solas en Supabase. El
+nombre llega en `user_metadata.name`, que es de donde ya sale la firma, pero completo, con
+apellidos.
 
 ### Lo que ya está decidido
 
@@ -134,13 +184,12 @@ El orden importa, porque la web desbloquea cosas que hoy están a medias:
   quien tenga la primera. No se ve en pantalla —el nombre visible sí se cambia cuando se quiera—,
   pero sale en la URL de la ficha. **Va sin guion a propósito y no es un descuido**: un
   identificador de paquete no admite guiones, así que `es.chup-chup` no es válido y el dominio no
-  se puede copiar tal cual. Falta ponerlo en `app.json`, que hoy no tiene `android.package`.
+  se puede copiar tal cual. Ya está en `app.json`, en Android y en iOS.
 
 ### Lo que hay que decidir antes de la primera compilación
-- **La base del enlace del visor tiene que ser configuración desde el primer día**
-  (`EXPO_PUBLIC_…`), no una constante. Hoy `src/features/sharing/shareLink.ts` la arma con
-  `EXPO_PUBLIC_SUPABASE_URL`; al desplegar hay que sacarla a su propia variable para que mudarse
-  sea tocar el `.env`.
+- **La base del enlace del visor es configuración, hecho el 25 de octubre de 2026:**
+  `EXPO_PUBLIC_SHARE_BASE_URL=https://chup-chup.es`, y sin ella se cae a la URL de la Edge
+  Function.
 
 **Decidido el 25 de octubre de 2026: etiquetas `og:` en el visor**, para que al pegar el enlace en
 WhatsApp salga la tarjeta con la foto y el título en vez de una línea de texto. Se hacen al colgar
