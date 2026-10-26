@@ -17,7 +17,8 @@
         "expo-image-picker",
         {
           "photosPermission": "Chup Chup usa tus fotos para ponerle cara a tus recetas.",
-          "cameraPermission": "Chup Chup usa la cámara para hacerle una foto a lo que cocinas."
+          "cameraPermission": "Chup Chup usa la cámara para hacerle una foto a lo que cocinas.",
+          "microphonePermission": false
         }
       ]
     ],
@@ -39,6 +40,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "75ac59f9-b001-4be1-86fb-3d886d21150b"
+      }
+    },
+    "owner": "sonhjas-team"
   }
 }
