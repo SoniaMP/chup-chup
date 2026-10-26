@@ -1,20 +1,25 @@
+import { MaterialIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 
-/** Los dos botones gigantes del modo cocina: atrás redondo, siguiente en píldora. */
+/** Los botones del modo cocina: atrás y leer en voz alta redondos, siguiente en píldora. */
 export function CookNavigation({
   isFirst,
   isLast,
+  isReading,
   onPrevious,
   onNext,
+  onToggleReading,
 }: {
   isFirst: boolean;
   isLast: boolean;
+  isReading: boolean;
   onPrevious: () => void;
   onNext: () => void;
+  onToggleReading: () => void;
 }) {
   const colors = useColors();
 
@@ -29,6 +34,19 @@ export function CookNavigation({
         style={[styles.previous, { backgroundColor: colors.muted }, isFirst && styles.disabled]}
       >
         <Text style={[styles.arrow, { color: colors.foreground }]}>←</Text>
+      </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={isReading ? "Dejar de leer" : "Leer en voz alta"}
+        accessibilityState={{ selected: isReading }}
+        onPress={onToggleReading}
+        style={[styles.previous, { backgroundColor: colors.secondary }]}
+      >
+        <MaterialIcons
+          name={isReading ? "pause" : "play-arrow"}
+          size={34}
+          color={colors.secondaryForeground}
+        />
       </Pressable>
 
       <Pressable accessibilityRole="button" onPress={onNext} style={styles.next}>

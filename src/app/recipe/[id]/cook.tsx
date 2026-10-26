@@ -3,13 +3,14 @@ import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Screen } from "@/components/Screen";
-import { stepIngredients } from "@/domain/cooking/stepIngredients";
+import { cookingView } from "@/domain/cooking/cookingView";
 import { CookIngredientsChip } from "@/features/cooking/CookIngredientsChip";
 import { CookNavigation } from "@/features/cooking/CookNavigation";
 import { CookNextStep } from "@/features/cooking/CookNextStep";
 import { CookProgress } from "@/features/cooking/CookProgress";
 import { CookStep } from "@/features/cooking/CookStep";
 import { KeepScreenOnChip } from "@/features/cooking/KeepScreenOnChip";
+import { useReadAloud } from "@/features/cooking/useReadAloud";
 import { RecipeIngredients } from "@/features/recipes/RecipeIngredients";
 import { useRecipe } from "@/features/recipes/useRecipe";
 import { tokens } from "@/theme/tokens";
@@ -22,6 +23,8 @@ export default function CookScreen() {
   const { recipe } = useRecipe(params.id ?? "");
   const [index, setIndex] = useState(0);
   const [areIngredientsOpen, setAreIngredientsOpen] = useState(false);
+  const view = recipe === null ? null : cookingView(recipe, index);
+  const { isReading, toggleReading } = useReadAloud(view?.speech ?? "", recipe?.locale ?? "es-ES");
 
   // Cambiar de paso cierra los ingredientes: se abren para mirar algo, no para quedarse.
   const goToStep = (next: (current: number) => number): void => {
@@ -34,7 +37,7 @@ export default function CookScreen() {
     else router.replace("/");
   };
 
-  if (recipe === null || recipe.steps.length === 0) {
+  if (recipe === null || view === null) {
     return (
       <Screen>
         <Pressable accessibilityRole="button" onPress={leave}>
@@ -44,10 +47,7 @@ export default function CookScreen() {
     );
   }
 
-  const total = recipe.steps.length;
-  const step = recipe.steps[Math.min(index, total - 1)];
-  const isLast = index === total - 1;
-  const next = isLast ? undefined : recipe.steps[index + 1];
+  const { total, isLast, current, next } = view;
 
   return (
     <Screen>
@@ -84,23 +84,17 @@ export default function CookScreen() {
         {areIngredientsOpen ? (
           <RecipeIngredients ingredients={recipe.ingredients} />
         ) : (
-          <CookStep
-            text={step?.text ?? ""}
-            ingredients={stepIngredients(step?.text ?? "", recipe.ingredients)}
-          />
+          <CookStep text={current.text} ingredients={current.ingredients} />
         )}
       </ScrollView>
 
       <View style={styles.navigation}>
-        {next !== undefined && (
-          <CookNextStep
-            text={next.text}
-            ingredients={stepIngredients(next.text, recipe.ingredients)}
-          />
-        )}
+        {next !== undefined && <CookNextStep text={next.text} ingredients={next.ingredients} />}
         <CookNavigation
           isFirst={index === 0}
           isLast={isLast}
+          isReading={isReading}
+          onToggleReading={toggleReading}
           onPrevious={() => {
             goToStep((current) => Math.max(0, current - 1));
           }}

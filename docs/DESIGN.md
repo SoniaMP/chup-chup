@@ -90,8 +90,10 @@ el principio para no tener que repintar nada después.
   imagen: portadas, miniaturas y logotipo. Empezó en 8 y bajó a 4 el 25 de octubre de 2026, para
   que la esquina se note menos y la foto mande más.
 - **Margen lateral de pantalla:** 20. Separación entre elementos de lista: 4–8; entre bloques: 20–28.
-- **Alturas de toque:** 44 los botones redondos de cabecera, 56 los botones principales, 80 los
-  botones gigantes del modo cocina.
+- **Alturas de toque:** 44 los botones redondos de cabecera, 56 los botones principales, 64 los
+  del modo cocina.
+- `[cambio]` **Botones del modo cocina a 64**, el 26 de octubre de 2026. Eran 80 y se veían
+  enormes, y con el play en la fila pasan a ser tres. 64 sigue siendo fácil con las manos sucias.
 - `shadowSoft`: color `#6B3725` al 25 %, desplazamiento Y 10, radio 30. En RN, `shadowColor` +
   `shadowOpacity 0.25` + `shadowRadius 15` y `elevation: 6` en Android.
 - `shadowGlow`: color `#CF542C` al 55 %, Y 12, radio 28. Solo para el botón principal y el de
