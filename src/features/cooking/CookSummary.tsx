@@ -4,7 +4,6 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { SectionHeading } from "@/components/SectionHeading";
 import type { Ingredient } from "@/domain/recipes/ingredient";
 import type { SavedRecipe } from "@/domain/recipes/savedRecipe";
-import { MissingServings } from "@/features/recipes/MissingServings";
 import { RecipeIngredients } from "@/features/recipes/RecipeIngredients";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
@@ -20,7 +19,8 @@ type CookSummaryProps = {
 
 /**
  * Lo que se ve antes del primer paso: qué vas a cocinar, para cuántas personas y con qué. Las
- * raciones se deciden aquí y no en mitad de la receta, con las manos ya en la masa.
+ * raciones se deciden aquí y no en mitad de la receta, con las manos ya en la masa. Si la receta
+ * no las dice no sale nada: aquí se viene a cocinar, no a editar.
  */
 export function CookSummary({
   recipe,
@@ -36,9 +36,7 @@ export function CookSummary({
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Text style={[styles.kicker, { color: colors.primary }]}>VAS A COCINAR</Text>
         <Text style={[styles.title, { color: colors.foreground }]}>{recipe.title}</Text>
-        {servings === undefined ? (
-          <MissingServings recipe={recipe} />
-        ) : (
+        {servings !== undefined && (
           <ServingsPicker
             servings={servings}
             originalServings={recipe.servings ?? servings}

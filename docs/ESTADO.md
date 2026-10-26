@@ -59,6 +59,11 @@ pite y vibre al acabar un temporizador, cómo suena la voz, y que la pantalla no
 - El visor web de recetas compartidas escribe «1.5» en vez de «1½»: está en
   `recipeViewerHtml.ts`, dentro de la Edge Function, y cambiarlo obliga a redesplegarla. Hacerlo
   la próxima vez que se despliegue algo de ahí.
+- **En la web, el teclado se cierra al cambiar de idioma** manteniendo pulsada la barra
+  espaciadora (Chrome en Android, escribiendo una receta). Se probó a devolver el foco al campo
+  cuando la ventana lo recupera y no lo arregló, así que se quitó. Se deja como fallo conocido de
+  la web: en la app nativa el campo es un control de Android y no debería pasar. Comprobarlo
+  cuando arranque la app.
 - La «G» del botón de Google es de un color; las normas de Google piden la de cuatro antes de
   publicar (necesita `react-native-svg`).
 

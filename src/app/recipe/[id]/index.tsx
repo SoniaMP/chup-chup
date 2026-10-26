@@ -85,7 +85,7 @@ export default function RecipeScreen() {
         <SectionHeading>Ingredientes</SectionHeading>
         <View style={styles.servings}>
           {servings === undefined ? (
-            <MissingServings recipe={recipe} />
+            <MissingServings />
           ) : (
             <ServingsPicker
               servings={servings}

@@ -310,8 +310,13 @@ rodajas · 150 g chorizo»), para ir preparándolo mientras se sofríe. Abajo, e
   8 personas.» Igual en la ficha y en el resumen, para aprenderlo una vez.
 - **No se guardan**: cada vez se empieza en las raciones de la receta. Guardar «la hago para
   seis» es planificar, y eso es el plan semanal del PRO.
-- **Sin raciones en la receta no hay selector**: sale «Esta receta no dice para cuántas personas
-  es», con un botón para decirlo que edita la receta.
+- **Sin raciones en la receta no hay selector.** En la ficha, en el sitio del selector, sale un chip
+  de borde discontinuo, «Raciones sin definir», y debajo, pequeño: «Edita la receta para añadir las personas y podrás ajustar
+  las cantidades.» Sin botón: para editar ya está el lápiz de arriba. En
+  el resumen del modo cocina no sale nada: ahí se viene a cocinar, no a editar.
+- **Lo que falta de preparación, cocción o raciones no se pinta en la ficha**, ni como un «—» ni
+  como aviso: un tiempo que falta no impide cocinar. Las raciones son la excepción de arriba porque
+  sin ellas se pierde algo que funciona. Decidido el 26 de octubre de 2026.
 - **Redondeo:** lo que se cuenta, a la media unidad más cercana y nunca por debajo de media
   («1½ cebollas»); lo que no se parte (huevo, lata, sobre…), a la unidad; cucharadas,
   cucharaditas, tazas y vasos, a la media; gramos y mililitros, al entero hasta 20, de 5 en 5

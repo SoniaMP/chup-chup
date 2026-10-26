@@ -1,20 +1,20 @@
 import { StyleSheet, Text, View } from "react-native";
 
+import { recipeFacts } from "@/domain/recipes/recipeFacts";
 import type { Recipe } from "@/domain/recipes/recipe";
 import { tokens } from "@/theme/tokens";
 import { useColors } from "@/theme/useColors";
 
-const show = (value: number | undefined, suffix: string): string =>
-  value === undefined ? "—" : `${String(value)}${suffix}`;
-
-/** Preparación · Cocción · Raciones, en los tres bloques del diseño. */
+/**
+ * Preparación · Cocción · Raciones, en los bloques del diseño, solo con lo que la receta dice.
+ * Sin nada que contar no se pinta nada: un tiempo que falta no impide cocinar, y un aviso ahí
+ * solo es ruido. Para añadirlo está el lápiz de arriba.
+ */
 export function RecipeFacts({ recipe }: { recipe: Recipe }) {
   const colors = useColors();
-  const facts = [
-    { label: "Preparación", value: show(recipe.prepMin, " min") },
-    { label: "Cocción", value: show(recipe.cookMin, " min") },
-    { label: "Raciones", value: show(recipe.servings, "") },
-  ];
+  const facts = recipeFacts(recipe);
+
+  if (facts.length === 0) return null;
 
   return (
     <View style={styles.row}>
