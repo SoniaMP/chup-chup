@@ -33,6 +33,26 @@ describe("cookingView", () => {
     );
   });
 
+  it("propone el tiempo del paso, con el nombre de lo que se cocina", () => {
+    const withTime = { ...recipe, steps: [{ text: "Sofríe la cebolla 10 minutos." }] };
+
+    expect(cookingView(withTime, 0)?.timer).toEqual({
+      minutes: 10,
+      isFromStep: true,
+      label: "Cebolla",
+    });
+  });
+
+  it("sin tiempo en el paso, cinco minutos y el número del paso", () => {
+    const plain = { ...recipe, steps: [{ text: "Precalienta el horno." }] };
+
+    expect(cookingView(plain, 0)?.timer).toEqual({
+      minutes: 5,
+      isFromStep: false,
+      label: "Paso 1",
+    });
+  });
+
   it("sin pasos no hay nada que cocinar", () => {
     expect(cookingView({ ...recipe, steps: [] }, 0)).toBeNull();
   });

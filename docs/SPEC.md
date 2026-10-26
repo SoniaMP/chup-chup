@@ -242,8 +242,9 @@ molesta menos que el que falta. Lo que no resuelve, y se acepta: «la masa» o �
 nombran nada (y ahí no hay nada que medir), y «la mitad del azúcar» enseña el azúcar entero. Si
 se queda corto, el paso gana `ingredients` desde la IA y esto queda de respaldo.
 
-**La pantalla**, de arriba abajo: Salir y Pantalla encendida; la barra de progreso; «Paso 2 de 6»,
-«Para 4» e Ingredientes; el paso en grande; sus cantidades; el temporizador del paso; y encima de
+**La pantalla**, de arriba abajo: Salir y Pantalla encendida; «Para 4 − +»; los temporizadores en
+marcha; la barra de progreso; «Paso 2 de 6» e Ingredientes; el temporizador del paso; el paso en
+grande; sus cantidades; y encima de
 los botones, en pequeño, **el siguiente paso con sus cantidades** («DESPUÉS · Corta el chorizo en
 rodajas · 150 g chorizo»), para ir preparándolo mientras se sofríe. Abajo, en una sola fila,
 **← · ▶ · Siguiente**.
@@ -265,19 +266,35 @@ rodajas · 150 g chorizo»), para ir preparándolo mientras se sofríe. Abajo, e
 
 **Temporizadores.**
 
-- **Todo paso tiene uno.** Si el texto trae un tiempo («20 minutos», «40 min», «1 hora», «hora y
-  media»), sale destacado con ese tiempo; si no, discreto y en 5 minutos. «Un par de minutos» o
-  «hasta que esté dorado» no cuentan: eso es interpretar.
-- **Se ajusta con −1 / +1 minuto**, antes de arrancar y mientras corre. No hay pantalla de ajustes.
+- **Es opcional, y va arriba**, justo debajo de «Paso 3 de 9». Si el texto trae un tiempo («20
+  minutos», «40 min», «1 hora», «hora y media»), sale ya puesto y destacado con ese tiempo; si no,
+  solo un botón discreto, **«+ Añadir temporizador»**, que al tocarlo lo abre en 5 minutos.
+  Cambiado el 26 de octubre de 2026 al probarlo: no todos los pasos tienen tiempo. «Un par de
+  minutos» o «hasta que esté dorado» no cuentan: eso es interpretar.
+- **El tiempo se escribe a mano tocándolo** («90», «1:30», «1h30», «1 h 30 min»), porque ir
+  minuto a minuto hasta hora y media es una tortura, y **se afina con −1 / +1**, antes de arrancar
+  y mientras corre. **Se arranca con un play pequeño a la derecha**, y una × lo quita si se ha
+  añadido sin querer. Al arrancarlo, se va a la franja de arriba y vuelve «+ Añadir temporizador». No hay pantalla de ajustes.
 - **Se arranca con un toque, nunca solo**, y puede haber varios a la vez, en una franja arriba
-  («Lentejas · 32:10»). Al acabar, suena y la voz lo dice. Salir con uno en marcha pide confirmar.
+  («Lentejas · 32:10»). Salir con uno en marcha pide confirmar.
+- **Al acabar, suena hasta que lo paras.** Decidido el 26 de octubre de 2026: un aviso que suena
+  una vez no sirve si estás en el salón. La voz lo dice una vez («Lentejas: ya está el tiempo») y
+  después pita cada pocos segundos, vibra en bucle y la fila parpadea con un **«Parar»** grande. El
+  + sigue ahí para el «le faltan dos minutitos», y sumarle un minuto también lo calla.
 - **En la web**, para probar ya: la cuenta atrás en pantalla, que se sostiene porque el modo
   cocina mantiene la pantalla encendida. No suena con el móvil bloqueado ni en otra app, y lo dice.
-- **En Android, y es una función de Android**: tiene que avisar con el móvil bloqueado, con una
-  notificación local programada. El permiso se pide la primera vez que se toca un temporizador.
-  **Riesgo por comprobar:** desde Android 12 los avisos programados se pueden retrasar minutos
-  para ahorrar batería si no hay permiso de alarmas exactas, y Play solo lo da sin más a las apps
-  de reloj. Puede hacer falta una notificación fija con la cuenta atrás, como el reloj de Android.
+- **En Android, y es una función de Android**: tiene que sonar como una alarma, en bucle y hasta
+  que se pare, con el móvil bloqueado o la app cerrada. **El camino elegido, el 26 de octubre de
+  2026: que lo ponga el reloj del propio móvil.** Android deja pedirle «un temporizador de 40
+  minutos llamado Lentejas» (la acción `android.intent.action.SET_TIMER`, con
+  `expo-intent-launcher` y el permiso normal `SET_ALARM`, que Play no pone en duda). El reloj suena
+  como una alarma de verdad y **quita el riesgo de las alarmas exactas**: desde Android 12 los
+  avisos programados se pueden retrasar minutos si no hay ese permiso, Play solo lo da sin más a
+  las apps de reloj, y aquí lo tiene el reloj, no nosotras.
+  **Lo que cuesta:** el ±1 de nuestra franja no mueve el temporizador del reloj, así que en Android
+  o se ajusta allí, o la franja solo enseña la cuenta atrás. La alternativa, sonar en bucle con
+  notificaciones propias, es mucho más trabajo nativo y vuelve a los permisos que Play restringe.
+  **En iPhone** no hay forma de pedírselo al reloj del sistema: queda para cuando llegue iOS.
 
 **Raciones (el paso 14).**
 
@@ -499,8 +516,9 @@ Existe un prototipo hecho en Lovable. Lovable genera React web (no React Native)
 17. Pegar una receta sin IA, con la hoja nueva y el puente a la IA (ver «Pegar una receta, sin
     IA»). Decidido el 26 de octubre de 2026; el orden respecto al resto está por decidir.
 18. Modo cocina con potencia (ver «Modo cocina»): cantidades en cada paso, vista previa del
-    siguiente, lectura en voz alta y temporizadores en pantalla. Después, los avisos de Android
-    con el móvil bloqueado y las órdenes por voz.
+    siguiente, lectura en voz alta y temporizadores en pantalla que suenan hasta pararlos. Hecho en
+    la web el 26 de octubre de 2026. Después, en Android, el temporizador del reloj del sistema y
+    las órdenes por voz.
 
 Los cinco últimos salen del estudio de mercado del 25 de octubre de 2026
 ([`MERCADO.md`](MERCADO.md)). Del 12 al 14 son baratos y se notan al segundo día de uso; el 15 y el

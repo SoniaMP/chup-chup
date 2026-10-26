@@ -10,8 +10,11 @@ import { CookNavigation } from "@/features/cooking/CookNavigation";
 import { CookNextStep } from "@/features/cooking/CookNextStep";
 import { CookProgress } from "@/features/cooking/CookProgress";
 import { CookStep } from "@/features/cooking/CookStep";
-import { KeepScreenOnChip } from "@/features/cooking/KeepScreenOnChip";
+import { CookTimerButton } from "@/features/cooking/CookTimerButton";
+import { CookTimersStrip } from "@/features/cooking/CookTimersStrip";
+import { CookTopBar } from "@/features/cooking/CookTopBar";
 import { ServingsPicker } from "@/features/cooking/ServingsPicker";
+import { useCookTimers } from "@/features/cooking/useCookTimers";
 import { useReadAloud } from "@/features/cooking/useReadAloud";
 import { RecipeIngredients } from "@/features/recipes/RecipeIngredients";
 import { useRecipe } from "@/features/recipes/useRecipe";
@@ -31,7 +34,9 @@ export default function CookScreen() {
   const ingredients =
     recipe === null ? [] : scaledIngredients(recipe.ingredients, recipe.servings, servings ?? 1);
   const view = recipe === null ? null : cookingView({ ...recipe, ingredients }, index);
-  const { isSpeaking, toggleReading } = useReadAloud(view?.speech ?? "", recipe?.locale ?? "es-ES");
+  const language = recipe?.locale ?? "es-ES";
+  const { isSpeaking, toggleReading } = useReadAloud(view?.speech ?? "", language);
+  const cookTimers = useCookTimers(language);
 
   // Cambiar de paso cierra los ingredientes: se abren para mirar algo, no para quedarse.
   const goToStep = (next: (current: number) => number): void => {
@@ -54,26 +59,24 @@ export default function CookScreen() {
     );
   }
 
-  const { total, isLast, current, next } = view;
+  const { total, isLast, current, next, timer } = view;
+  const isTimerRunning = cookTimers.timers.some((running) => running.endsAt > cookTimers.now);
 
   return (
     <Screen>
-      <View style={styles.top}>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Salir del modo cocina"
-          onPress={leave}
-        >
-          <Text style={[styles.close, { color: colors.mutedForeground }]}>Salir</Text>
-        </Pressable>
-        <KeepScreenOnChip />
-      </View>
+      <CookTopBar onLeave={leave} isTimerRunning={isTimerRunning} />
 
       {recipe.servings !== undefined && servings !== undefined && (
         <View style={styles.servings}>
           <ServingsPicker servings={servings} onChange={setChosenServings} />
         </View>
       )}
+      <CookTimersStrip
+        timers={cookTimers.timers}
+        now={cookTimers.now}
+        onAdjust={cookTimers.adjustTimer}
+        onDismiss={cookTimers.dismissTimer}
+      />
       <CookProgress total={total} current={index} />
       <View style={styles.counterRow}>
         <Text style={[styles.counter, { color: colors.primary }]}>
@@ -89,6 +92,14 @@ export default function CookScreen() {
         )}
       </View>
 
+      <CookTimerButton
+        key={index}
+        minutes={timer.minutes}
+        isFromStep={timer.isFromStep}
+        onStart={(minutes) => {
+          cookTimers.startTimer(timer.label, minutes);
+        }}
+      />
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[styles.stepArea, areIngredientsOpen && styles.ingredientsArea]}
@@ -121,12 +132,6 @@ export default function CookScreen() {
 }
 
 const styles = StyleSheet.create({
-  top: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: tokens.spacing.gutter,
-  },
   servings: { marginBottom: tokens.spacing.row },
   close: { fontFamily: tokens.fontFamily.bodyStrong, fontSize: tokens.fontSize.label },
   counterRow: {
