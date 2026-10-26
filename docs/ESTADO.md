@@ -50,6 +50,9 @@ Salió de una ronda de preguntas con la usuaria; las decisiones y el porqué est
   Se van a una franja arriba; al acabar **suenan en bucle** (pitido del navegador, vibración y
   parpadeo) hasta pulsar «Parar».
 - Botones del modo cocina a 64 en vez de 80.
+- **En la ficha**, lo que falta ya no se pinta con «—»: sin tiempos no sale la fila, y sin raciones
+  sale un chip de borde discontinuo, «Raciones sin definir», en el sitio del selector.
+- **Había un segundo bug** que la usuaria iba a contar y no recordó. Preguntarle si vuelve a salir.
 
 **Lo que la usuaria tiene que comprobar en el móvil**, porque desde el ordenador no se pudo: que
 pite y vibre al acabar un temporizador, cómo suena la voz, y que la pantalla no se apague.
