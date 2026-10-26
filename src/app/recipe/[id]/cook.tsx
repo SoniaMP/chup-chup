@@ -3,9 +3,12 @@ import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Screen } from "@/components/Screen";
+import { stepIngredients } from "@/domain/cooking/stepIngredients";
 import { CookIngredientsChip } from "@/features/cooking/CookIngredientsChip";
 import { CookNavigation } from "@/features/cooking/CookNavigation";
+import { CookNextStep } from "@/features/cooking/CookNextStep";
 import { CookProgress } from "@/features/cooking/CookProgress";
+import { CookStep } from "@/features/cooking/CookStep";
 import { KeepScreenOnChip } from "@/features/cooking/KeepScreenOnChip";
 import { RecipeIngredients } from "@/features/recipes/RecipeIngredients";
 import { useRecipe } from "@/features/recipes/useRecipe";
@@ -44,11 +47,16 @@ export default function CookScreen() {
   const total = recipe.steps.length;
   const step = recipe.steps[Math.min(index, total - 1)];
   const isLast = index === total - 1;
+  const next = isLast ? undefined : recipe.steps[index + 1];
 
   return (
     <Screen>
       <View style={styles.top}>
-        <Pressable accessibilityRole="button" accessibilityLabel="Salir del modo cocina" onPress={leave}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Salir del modo cocina"
+          onPress={leave}
+        >
           <Text style={[styles.close, { color: colors.mutedForeground }]}>Salir</Text>
         </Pressable>
         <KeepScreenOnChip />
@@ -76,11 +84,20 @@ export default function CookScreen() {
         {areIngredientsOpen ? (
           <RecipeIngredients ingredients={recipe.ingredients} />
         ) : (
-          <Text style={[styles.step, { color: colors.foreground }]}>{step?.text ?? ""}</Text>
+          <CookStep
+            text={step?.text ?? ""}
+            ingredients={stepIngredients(step?.text ?? "", recipe.ingredients)}
+          />
         )}
       </ScrollView>
 
       <View style={styles.navigation}>
+        {next !== undefined && (
+          <CookNextStep
+            text={next.text}
+            ingredients={stepIngredients(next.text, recipe.ingredients)}
+          />
+        )}
         <CookNavigation
           isFirst={index === 0}
           isLast={isLast}
@@ -115,6 +132,5 @@ const styles = StyleSheet.create({
   counter: { fontFamily: tokens.fontFamily.display, fontSize: tokens.fontSize.sectionHeading },
   stepArea: { flexGrow: 1, justifyContent: "center", paddingVertical: tokens.spacing.block },
   ingredientsArea: { justifyContent: "flex-start" },
-  step: { fontFamily: tokens.fontFamily.bodyStrong, fontSize: tokens.fontSize.cookStep, lineHeight: 46 },
   navigation: { paddingBottom: tokens.spacing.gutter },
 });
