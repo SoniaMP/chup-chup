@@ -22,29 +22,52 @@ abiertas. El qué y el por qué del producto siguen en [`SPEC.md`](SPEC.md); los
 | 8b. «Mejorar con IA» | **Fuera del MVP**, para una fase final. El esquema ya lo contempla, así que entrar después no cuesta nada |
 | 9. Caché offline de lectura | **Hecho.** Recetas, libros y pertenencias en el disco del móvil; las fotos fuera. Al cerrar sesión se borra |
 | 10. Sacar lo personal de `recipes` a `saved_recipes` | **Hecho.** `recipes` es contenido; `saved_recipes` es «mi cocina». Nada de acceso ni revocación todavía |
-| 11. Compartir: visor HTML | **Hecho.** Enlace con testigo que caduca a los 30 días, Edge Function pública que arma la página, y dejar de compartir. Falta dominio: Supabase no sirve HTML |
+| 11. Compartir: visor HTML | **Hecho.** Enlace con testigo que caduca a los 30 días, Edge Function pública que arma la página, y dejar de compartir. Servido en `chup-chup.es/r/<testigo>` |
+| 12. Etiquetas `og:` en el visor | **Hecho y desplegado** el 25 de octubre de 2026 |
+| 13. Importar desde una URL | Sin empezar |
+| 14. Escalar raciones | **Hecho** el 26 de octubre de 2026: en la ficha y en el resumen del modo cocina, con el redondeo del SPEC |
+| 15. Foto de una página de libro | Sin empezar. Va al plan PRO |
+| 16. «La he hecho» | Sin empezar |
+| 17. Pegar una receta sin IA | **Decidido** el 26 de octubre de 2026 (ver SPEC, «Pegar una receta, sin IA»), sin empezar. Es lo siguiente candidato |
+| 18. Modo cocina con potencia | **Hecho en la web y desplegado** el 26 de octubre de 2026. Falta lo de Android: el temporizador del reloj del sistema y las órdenes por voz |
 
 ## Lo último que se estaba haciendo
 
-El **catálogo de imágenes del proyecto**: portadas que cualquier usuaria puede elegir para sus
-libros y recetas, curadas por quien desarrolla.
+**El modo cocina (paso 18), hecho en la web y subido a `chup-chup.es` el 26 de octubre de 2026.**
+Salió de una ronda de preguntas con la usuaria; las decisiones y el porqué están en la sección
+«Modo cocina» del SPEC. Lo que hay:
 
-- Bucket público `library-images` y columna `library_image` en `cookbooks` y `recipes`: hechos y
-  aplicados en el proyecto.
-- Selector de portada, tarjetas que pintan la portada elegida y acción «Cambiar portada» en los
-  dos menús: hechos. La rejilla del selector se mide sola y llena el ancho que haya.
-- **La portada de un libro puede ser una foto propia**, de la cámara o de la galería, en el
-  bucket privado `cookbook-covers`. O del catálogo o tuya, nunca las dos: no hay regla de
-  precedencia que la usuaria no pueda ver. Las recetas no cambian, ahí la foto es contenido.
-- `npm run covers -- library/originals` deja las imágenes cuadradas y en dos tamaños; se suben
-  con el CLI, una a una y a la raíz del bucket, como explica `library/README.md`.
-- **Las doce primeras están dentro**: dibujo a línea, dos colores, sobre cuatro fondos de la
-  paleta, y el selector ya las pinta. Hizo falta una política de lectura sobre `storage.objects`:
-  el bucket era público y aun así la lista llegaba vacía.
+- **Resumen previo**: «VAS A COCINAR», el selector «¿Para cuántas personas? · 6 personas − +» con
+  la línea «Cantidades ajustadas para 6…» al cambiarlo, los ingredientes escalados y «Empezar a
+  cocinar». En los pasos ya no se cambian las raciones.
+- **Cada paso enseña sus ingredientes con la cantidad**, y encima de los botones el siguiente paso
+  en pequeño. Los pone `stepIngredients` por coincidencia de palabras, sin IA. Fallo conocido y
+  aceptado: «espolvoréalo con un poco de harina» enseña la harina entera.
+- **Lectura en voz alta** (`expo-speech`): el play se queda leyendo cada paso al llegar; mientras
+  habla es pausa, y al terminar vuelve a ser play para repetirlo.
+- **Temporizadores**: opcionales, «+ Añadir temporizador» bajo «Paso 3 de 9» (ya puesto si el paso
+  dice un tiempo), tiempo escrito a mano («1:30», «90»), −/+, play para arrancar y × para quitar.
+  Se van a una franja arriba; al acabar **suenan en bucle** (pitido del navegador, vibración y
+  parpadeo) hasta pulsar «Parar».
+- Botones del modo cocina a 64 en vez de 80.
 
-Y el **logotipo**: `assets/logo.png` (el gorro con el tenedor y la cuchara) ya genera icono,
-splash, icono adaptativo de Android y favicon, conectados en `app.json`. Es provisional: el
-definitivo lo hará un diseñador, y cambiarlo será sustituir los PNG y volver a generar.
+**Lo que la usuaria tiene que comprobar en el móvil**, porque desde el ordenador no se pudo: que
+pite y vibre al acabar un temporizador, cómo suena la voz, y que la pantalla no se apague.
+
+**Pendientes pequeños que salieron por el camino:**
+
+- El visor web de recetas compartidas escribe «1.5» en vez de «1½»: está en
+  `recipeViewerHtml.ts`, dentro de la Edge Function, y cambiarlo obliga a redesplegarla. Hacerlo
+  la próxima vez que se despliegue algo de ahí.
+- La «G» del botón de Google es de un color; las normas de Google piden la de cuatro antes de
+  publicar (necesita `react-native-svg`).
+
+**Cómo se prueba la interfaz:** la usuaria tiene `npx expo start` abierto en su propia ventana, en
+el puerto 8081, y con sesión iniciada en `http://localhost:8081`. No hace falta arrancar otro.
+Para mirar pantallas sirve abrir ahí una pestaña nueva con el navegador y ponerla a ancho de móvil.
+
+**Lo que viene, a elegir:** el paso 17 (pegar una receta sin IA), retomar Android (la development
+build y Google nativo, ver más abajo), o los pasos 13 y 16.
 
 ## Antes de dar el MVP por cerrado
 
@@ -77,12 +100,11 @@ decir que el MVP está hecho:
       tirando sus dos cabeceras (`content-type: text/plain` y `content-security-policy: sandbox`,
       que son las que hacían que el enlace se viera como código). Comprobado desde fuera: devuelve
       `text/html`. Ni una línea del código de la función tuvo que cambiar.
-- [ ] **Apuntar la *Site URL* a la app cuando se despliegue** (Authentication → URL
-      Configuration). La confirmación de correo está **activada** y el circuito entero está
-      probado: registrarse, recibir, confirmar y entrar funciona. Lo único pendiente es a dónde
-      cae la usuaria *después* de confirmar, que hoy es la URL por defecto y es una página rota.
-      La cuenta se confirma igual, porque eso pasa al tocar el enlace. Si algún día tiene que
-      volver a un sitio concreto, es el parámetro `emailRedirectTo` en `signUp`.
+- [x] **Apuntar la *Site URL* a la app. Hecho el 26 de octubre de 2026**, al configurar Google:
+      `https://chup-chup.es` (Authentication → URL Configuration). Así, después de confirmar el
+      correo se cae en la web y no en una página rota. La confirmación está **activada** y el
+      circuito entero probado. Si algún día tiene que volver a otro sitio, es el parámetro
+      `emailRedirectTo` en `signUp`.
 - [ ] **La hoja no se cierra arrastrando, aunque el gesto está puesto.** `BottomSheet` lleva un
       `Pan` sobre la pestaña desde el 25 de octubre de 2026 y en el móvil no responde; se cierra
       tocando fuera, que sí funciona. Sin diagnosticar: lo primero que hay que mirar es si los
