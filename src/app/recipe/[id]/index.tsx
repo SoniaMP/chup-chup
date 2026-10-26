@@ -87,7 +87,11 @@ export default function RecipeScreen() {
           {servings === undefined ? (
             <MissingServings recipe={recipe} />
           ) : (
-            <ServingsPicker servings={servings} onChange={setChosenServings} />
+            <ServingsPicker
+              servings={servings}
+              originalServings={recipe.servings ?? servings}
+              onChange={setChosenServings}
+            />
           )}
         </View>
         <RecipeIngredients

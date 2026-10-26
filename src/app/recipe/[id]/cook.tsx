@@ -5,7 +5,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Screen } from "@/components/Screen";
 import { cookingView } from "@/domain/cooking/cookingView";
 import { scaledIngredients } from "@/domain/cooking/scaledIngredients";
-import { CookIngredientsChip } from "@/features/cooking/CookIngredientsChip";
+import { CookCounterRow } from "@/features/cooking/CookCounterRow";
 import { CookNavigation } from "@/features/cooking/CookNavigation";
 import { CookNextStep } from "@/features/cooking/CookNextStep";
 import { CookProgress } from "@/features/cooking/CookProgress";
@@ -13,7 +13,7 @@ import { CookStep } from "@/features/cooking/CookStep";
 import { CookTimerButton } from "@/features/cooking/CookTimerButton";
 import { CookTimersStrip } from "@/features/cooking/CookTimersStrip";
 import { CookTopBar } from "@/features/cooking/CookTopBar";
-import { ServingsPicker } from "@/features/cooking/ServingsPicker";
+import { CookSummary } from "@/features/cooking/CookSummary";
 import { useCookTimers } from "@/features/cooking/useCookTimers";
 import { useReadAloud } from "@/features/cooking/useReadAloud";
 import { RecipeIngredients } from "@/features/recipes/RecipeIngredients";
@@ -28,7 +28,8 @@ export default function CookScreen() {
   const { recipe } = useRecipe(params.id ?? "");
   const [index, setIndex] = useState(0);
   const [areIngredientsOpen, setAreIngredientsOpen] = useState(false);
-  // Las raciones llegan de la ficha; aquí se pueden cambiar sin salir, y no se guardan.
+  const [hasStarted, setHasStarted] = useState(false);
+  // Las raciones llegan de la ficha y se cambian en el resumen previo, no en los pasos. No se guardan.
   const [chosenServings, setChosenServings] = useState(Number(params.servings) || null);
   const servings = chosenServings ?? recipe?.servings;
   const ingredients =
@@ -59,6 +60,23 @@ export default function CookScreen() {
     );
   }
 
+  if (!hasStarted) {
+    return (
+      <Screen>
+        <CookTopBar onLeave={leave} isTimerRunning={false} />
+        <CookSummary
+          recipe={recipe}
+          servings={servings}
+          ingredients={ingredients}
+          onChangeServings={setChosenServings}
+          onStart={() => {
+            setHasStarted(true);
+          }}
+        />
+      </Screen>
+    );
+  }
+
   const { total, isLast, current, next, timer } = view;
   const isTimerRunning = cookTimers.timers.some((running) => running.endsAt > cookTimers.now);
 
@@ -66,11 +84,6 @@ export default function CookScreen() {
     <Screen>
       <CookTopBar onLeave={leave} isTimerRunning={isTimerRunning} />
 
-      {recipe.servings !== undefined && servings !== undefined && (
-        <View style={styles.servings}>
-          <ServingsPicker servings={servings} onChange={setChosenServings} />
-        </View>
-      )}
       <CookTimersStrip
         timers={cookTimers.timers}
         now={cookTimers.now}
@@ -78,19 +91,15 @@ export default function CookScreen() {
         onDismiss={cookTimers.dismissTimer}
       />
       <CookProgress total={total} current={index} />
-      <View style={styles.counterRow}>
-        <Text style={[styles.counter, { color: colors.primary }]}>
-          Paso {index + 1} de {total}
-        </Text>
-        {recipe.ingredients.length > 0 && (
-          <CookIngredientsChip
-            isOpen={areIngredientsOpen}
-            onToggle={() => {
-              setAreIngredientsOpen((isOpen) => !isOpen);
-            }}
-          />
-        )}
-      </View>
+      <CookCounterRow
+        stepNumber={index + 1}
+        total={total}
+        hasIngredients={recipe.ingredients.length > 0}
+        areIngredientsOpen={areIngredientsOpen}
+        onToggleIngredients={() => {
+          setAreIngredientsOpen((isOpen) => !isOpen);
+        }}
+      />
 
       <CookTimerButton
         key={index}
@@ -132,16 +141,7 @@ export default function CookScreen() {
 }
 
 const styles = StyleSheet.create({
-  servings: { marginBottom: tokens.spacing.row },
   close: { fontFamily: tokens.fontFamily.bodyStrong, fontSize: tokens.fontSize.label },
-  counterRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: tokens.spacing.row,
-    marginTop: tokens.spacing.gutter,
-  },
-  counter: { fontFamily: tokens.fontFamily.display, fontSize: tokens.fontSize.sectionHeading },
   stepArea: { flexGrow: 1, justifyContent: "center", paddingVertical: tokens.spacing.block },
   ingredientsArea: { justifyContent: "flex-start" },
   navigation: { paddingBottom: tokens.spacing.gutter },

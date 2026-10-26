@@ -242,7 +242,11 @@ molesta menos que el que falta. Lo que no resuelve, y se acepta: «la masa» o �
 nombran nada (y ahí no hay nada que medir), y «la mitad del azúcar» enseña el azúcar entero. Si
 se queda corto, el paso gana `ingredients` desde la IA y esto queda de respaldo.
 
-**La pantalla**, de arriba abajo: Salir y Pantalla encendida; «Para 4 − +»; los temporizadores en
+**Antes del primer paso, un resumen**: «VAS A COCINAR · Bizcocho de yogur», «Para 4 − +» y los
+ingredientes ya escalados, con «Empezar a cocinar» abajo. Decidido el 26 de octubre de 2026: las
+raciones se deciden ahí, no en mitad de la receta con las manos en la masa.
+
+**La pantalla de los pasos**, de arriba abajo: Salir y Pantalla encendida; los temporizadores en
 marcha; la barra de progreso; «Paso 2 de 6» e Ingredientes; el temporizador del paso; el paso en
 grande; sus cantidades; y encima de
 los botones, en pequeño, **el siguiente paso con sus cantidades** («DESPUÉS · Corta el chorizo en
@@ -298,8 +302,12 @@ rodajas · 150 g chorizo»), para ir preparándolo mientras se sofríe. Abajo, e
 
 **Raciones (el paso 14).**
 
-- Se eligen en la ficha de la receta con **«Para 4 − +»**, encima de los ingredientes, entran
-  contigo en el modo cocina y allí se cambian sin salir.
+- Se eligen en la ficha de la receta con **«Para 4 − +»**, encima de los ingredientes, y entran
+  contigo en el resumen del modo cocina, donde se pueden cambiar todavía. **En los pasos ya no**:
+  ahí se cocina, no se planifica.
+- **El selector se explica solo, sin avisos**: «¿Para cuántas personas?» encima, «6 personas − +», y
+  al cambiarlo una línea debajo: «Cantidades ajustadas para 6 personas. La receta original es para
+  8 personas.» Igual en la ficha y en el resumen, para aprenderlo una vez.
 - **No se guardan**: cada vez se empieza en las raciones de la receta. Guardar «la hago para
   seis» es planificar, y eso es el plan semanal del PRO.
 - **Sin raciones en la receta no hay selector**: sale «Esta receta no dice para cuántas personas
