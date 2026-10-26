@@ -132,32 +132,20 @@ El orden importa, porque la web desbloquea cosas que hoy están a medias:
    necesita **doce probadores durante catorce días** antes de poder publicar. Eso se empieza
    pronto o se espera dos semanas al final.
 
-## Entrar con Google, a medias
+## Entrar con Google: la web hecha, falta el móvil
 
 Decidido el 26 de octubre de 2026: la gente tiene que poder entrar con Google, y se hace **nativo
 en el móvil y con redirección en la web** (opción A). En el móvil sale el selector de cuentas
 del sistema, que es un toque; por el navegador Google enseñaría «Continuar a `xxxx.supabase.co`»,
 y quitar eso cuesta unos 10 $/mes.
 
-**El código de la web está escrito y sin commit**: `GoogleSignIn` (el botón y el «o con tu
-correo», en entrar y en crear cuenta), `signInWithGoogle`, `oauthReturnUrl` con sus pruebas, y
-`detectSessionInUrl` activado solo en la web. En el móvil el botón no se pinta. **No se ha
-probado contra Google**, y **no hay que subir la web hasta que esté configurado**: el botón
-saldría y daría error.
-
-**Bloqueado por:** la cuota de proyectos de Google Cloud de la cuenta está llena. Se ha pedido
-ampliarla el 26 de octubre de 2026. En cuanto llegue:
-
-1. **Google Cloud Console:** proyecto «Chup Chup»; pantalla de consentimiento de OAuth de tipo
-   *Externo*, con el nombre «Chup Chup» y un correo de asistencia; y un ID de cliente de OAuth de
-   tipo *Aplicación web*, con orígenes `https://chup-chup.es` y `http://localhost:8081` y como
-   URI de redirección la *Callback URL* que da Supabase (`https://<proyecto>.supabase.co/auth/v1/callback`).
-2. **Supabase, Authentication → Providers → Google:** activarlo con el ID y el secreto del
-   cliente web.
-3. **Supabase, Authentication → URL Configuration:** *Site URL* `https://chup-chup.es`; en
-   *Redirect URLs*, `https://chup-chup.es` y `http://localhost:8081`, **sin barra al final**,
-   que es exactamente adonde vuelve la app.
-4. Probar en local con `npx expo start --web`, hacer commit y desplegar.
+**En la web, hecho el 26 de octubre de 2026**, probado en local y desplegado en `chup-chup.es`:
+`GoogleSignIn` (el botón y el «o con tu correo», en entrar y en crear cuenta), `signInWithGoogle`,
+`oauthReturnUrl` y `detectSessionInUrl` solo en la web. En el móvil el botón no se pinta todavía.
+Configurado: proyecto «Chup Chup» en Google Cloud con un cliente OAuth *Aplicación web*
+(orígenes `https://chup-chup.es` y `http://localhost:8081`, redirección al callback de Supabase),
+el proveedor Google activado en Supabase, y *Site URL* y *Redirect URLs* a `https://chup-chup.es`
+y `http://localhost:8081`, sin barra al final.
 
 **Después, para el móvil:** `@react-native-google-signin/google-signin`, que entrega un token a
 `supabase.auth.signInWithIdToken`. Pide un segundo cliente OAuth de tipo *Android* con el paquete
