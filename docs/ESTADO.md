@@ -74,6 +74,11 @@ pite y vibre al acabar un temporizador, cómo suena la voz, y que la pantalla no
 el puerto 8081, y con sesión iniciada en `http://localhost:8081`. No hace falta arrancar otro.
 Para mirar pantallas sirve abrir ahí una pestaña nueva con el navegador y ponerla a ancho de móvil.
 
+**Hoja de la cuenta, hecha el 26 de octubre de 2026:** el círculo de arriba a la derecha ya no
+cierra la sesión de golpe. Enseña la foto de Google, o la inicial si no hay foto, y al tocarlo abre
+una hoja con el nombre, el correo y «Cerrar sesión». No hay pantalla de ajustes: cuando aparezca
+el primer ajuste, crece esa hoja.
+
 **Lo que viene, a elegir:** el paso 17 (pegar una receta sin IA), retomar Android (la development
 build y Google nativo, ver más abajo), o los pasos 13 y 16.
 
@@ -185,7 +190,8 @@ Expo Go.
 
 **Antes de publicar:** la «G» del botón es de un solo color y las normas de marca de Google piden
 la de cuatro colores, que necesita `react-native-svg`. Y la política de privacidad tiene que decir
-que con Google se recibe el nombre y el correo. **Para iOS, más adelante:** si se ofrece entrar con
+que con Google se recibe el nombre, el correo y la foto, que se enseña en el
+círculo de la cuenta. **Para iOS, más adelante:** si se ofrece entrar con
 Google, Apple obliga a ofrecer también «Iniciar sesión con Apple».
 
 Una cuenta creada con correo y otra con Google del mismo correo se unen solas en Supabase. El
