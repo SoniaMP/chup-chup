@@ -1,8 +1,11 @@
 import { MaterialIcons } from "@expo/vector-icons";
+import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 import { Logo } from "@/components/Logo";
-import { signOut } from "@/features/auth/signOut";
+import { AccountAvatar } from "@/features/auth/AccountAvatar";
+import { AccountSheet } from "@/features/auth/AccountSheet";
+import { useAccount } from "@/features/auth/useAccount";
 
 import { FavoritesFilter } from "./FavoritesFilter";
 import { tokens } from "@/theme/tokens";
@@ -24,6 +27,8 @@ export function KitchenHeader({
   onOnlyFavoritesChange,
 }: KitchenHeaderProps) {
   const colors = useColors();
+  const account = useAccount();
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -34,15 +39,22 @@ export function KitchenHeader({
         </View>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Cerrar sesión"
+          accessibilityLabel="Tu cuenta"
           onPress={() => {
-            void signOut();
+            setIsAccountOpen(true);
           }}
-          style={[styles.roundButton, { backgroundColor: colors.secondary }]}
+          style={({ pressed }) => pressed && styles.pressed}
         >
-          <Text style={[styles.initial, { color: colors.secondaryForeground }]}>S</Text>
+          <AccountAvatar account={account} size={tokens.touch.headerButton} />
         </Pressable>
       </View>
+      <AccountSheet
+        account={account}
+        isOpen={isAccountOpen}
+        onClose={() => {
+          setIsAccountOpen(false);
+        }}
+      />
       {/* La ✕ es nuestra: la del sistema (`clearButtonMode`) solo existe en iPhone. */}
       <View style={[styles.search, { backgroundColor: colors.muted }]}>
         <MaterialIcons name="search" size={22} color={colors.mutedForeground} />
@@ -85,14 +97,6 @@ const styles = StyleSheet.create({
   brand: { flexDirection: "row", alignItems: "center", gap: tokens.spacing.row + 2 },
   // El logo es la marca y el texto la acompaña: el título baja para que mande el dibujo.
   title: { fontFamily: tokens.fontFamily.display, fontSize: 26, letterSpacing: -0.3 },
-  roundButton: {
-    width: tokens.touch.headerButton,
-    height: tokens.touch.headerButton,
-    borderRadius: tokens.radius.pill,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  initial: { fontFamily: tokens.fontFamily.bodyStrong, fontSize: tokens.fontSize.body },
   search: {
     flexDirection: "row",
     alignItems: "center",
